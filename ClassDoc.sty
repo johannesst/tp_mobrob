@@ -1,0 +1,1171 @@
+%%
+%% This is file `ClassDoc.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% ClassDoc.doc 
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% You are *not* allowed to modify this file.
+%% 
+%% You are *not* allowed to distribute this file.
+%% For distribution of the original source see the terms
+%% for copying and modification in the file ClassDoc.doc.
+%% 
+%%---------------------------------------------------------------------
+%% @(#)ClassDoc.sty	5.7 (ben"otigt LaTeX!!!)
+%% 04/30/97
+%%---------------------------------------------------------------------
+%% Kommandos und Environments f"ur TeX
+%% zur vereinfachten Dokumentation von Objektklassen
+%%
+%% written by Tim Wittrock (tim@ida.ing.tu-bs.de) 01.08.1994
+%%    release 2: 02.09.1994
+%%    release 3: 05.10.1994
+%%    release 4: 01.03.1995
+%%    release 5: 05.09.1995
+%%
+%% IMPORTANT NOTICE:
+%%
+%% You are not allowed to change this file. You may however copy this file
+%% to a file with a different name and then change the copy.
+%%
+%% You are NOT ALLOWED to distribute this file alone. You are NOT ALLOWED
+%% to take money for the distribution or use of this file (or a changed
+%% version) except for a nominal charge for copying etc.
+%%
+%% You are allowed to distribute this file under the condition that it is
+%% distributed together with the file 'ClassDoc.tex'.
+%%
+%% If you receive only some of these files from someone, complain!
+%%
+%% Error Reports in case of UNCHANGED versions to
+%%   Tim Wittrock, tim@ida.ing.tu-bs.de
+%%---------------------------------------------------------------------
+
+\typeout{LaTeX-Document Style `ClassDoc.sty 5.7%
+' <97/04/30%
+>,}
+\typeout{written by Tim Wittrock (tim@ida.ing.tu-bs.de)}
+
+%%---------------------------------------------------------------------
+%% Definition des Stils 'linedheadings'
+%%---------------------------------------------------------------------
+\if@twoside \def\ps@linedheadings{\let\@mkboth\markboth
+\def\@oddfoot{}\def\@evenfoot{}\def\@evenhead{\underline{%
+\parbox{\textwidth}{\rule[-2mm]{0mm}{0mm}%
+\rm\thepage \hfill \sl\leftmark}}}\def\@oddhead{\underline{%
+\parbox{\textwidth}{\rule[-2mm]{0mm}{0mm}%
+\sl \rightmark \hfill \rm\thepage}}}%
+\def\sectionmark##1{\markboth {{\ifnum
+\c@secnumdepth
+>\z@
+ \thesection\hskip 1em\relax \fi ##1}}{}}\def\subsectionmark##1{\markright
+{\ifnum \c@secnumdepth >\@ne
+ \thesubsection\hskip 1em\relax \fi ##1}}}
+\else \def\ps@linedheadings{\let\@mkboth\markboth
+\def\@oddfoot{}\def\@evenfoot{}\def\@oddhead{\underline{\parbox{%
+\textwidth}{\rule[-2mm]{0mm}{0mm}\hbox{}\sl \rightmark \hfill
+\rm\thepage}}}%
+\def\sectionmark##1{\markright {{\ifnum
+\c@secnumdepth
+>\z@
+ \thesection\hskip 1em\relax \fi ##1}}}}
+\fi
+
+%%---------------------------------------------------------------------
+%% Voreinstellungen:
+%%---------------------------------------------------------------------
+\textheight245mm
+\textwidth155mm
+\oddsidemargin5mm
+\evensidemargin0cm
+\topmargin-7mm
+\parskip1ex
+\parindent0mm
+\pagestyle{linedheadings}
+
+%%---------------------------------------------------------------------
+%% Fussnoten am Seitenende
+%%---------------------------------------------------------------------
+\renewcommand{\footnoterule}{\vfill\rule{60mm}{0.2mm}\vspace{.5\footnotesep}}
+
+%%---------------------------------------------------------------------
+%% Silbentrennung bei Typewriter erm"oglichen
+%%---------------------------------------------------------------------
+%% ACHTUNG!!! In LaTeX2e fuehren die folgenden Zeilen zu Fehlern.
+\hyphenchar\nintt = 45
+\hyphenchar\tentt = 45
+\hyphenchar\elvtt = 45
+\hyphenchar\twltt = 45
+%% Diese muessen dann durch die Zeile
+%%\DeclareFontFamily{OT1}{cmtt}{\hyphenchar\font=45}
+%% ersetzt werden...
+%%---------------------------------------------------------------------
+
+%%---------------------------------------------------------------------
+%% Ausgabefile fuer Kurzzusammenfassung der Klassen anlegen...
+\typeout{Writing class-overview-file \jobname.cof}
+\newwrite\ClassViewFile
+\immediate\openout\ClassViewFile\jobname.cof\relax
+\def\CD@unexpandable{\noexpand\noexpand\noexpand}
+
+%%---------------------------------------------------------------------
+%% Standard--Schriftarten in den Spalten von DataDescript
+\def\CD@ColALetter#1{{\em #1}}
+\def\CD@ColBLetter#1{{\sc #1}}
+\def\CD@ColCLetter#1{{\tt #1}}
+\def\CD@ColDXLetter#1{{\sl #1}}
+
+%% "Uberschriften der Spalten von DataDescript
+\def\CD@ColAText{ColAText}
+\def\CD@ColBText{ColBText}
+\def\CD@ColCText{ColCText}
+\def\CD@ColDText{ColDText}
+
+%% Breite der Spalten von DataDescript und History
+\newlength{\CD@ColALen}
+\newlength{\CD@ColBLen}
+\newlength{\CD@ColCLen}
+\newlength{\CD@ColDLen}
+
+%%---------------------------------------------------------------------
+%% interne Variablen und Kommandos -- nicht verwenden !!!
+\global\def\CD@empty{}
+
+\newcounter{CD@NoOfCols}
+
+\newlength{\CD@BoxWidth}
+
+\newcounter{CD@LastPage}
+
+\newcounter{CD@LinesLeft}
+\newlength{\CD@PagePos}
+
+\newlength{\CD@DummyLen}
+\newlength{\CD@ParamLen}
+\newcounter{CD@cntDummy}
+\newcounter{CD@PageCorrector}
+
+\def\NextLine{\\ \hline \hline}
+
+\newcounter{CD@ParamCount}
+
+\newlength{\CD@MaxParamLen}
+
+%%---------------------------------------------------------------------
+%% Berechnung der verbleibenden Zeilen dieser Seite
+\def\CD@CalcLinesLeft{%
+  \setlength{\CD@PagePos}{\textheight}%
+  \addtolength{\CD@PagePos}{-\pagetotal}%
+  \CD@DummyLen=\baselineskip%
+  \divide\CD@PagePos by \CD@DummyLen%
+  \setcounter{CD@LinesLeft}{\CD@PagePos}%
+  \addtocounter{CD@LinesLeft}{-1}%
+  }
+
+%%---------------------------------------------------------------------
+%% Hilfskommandos zur Feststellung optionaler Parameter
+\def\CD@ifnextchar#1#2#3{\let\tempe
+#1\def\tempa{#2}\def\tempb{#3}\futurelet \tempc\ifnch}
+\def\ifnch{\ifx \tempc \sptoken \let\tempd\xifnch
+      \else \ifx \tempc \tempe\let\tempd\tempa\else\let\tempd\tempb\fi
+      \fi \tempd}
+
+
+
+\def\:{\let\sptoken= } \:  % this makes \sptoken a space token
+
+\def\:{\xifnch} \expandafter\def\: {\futurelet\tempc\ifnch}
+%%---------------------------------------------------------------------
+
+%%---------------------------------------------------------------------
+%% Neue Z"ahler f"ur neue "Uberschriften
+\newcounter {SubSection}[section]
+\newcounter {SubSubSection}[SubSection]
+\newcounter {SubIIISection}[SubSubSection]
+\newcounter {subIIIsection}[subsubsection]
+
+%%---------------------------------------------------------------------
+%% "Uberschriften--Numerierung
+\def\theSubSection {\thesection.\Alph{SubSection}}
+\def\theSubSubSection {\theSubSection.\alph{SubSection}}
+\def\theSubIIISection {\theSubSubSection.\alph{SubIIISection}}
+\def\thesubIIIsection {\thesubsubsection.\arabic{subIIIsection}}
+
+%%---------------------------------------------------------------------
+%% neue "Uberschriften (mit * wird alphabetisch gez"ahlt)
+\def\SubSection{\par \addvspace{4ex} \@afterindentfalse \secdef\@SubSect\@sSubSect}
+\def\@SubSect[#1]#2{\refstepcounter{subsection}
+  {\parindent 0pt \raggedright \large \bf\thesubsection \hspace{1em}
+   \bf #2 \par} \nobreak \vskip2ex \@afterheading}
+\def\@sSubSect#1{\refstepcounter{SubSection}
+  {\parindent 0pt \raggedright \large \bf\theSubSection \hspace{1em}
+   \large \bf#1\par} \nobreak \vskip2ex \@afterheading }
+
+\def\SubSubSection{\par \addvspace{4ex} \@afterindentfalse \secdef\@SubSubSect\@sSubSubSect}
+\def\@SubSubSect[#1]#2{\refstepcounter{subsubsection}
+  {\parindent 0pt \raggedright \normalsize \bf\thesubsubsection \hspace{1em}
+   \bf #2 \par} \nobreak \vskip2ex \@afterheading}
+\def\@sSubSubSect#1{\refstepcounter{SubSubSection}
+  {\parindent 0pt \raggedright \normalsize \bf\theSubSubSection \hspace{1em}
+   \bf#1\par} \nobreak \vskip2ex \@afterheading }
+
+\def\SubIIISection{\par \addvspace{4ex} \@afterindentfalse \secdef\@SubIIISect\@sSubIIISect}
+\def\@SubIIISect[#1]#2{\refstepcounter{subIIIsection}
+  {\parindent 0pt \raggedright \normalsize \bf\thesubIIIsection \hspace{1em}
+   \bf #2 \par} \nobreak \vskip2ex \@afterheading}
+\def\@sSubIIISect#1{\refstepcounter{SubIIISection}
+  {\parindent 0pt \raggedright \normalsize \bf\theSubIIISection \hspace{1em}
+   \bf#1\par} \nobreak \vskip2ex \@afterheading }
+
+\def\subIIIsection{\par \addvspace{4ex} \@afterindentfalse \secdef\@subIIIsection\@ssubIIIsection}
+\def\@subIIIsection[#1]#2{\ifnum \c@secnumdepth >\m@ne \refstepcounter{subIIIsection}
+\addcontentsline{toc}{subsubsection}{\hspace{3.25em}\thesubIIIsection \hspace{1em}#1}\else
+\addcontentsline{toc}{subIIIsection}{#1}\fi { \parindent 0pt \raggedright
+ \ifnum \c@secnumdepth >\m@ne
+ \normalsize\bf\thesubIIIsection \hspace{1em}\fi
+ \normalsize \bf #2 \par} \nobreak \vskip2ex \@afterheading }
+\def\@ssubIIIsection#1{{\parindent 0pt \raggedright
+ \normalsize \bf#1\par} \nobreak \vskip2ex \@afterheading }
+%%---------------------------------------------------------------------
+
+%%---------------------------------------------------------------------
+%% neue "Uberschriften--Kommandos
+\def\ClassSection{\subsection}
+\def\SubClassSection{\SubSubSection}
+\def\SubSubClassSection{\SubIIISection}
+\def\theClassSection{\thesubsection}
+
+%%----------------------------------------------------------------------
+%% Auswahl der Art der "Uberschriften:
+%%
+%% 000000xx  Class ist 1: section 2: subsection
+%% 0000xx00  numeriert bis 0: Class 1: SubClass 2: SubSubClass
+%% 00xx0000  Im Inhalt bis 0: Class 1: SubClass 2: SubSubClass
+\def\SetClassDepth#1{
+  \setcounter{CD@cntDummy}{#1}
+  \ifnum \value{CD@cntDummy}=1
+    \def\theClassSection{\thesection}
+    \def\ClassSection{\section}
+    \def\SubClassSection{\subsection*}
+    \def\SubSubClassSection{\subsubsection*} \fi
+  \ifnum \value{CD@cntDummy}=2
+    \def\theClassSection{\thesubsection}
+    \def\ClassSection{\subsection}
+    \def\SubClassSection{\subsubsection*}
+    \def\SubSubClassSection{\subIIIsection*} \fi
+  \ifnum \value{CD@cntDummy}=5
+    \def\theClassSection{\thesection}
+    \def\ClassSection{\section}
+    \def\SubClassSection{\SubSection}
+    \def\SubSubClassSection{\subsubsection*} \fi
+  \ifnum \value{CD@cntDummy}=6
+    \def\theClassSection{\thesubsection}
+    \def\ClassSection{\subsection}
+    \def\SubClassSection{\SubSubSection}
+    \def\SubSubClassSection{\subIIIsection*} \fi
+  \ifnum \value{CD@cntDummy}=9
+    \def\theClassSection{\thesection}
+    \def\ClassSection{\section}
+    \def\SubClassSection{\SubSection}
+    \def\SubSubClassSection{\SubSubSection} \fi
+  \ifnum \value{CD@cntDummy}=10
+    \def\theClassSection{\thesubsection}
+    \def\ClassSection{\subsection}
+    \def\SubClassSection{\SubSubSection}
+    \def\SubSubClassSection{\SubIIISection} \fi
+  \ifnum \value{CD@cntDummy}=21
+    \def\theClassSection{\thesection}
+    \def\ClassSection{\section}
+    \def\SubClassSection{\subsection}
+    \def\SubSubClassSection{\subsubsection*} \fi
+  \ifnum \value{CD@cntDummy}=22
+    \def\theClassSection{\thesubsection}
+    \def\ClassSection{\subsection}
+    \def\SubClassSection{\subsubsection}
+    \def\SubSubClassSection{\subIIIsection*} \fi
+  \ifnum \value{CD@cntDummy}=25
+    \def\theClassSection{\thesection}
+    \def\ClassSection{\section}
+    \def\SubClassSection{\subsection}
+    \def\SubSubClassSection{\SubSubSection} \fi
+  \ifnum \value{CD@cntDummy}=26
+    \def\theClassSection{\thesubsection}
+    \def\ClassSection{\subsection}
+    \def\SubClassSection{\subsubsection}
+    \def\SubSubClassSection{\SubIIISection} \fi
+  \ifnum \value{CD@cntDummy}=41
+    \def\theClassSection{\thesection}
+    \def\ClassSection{\section}
+    \def\SubClassSection{\subsection}
+    \def\SubSubClassSection{\subsubsection} \fi
+  \ifnum \value{CD@cntDummy}=42
+    \def\theClassSection{\thesubsection}
+    \def\ClassSection{\subsection}
+    \def\SubClassSection{\subsubsection}
+    \def\SubSubClassSection{\subIIIsection} \fi
+  }
+
+%%---------------------------------------------------------------------
+%% Z"ahler zum Unterdr"ucken der History in Studien- und Diplomarbeiten
+%% 0 = History drucken (default)   >0 History unterdr"ucken
+\newcounter{NoHist}
+\setcounter{NoHist}{0}
+
+%% Boolscher Wert fuer automatischen Eintrag von Methoden in Index
+\newcounter{IdxRefDepth}
+\setcounter{IdxRefDepth}{2}
+\newcounter{IdxDeclareDepth}
+\setcounter{IdxDeclareDepth}{4}
+\newcounter{ShortViewActive}
+
+\def\ShortMethodDef#1{\ifx\CD@empty#1\CD@empty\global\def\ShortMethod{}%
+  \else  \global\def\ShortMethod{\noexpand#1}\fi}
+\def\ShrtMethView#1{{\PrePare%
+  \immediate\write\ClassViewFile{\ShortMethod {#1}{\arabic{CD@ParamCount}}}%
+\relax}}
+
+%%---------------------------------------------------------------------
+%%  Automatischer Indexeintrag
+\def\LEX{@}
+
+\def\IndexNormalStyle{EM}
+\def\IndexDefStyle{BF}
+\def\IndexRefStyle{}
+\def\PrePare{\def\_{\string\_}\def\\{\string\\}\def\"{\string\"}}
+
+\def\IndexClassDefPre#1{{\PrePare\index{#1\LEX\niCR{#1}|(\IndexDefStyle}}}
+\def\IndexClassDefPost#1{{\PrePare\index{#1\LEX\niCR{#1}|)\IndexDefStyle}}}
+\def\IndexClassRef#1{{\PrePare\index{#1\LEX\niCR{#1}|\IndexRefStyle}}}
+
+\def\IndexMethodDef#1{{\PrePare\index{#1\LEX\niMR{#1}|\IndexDefStyle}}}
+\def\IndexMethodRef#1{{\PrePare\index{#1\LEX\niMR{#1}|\IndexRefStyle}}}
+
+\def\IndexVarDef#1{{\PrePare\index{Variablen!#1\LEX\niVN{#1}|\IndexDefStyle}}}
+\def\IndexVarRef#1{{\PrePare\index{Variablen!#1\LEX\niVN{#1}|\IndexRefStyle}}}
+
+\def\IndexConstDef#1{{\PrePare\index{Konstanten!#1\LEX\KW{#1}|\IndexDefStyle}}}
+
+\def\IndexDefineDef#1{{\PrePare\index{Defines!#1\LEX\KW{#1}|\IndexDefStyle}}}
+
+\def\IndexTypeDef#1{{\PrePare\index{Datentypen!#1\LEX\niTN{#1}|\IndexDefStyle}}}
+\def\IndexTypeRef#1{{\PrePare\index{Datentypen!#1\LEX\niTN{#1}|\IndexRefStyle}}}
+
+\def\idxLast#1 #2]]{\ifx \CD@empty#2\CD@empty%
+  \ifnum \value{IdxDeclareDepth}>1 \IndexMethodDef{#1}\fi%
+  \ifx\ShortMethod\CD@empty \else\ShrtMethView{#1}\fi%
+  \else\idxLast#2]]\fi}
+
+%%---------------------------------------------------------------------
+%% Befehl: Indexeintrag
+\def\Index{\CD@ifnextchar[{\IndexA}{\IndexA []}}
+\def\IndexA[#1]#2{\ifx\CD@empty#1\CD@empty \index{#2|\IndexNormalStyle}%
+  \else \index{#1!#2|\IndexNormalStyle}\fi}
+
+%%---------------------------------------------------------------------
+%% Umgebung: TabDescript  (1 Parameter)
+\def\TabDescript{\CD@ifnextchar[{\TABDESCRPT}{\TABDESCRPT [\bf]}} %}
+
+\def\TABDESCRPT[#1]#2{%
+  \begin{list}{}{\settowidth{\labelwidth}{{#1 {#2}{\bf:}}}%
+  \setlength{\leftmargin}{\labelwidth}\addtolength{\leftmargin}%
+  {\labelsep}\parsep0.5ex plus0.2ex minus0.2ex\itemsep0.3ex%
+  \def\makelabel##1{\parbox[b]{\labelwidth}{{#1 {##1}{\bf:}}}}}}%
+
+\def\endTabDescript{\end{list}}
+
+\newenvironment{PTabDescript}[1]{%
+  \begin{list}{}{\settowidth{\labelwidth}{\bf #1:}%
+  \setlength{\leftmargin}{\labelwidth}\addtolength{\leftmargin}%
+  {\labelsep}\parsep0.5ex plus0.2ex minus0.2ex\itemsep0.3ex%
+  \def\makelabel##1{\bf \parbox[b]{\labelwidth}{\bf ##1:}}}%
+  }{\end{list}}
+
+  \def\NameParam#1(#2)#3\\{\def\CD@DummyCmd{#1}%
+    \ifx\CD@empty\CD@DummyCmd%
+    \else\def\CD@DummyCmd{#2}%
+      \global\setcounter{CD@ParamCount}{0}%
+      \ifx\CD@empty\CD@DummyCmd #1()#3\else%
+        \setlength{\CD@ParamLen}{\CD@BoxWidth}%
+        \settowidth{\CD@DummyLen}{#1)}\addtolength{\CD@ParamLen}{-\CD@DummyLen}%
+        #1%
+        \ParamWidth{#2}%
+        \ifnum\CD@MaxParamLen>\CD@ParamLen%
+          \settowidth{\CD@DummyLen}{(#2)#3}%
+          \ifnum\CD@DummyLen>\CD@ParamLen%
+            \newline\hspace*{0.1\textwidth}\settowidth{\CD@ParamLen}{(}%
+            \multiply \CD@ParamLen by -1\addtolength{\CD@ParamLen}{0.9\textwidth}%
+            (\begin{minipage}[t]{\CD@ParamLen}\ParamList{#2})#3\end{minipage}%
+          \else%
+            (\begin{minipage}[t]{\CD@ParamLen}\ParamList{#2})#3\end{minipage}%
+          \fi%
+        \else%
+          (\begin{minipage}[t]{\CD@ParamLen}\ParamList{#2})#3\end{minipage}%
+        \fi%
+      \fi%[
+      \idxLast #1]]\\ \CD@LineSpacing%[
+    \fi\CD@ifnextchar]{\skipBrace}{\NameParam}}
+
+  \def\CD@LineSpacing{{\addtolength{\baselineskip}{-1mm}%
+    \rule[\baselineskip]{0pt}{0pt}}}
+
+  \def\ParamList#1{\ListParams#1,]}   %[
+  \def\ListParams#1,{\stepcounter{CD@ParamCount}%
+    \settowidth{\CD@DummyLen}{\bf#1}%
+    \ifnum\CD@ParamLen>\CD@DummyLen%
+      \raggedright\mbox{#1}%
+    \else #1%
+    \fi%
+    \CD@ifnextchar]{\skipBrace}{, \ListParams}}
+
+  \def\ParamWidth#1{\setlength{\CD@MaxParamLen}{0mm}\CD@ParamLength#1,]} %[
+  \def\CD@ParamLength#1,{%
+    \settowidth{\CD@DummyLen}{\bf#1}%
+    \ifnum\CD@DummyLen>\CD@MaxParamLen%
+      \setlength{\CD@MaxParamLen}{\CD@DummyLen}%
+    \fi%
+    \CD@ifnextchar]{\skipBrace}{\CD@ParamLength}}%
+
+%%---------------------------------------------------------------------
+%% Umgebung: Class  (3/4 Paramater)
+%% Verwendung:
+%%   \begin{Class}{Name der Klasse}[Kurzbeschreibung]
+%%       {Liste1}{Liste2}
+%%     ...
+%%   \end{Class}
+%%  Wobei 'Liste1' aus den Befehlen
+%%    \Include{Name des Include-Files}
+%%    \Source{Name des SourceFiles}
+%%    \Library{Name der Library}
+%%    \Derived{Name der Klasse, von der diese abgeleitet ist}
+%%    \FriendOf{Klasse, mit der diese befreundt ist}
+%%    \Friends{mit dieser Klasse befreundete Klassen}
+%%  besteht (beliebige Reihenfolge).
+%%  Liste2 besteht ausschlie"slich aus einer Reihe von
+%%    \History{Datum}{Version}{Name}{Kommentar}
+%%  Befehlen.
+\def\Class#1{\CD@ifnextchar[{\CLASS #1}{\CLASS #1[]}}  %]
+
+\def\CLASS#1[#2]#3#4{\ClassSection{#1}\def\ClassName{#1}
+  \ifnum \value{IdxDeclareDepth}>0 \IndexClassDefPre{#1}\fi
+  \setcounter{CD@cntDummy}{0}
+  \def\CD@ColAMax{Datum}
+  \def\CD@ColBMax{Version}
+  \def\CD@ColCMax{Name}
+  \settowidth{\CD@ColALen}{\CD@ColAMax}
+  \settowidth{\CD@ColBLen}{\CD@ColBMax}
+  \settowidth{\CD@ColCLen}{\CD@ColCMax}
+%% Eintrag in / Kommando f"ur Liste1 (falls benutzt: Benutzung registrieren)
+  \def\IncludeFile{}
+  \def\Include##1{\def\IncludeFile{##1}
+     \ifx\CD@empty\IncludeFile \else \stepcounter{CD@cntDummy} \fi}
+%% Eintrag in / Kommando f"ur Liste1 (falls benutzt: Benutzung registrieren)
+  \def\LibraryFile{}
+  \def\Library##1{\def\LibraryFile{##1}
+     \ifx\CD@empty\LibraryFile \else \stepcounter{CD@cntDummy} \fi}
+%% Eintrag in / Kommando f"ur Liste1 (falls benutzt: Benutzung registrieren)
+  \def\SourceFile{}
+  \def\Source##1{\def\SourceFile{##1}
+     \ifx\CD@empty\SourceFile \else \stepcounter{CD@cntDummy} \fi}
+%% Eintrag in / Kommando f"ur Liste1 (falls benutzt: Benutzung registrieren)
+  \def\DerivedFrom{}
+  \def\Derived##1{\def\DerivedFrom{##1}
+     \ifx\CD@empty\DerivedFrom \else \stepcounter{CD@cntDummy} \fi}
+%% Eintrag in / Kommando f"ur Liste1 (falls benutzt: Benutzung registrieren)
+  \def\IsFriendOf{}
+  \def\FriendOf##1{\def\IsFriendOf{##1}
+     \ifx\CD@empty\IsFriendOf \else \stepcounter{CD@cntDummy} \fi}
+%% Eintrag in / Kommando f"ur Liste1 (falls benutzt: Benutzung registrieren)
+  \def\FriendClasses{}
+  \def\Friends##1{\def\FriendClasses{##1}
+     \ifx\CD@empty\FriendClasses \else \stepcounter{CD@cntDummy} \fi}
+%% "Anderungsdaten auf leer setzen
+  \def\ChangeTime{}
+  \def\ChangedBy{}
+%% \History zur Berechnung der Spaltenbreiten und der "Anderungsdaten
+%% umdefinieren (keine Textausgabe)
+  \def\History##1##2##3##4{
+    \def\ChangeTime{##1}
+    \def\ChangedBy{##3}
+    \settowidth{\CD@DummyLen}{##1}
+    \ifdim \CD@DummyLen >\CD@ColALen
+      \def\CD@ColAMax{##1}%
+      \setlength{\CD@ColALen}{\CD@DummyLen} \fi
+    \settowidth{\CD@DummyLen}{##2}
+    \ifdim \CD@DummyLen >\CD@ColBLen
+      \def\CD@ColBMax{##2}%
+      \setlength{\CD@ColBLen}{\CD@DummyLen} \fi
+    \settowidth{\CD@DummyLen}{##3}
+    \ifdim \CD@DummyLen >\CD@ColCLen
+      \def\CD@ColCMax{##3}%
+      \setlength{\CD@ColCLen}{\CD@DummyLen} \fi
+    }
+  #3 \ifnum \value{NoHist} =0 #4 \fi
+  \ifx\CD@empty\ChangeTime \else \stepcounter{CD@cntDummy} \fi
+  \ifx\CD@empty\ChangedBy \else \stepcounter{CD@cntDummy} \fi
+  \ifnum \value{CD@cntDummy} >0
+    \begin{list}{}{\settowidth{\labelwidth}{\bf Letzte \"Anderung:}%
+      \setlength{\leftmargin}{\labelwidth}\addtolength{\leftmargin}%
+      {\labelsep}\parsep0.5ex plus0.2ex minus0.2ex\itemsep0.3ex%
+      \def\makelabel##1{\bf ##1:\hfill}}%
+    \ifx\CD@empty\IncludeFile \else
+      \item[Include--Datei] \IncludeFile \fi
+    \ifx\CD@empty\SourceFile \else
+      \item[Source] \SourceFile \fi
+    \ifx\CD@empty\LibraryFile \else
+      \item[Library] \LibraryFile \fi
+    \ifx\CD@empty\DerivedFrom \else
+      \item[Abgeleitet von] \DerivedFrom \fi
+    \ifx\CD@empty\IsFriendOf \else
+      \item[Freund von] \IsFriendOf \fi
+    \ifx\CD@empty\FriendClasses \else
+      \item[befreundet mit] \FriendClasses \fi
+    \ifnum \value{NoHist}=0
+      \ifx\CD@empty\ChangedBy
+        \ifx\CD@empty\ChangeTime \else
+          \item[ge\"andert am] \ChangeTime \fi \else
+        \item[Letzte \"Anderung] \ChangedBy
+        \ifx\CD@empty\ChangeTime \else
+          \def\makelabel{\hfill}
+          \item[] \ChangeTime \fi \fi
+     \fi
+    \end{list}
+  \fi
+  {\PrePare\immediate\write\ClassViewFile{\noexpand\Class {#1}{#2}}\relax
+   \ifx\CD@empty\DerivedFrom\else%
+     \immediate\write\ClassViewFile{\noexpand\Father {\DerivedFrom}}\relax\fi}
+  \def\ShortMethod{\noexpand\Public}
+  \def\rightmark{\theClassSection{} #1 \hfill {\sf \ChangeTime}}
+  \def\leftmark{{\sf \ChangeTime} \hfill \theClassSection{} #1}
+%% Kommandos f"ur "Uberschriften (teilweise mit Einstellungen f"ur
+%% DataDescript)
+  \def\ClassDescript{\CD@ifnextchar[{\ClassDscrpt}{\ClassDscrpt[]}} %]
+  \def\ClassDscrpt[]{\SubClassSection{Beschreibung der Klasse}}
+
+  \def\MethodDescript{\SubClassSection{Beschreibung der Methoden}%
+    \def\ShortMethod{\noexpand\Public}}
+  \def\ConstDescript{\SubClassSection{Beschreibung der Konstanten}
+    \def\CD@ColALetter####1{\niTN{####1}}
+    \def\CD@ColBLetter####1{\KW{####1}%
+      \ifnum \value{IdxDeclareDepth}>4
+      \IndexConstDef{####1}\fi}
+    \def\CD@ColCLetter####1{\hfill\KW{####1}}
+    \def\CD@ColDXLetter####1{{\bf ####1}}
+    \def\CD@ColAText{Typ}
+    \def\CD@ColBText{Name}
+    \def\CD@ColCText{Wert}
+    \def\CD@ColDText{Kommentar}
+    }
+  \def\DefineDescript{\SubClassSection{Beschreibung der
+                                                Define-Anweisungen}
+    \def\CD@ColALetter####1{####1}
+    \def\CD@ColBLetter####1{\KW{####1}%
+      \ifnum \value{IdxDeclareDepth}>3
+      \IndexDefineDef{####1}\fi}
+    \def\CD@ColCLetter####1{\hfill\KW{####1}}
+    \def\CD@ColDXLetter####1]{{\bf ####1}}
+    \def\CD@ColAText{}
+    \def\CD@ColBText{Name}
+    \def\CD@ColCText{Wert}
+    \def\CD@ColDText{Kommentar}
+    }
+  \def\VarDescript{\SubClassSection{Beschreibung der Variablen}
+    \def\CD@ColALetter####1{####1}
+    \def\CD@ColBLetter####1{\niTN{####1}}
+    \def\CD@ColCLetter####1{\niVN{####1}%
+      \ifnum \value{IdxDeclareDepth}>5
+      \IndexVarDef{####1}\fi}
+    \def\CD@ColDXLetter####1{\KW{####1}}
+    \def\CD@ColAText{Art}
+    \def\CD@ColBText{Typ}
+    \def\CD@ColCText{Name}
+    \def\CD@ColDText{Beschreibung}
+    }
+  \def\StructDescript{\SubClassSection{Beschreibung der
+    Datenstrukturen}
+    \def\CD@ColALetter####1{####1}
+    \def\CD@ColBLetter####1{\niTN{####1}%
+      \ifnum \value{IdxDeclareDepth}>2
+      \IndexTypeDef{####1}\fi}
+    \def\CD@ColCLetter####1{\VN{####1}}
+    \def\CD@ColDXLetter####1{{\bf ####1}}
+    \def\CD@ColAText{}
+    \def\CD@ColBText{Name}
+    \def\CD@ColCText{Feld}
+    \def\CD@ColDText{Beschreibung}
+    }
+  \def\TypeDescript{\SubClassSection{Beschreibung der
+    Datentypen}
+    \def\CD@ColALetter####1{####1}
+    \def\CD@ColBLetter####1{\niTN{####1}%
+      \ifnum \value{IdxDeclareDepth}>2
+      \IndexTypeDef{####1}\fi}
+    \def\CD@ColCLetter####1{\KW{####1}}
+    \def\CD@ColDXLetter####1{\KW{####1}%
+      \ifnum \value{IdxDeclareDepth}>3
+      \IndexDefineDef{####1}\fi}
+    \def\CD@ColAText{}
+    \def\CD@ColBText{Name}
+    \def\CD@ColCText{Werte}
+    \def\CD@ColDText{Beschreibung}
+    }
+  \def\GlobalFunctions{\SubClassSection{Definition globaler
+    Funktionen}}
+  \def\InternalStruct{\SubClassSection{Interne Struktur}}
+  \def\Examples{\SubClassSection{Beispiele}}
+%% Unter--"Uberschriften
+  \def\Public{\SubSubClassSection{\"Offentlich}
+    \ShortMethodDef{\Public}}
+  \def\Private{\SubSubClassSection{Privat}
+    \ShortMethodDef{}}
+  \def\Extern{\SubSubClassSection{Extern}
+    \ShortMethodDef{}}
+  \def\Protected{\SubSubClassSection{Protected}
+    \ShortMethodDef{\Protected}}
+%% "Uberschriften f"ur Methoden (2 Parameter)
+  \def\Constructor##1##2{\MethodHead{Konstruktor}{##1}{##2}}
+  \def\Destructor##1##2{\MethodHead{Destruktor}{##1}{##2}}
+  \def\Method##1##2{\MethodHead{Methode}{##1}{##2}}
+  \def\Function##1##2{\MethodHead{Funktion}{##1}{##2}}
+  \def\skipBrace]{}
+  \def\MethodHead##1##2##3{%
+    \paragraph*{##1:}\settowidth{\CD@DummyLen}{\bf ##1:\quad}%
+      \setlength{\CD@BoxWidth}{\textwidth}\addtolength{\CD@BoxWidth}{-\CD@DummyLen}%
+      \begin{minipage}[t]{\CD@BoxWidth}%[
+        \bf\NameParam##2\\]\end{minipage}\nopagebreak\vskip-1ex%
+    \ifx\CD@empty##3\CD@empty%
+    \else\settowidth{\CD@DummyLen}{\hspace*{6em}}%
+         \setlength{\CD@BoxWidth}{\textwidth}%
+         \addtolength{\CD@BoxWidth}{-\CD@DummyLen}%
+       \hspace*{3em}\parbox[t]{\CD@BoxWidth}{\em ##3}\nopagebreak\vskip1ex\fi}
+
+%% \History zur Textausgabe vorbereiten und ggf. Liste2 zur Ausgabe am
+%% Ende der Klasse in \InternHist speichern
+  \ifnum \value{NoHist}=0
+    \def\InternHist{#4}
+  \else \def\InternHist{} \fi
+  }
+
+%% Klasse beenden, \InternHist ausgeben
+\def\endClass{\immediate\write\ClassViewFile{\noexpand\EndClass}\relax%
+  \ifnum \value{IdxDeclareDepth}>0
+    \IndexClassDefPost{\ClassName}\fi
+    \ifx\CD@empty\InternHist \else
+    \def\History##1##2##3##4{\Item{##1}{##2}{##3}{##4}}
+    \SubClassSection{History}
+    \DataDescrHead[Datum][]{Version}{}{Name}{}{\"Anderung}{\bf}
+    \begin{DataDescript}[\CD@ColAMax]{\CD@ColBMax}{\CD@ColCMax}
+      \InternHist \end{DataDescript}
+    \fi
+     %\end{TabDescript}
+  \clearpage}
+%%---------------------------------------------------------------------
+
+%%---------------------------------------------------------------------
+%% Umgebung: Tree  (1 Paramater)
+%% Z"ahler f"ur Baumtiefe
+\newcounter{TreeDepth}
+\newenvironment{Tree}[1]{\begin{samepage}\thicklines
+  \setcounter{TreeDepth}{0}
+  \newcommand{\Node}[1]{
+    \unitlength2ex\begin{picture}(0,1.7)
+      \put(0,0.7){\begin{picture}(0,0)
+        \put(0.5,0){\line(1,0){1.7}}
+        \put(0.5,0){\line(0,1){0.9}}
+        \put(2.5,0){\makebox(0,0)[l]{##1}}
+        \end{picture}}
+      \end{picture}\\
+      \newcommand{\SubTree}{\stepcounter{TreeDepth}}
+      \newcommand{\TreeEnd}{\addtocounter{TreeDepth}{-1}}
+      \renewcommand{\Node}[1]{
+        \unitlength2ex\begin{picture}(0,1.5)
+          \multiput(0.5,0.7)(1,0){\value{TreeDepth}}{\line(0,1){1.6}}
+          \put(\value{TreeDepth},0.7){\begin{picture}(0,0)
+            \put(0.5,0){\line(1,0){1.7}}
+            \put(0.5,0){\line(0,1){1.6}}
+            \put(2.5,0){\makebox(0,0)[l]{####1}}
+            \end{picture}}
+          \end{picture}\\
+        }
+      }
+{#1}\\}{\end{samepage}}
+
+%%---------------------------------------------------------------------
+%% Hilfskommandos f"ur DataDescript
+%% \DataTabCheck f"ur den automatischen Seitenumbruch
+\def\DataTabCheck#1{%
+  \settowidth{\global\CD@DummyLen}{#1}%
+  \divide \CD@DummyLen by \CD@ColDLen%
+  \setcounter{CD@cntDummy}{\CD@DummyLen}%
+  \ifnum \value{CD@cntDummy}<\value{MaxMoreCnt}%
+  \setcounter{CD@cntDummy}{\value{MaxMoreCnt}}\fi%
+  \addtocounter{CD@cntDummy}{3}%
+  \ifnum \value{CD@cntDummy} >\value{CD@LinesLeft}%
+    \ifnum \value{NewDataTable}>1%
+      \setlength{\CD@PagePos}{\textheight}%
+      \CD@DummyLen=\baselineskip%
+      \divide\CD@PagePos by \CD@DummyLen%
+      \setcounter{CD@LinesLeft}{\CD@PagePos}%
+      \addtocounter{CD@LinesLeft}{-4}%
+      \setcounter{CD@PageCorrector}{1}%
+    \else\setcounter{CD@cntDummy}{\value{page}}%
+      \addtocounter{CD@cntDummy}{\value{CD@PageCorrector}}%
+      \stepcounter{CD@cntDummy}\\ \hline%
+      \multicolumn{\value{CD@NoOfCols}}{r}{\footnotesize Fortsetzung auf Seite \arabic{CD@cntDummy}}\\%
+      \end{tabular}\setcounter{CD@LastPage}{\value{page}}%
+      \addtocounter{CD@LastPage}{\value{CD@PageCorrector}}\setcounter{NewDataTable}{1}%
+      \setcounter{CD@PageCorrector}{0}%
+      \newpage\CD@CalcLinesLeft%
+      \ifnum \value{CD@NoOfCols}=3%
+        \begin{tabular}{|p{\CD@ColBLen}|p{\CD@ColCLen}|l|}%
+        \multicolumn{3}{l}{\footnotesize Fortsetzung von Seite \arabic{CD@LastPage}}\\ \hline%
+      \else%
+        \begin{tabular}{|p{\CD@ColALen}|p{\CD@ColBLen}|p{\CD@ColCLen}|l|}%
+        \multicolumn{3}{l}{\footnotesize Fortsetzung von Seite \arabic{CD@LastPage}}\\ \hline%
+      \fi%
+      \addtocounter{CD@LinesLeft}{-2}\Headline%
+    \fi\fi%
+  \ifnum\value{NewDataTable}>1%
+    \ifnum\value{CD@NoOfCols}=3%
+      \begin{tabular}{|p{\CD@ColBLen}|p{\CD@ColCLen}|l|}\hline%
+    \else%
+      \begin{tabular}{|p{\CD@ColALen}|p{\CD@ColBLen}|p{\CD@ColCLen}|l|}\hline%
+    \fi \addtocounter{CD@LinesLeft}{-2}\Headline%
+  \else%
+  \fi}
+
+%% DataDescrHead  zum Setzen des Tabellenkopfes
+\def\DataDescrHead{\CD@ifnextchar [{\DDHEAD}{\DDHEAD[][]}}
+\def\DDHEAD[#1][#2]#3#4#5#6#7#8{\def\CD@ColALetter##1{{#2##1}}
+  \def\CD@ColBLetter##1{{#4##1}}
+  \def\CD@ColCLetter##1{{#6##1}}
+  \def\CD@ColDXLetter##1{{#8##1}}
+  \def\CD@ColAText{#1}
+  \def\CD@ColBText{#3}
+  \def\CD@ColCText{#5}
+  \def\CD@ColDText{#7}}
+
+%%---------------------------------------------------------------------
+%% Umgebung: DataDescript (2 Parameter)
+\newcounter{NewDataTable}
+\def\CD@ColAMemo{}
+\def\CD@ColBMemo{}
+\def\CD@ColCMemo{}
+\def\CD@ColAEntry{}
+\def\CD@ColBEntry{}
+\def\CD@ColCEntry{}
+\newcounter{CounterA}\newcounter{CounterB}
+\newcounter{MoreCnt}
+\newcounter{MaxMoreCnt}
+%% Spalte horizontal trennen mit \More
+\def\More{\setcounter{CounterA}{\linewidth}%
+  \setcounter{CounterB}{\tabcolsep}%
+  \stepcounter{MoreCnt}%
+  \addtocounter{CounterA}{\tabcolsep}%
+  \addtocounter{CounterA}{\tabcolsep}%
+  \vspace{-1.8ex}\newline\unitlength0.00001pt%
+  \begin{picture}(0,0)%
+  \put(-\value{CounterB},0){\line(1,0){\value{CounterA}}}%
+  \end{picture}\vspace{-.7ex}\newline}%
+
+  \def\JumpOver]]{}%
+
+%% alle \More im Parameter z"ahlen (Ergebnis in MoreCnt)
+\def\CountMore#1{\setcounter{MoreCnt}{0}\FindMore #1\More]]}
+\def\FindMore#1\More{\CD@ifnextchar]{\JumpOver}%
+  {\stepcounter{MoreCnt}\FindMore}}
+
+%% letzten Parameter zerlegen (optionale Parameter erkennen)
+  \def\OptParam{\CD@ifnextchar[{\OptDescript}{\NoOptDescript}}%
+  \def\OptDescript[#1]#2[{\addtocounter{CD@LinesLeft}{-1}%
+    \ifx \CD@empty{#1#2}\CD@empty%
+    \else%
+    {\def\footnote##1{}%
+    \settowidth{\global\CD@DummyLen}{\CD@ColDXLetter{#1}{\bf:} #2}}%
+    \ifnum \CD@DummyLen >\CD@ColDLen%
+      \setlength{\CD@DummyLen}{\CD@ColDLen}%
+      \addtolength{\CD@DummyLen}{-1cm}%
+      \begin{minipage}[t]{\CD@ColDLen}%
+        \parshape 2 0mm \CD@ColDLen 1cm \CD@DummyLen%
+        \rule[2ex]{0mm}{0mm}\CD@ColDXLetter{#1}{\bf:} \hfill #2\rule[-.9ex]{0mm}{0mm}\end{minipage}%
+      \settowidth{\CD@DummyLen}{\CD@ColDXLetter{#1}{\bf:} #2}%
+      \divide \CD@DummyLen by \CD@ColDLen%
+      \ifnum \CD@DummyLen<\value{MaxMoreCnt}%
+        \addtocounter{CD@LinesLeft}{-\value{MaxMoreCnt}}%
+      \else \addtocounter{CD@LinesLeft}{-\CD@DummyLen}\fi%
+    \else \rule[2ex]{0mm}{0mm}\CD@ColDXLetter{#1}{\bf:} #2\rule[-.9ex]{0mm}{0mm}%
+      \addtocounter{CD@LinesLeft}{-\value{MaxMoreCnt}}%
+    \fi\fi \CD@ifnextchar]{\JumpOver}{\newline \OptDescript[}}%
+
+  \def\NoOptDescript#1[{\addtocounter{CD@LinesLeft}{-1}%
+    \ifx \CD@empty#1\CD@empty%
+    \else%
+      {\def\footnote##1{}\settowidth{\global\CD@DummyLen}{#1}}%
+      \ifnum \CD@DummyLen >\CD@ColDLen%
+        \divide \CD@DummyLen by \CD@ColDLen%
+        \setcounter{CD@cntDummy}{\CD@DummyLen}%
+        \ifnum \CD@DummyLen<\value{MaxMoreCnt}%
+          \addtocounter{CD@LinesLeft}{-\value{MaxMoreCnt}}%
+        \else \addtocounter{CD@LinesLeft}{-\CD@DummyLen}\fi%
+        \begin{minipage}[t]{\CD@ColDLen}%
+          \rule[2ex]{0mm}{0mm}#1\rule[-.9ex]{0mm}{0mm}\end{minipage}%
+      \else \rule[2ex]{0mm}{0mm}#1\rule[-.9ex]{0mm}{0mm}%
+        \addtocounter{CD@LinesLeft}{-\value{MaxMoreCnt}}%
+      \fi%
+      \fi\CD@ifnextchar]{\JumpOver}{\newline \OptDescript[}}
+%% endlich: DataDescript
+%% Anzahl Parameter: 3 oder 4?
+\def\DataDescript{\begin{center}\CD@ifnextchar[{\DATA}{\DATA[]}}
+\def\DATA[#1]#2#3{% Spaltenbreiten berechnen
+  \setcounter{CD@PageCorrector}{0}%
+  \global\def\CD@ColAMemo{}\global\def\CD@ColBMemo{}\global\def\CD@ColCMemo{}%
+  \settowidth{\CD@ColALen}{\CD@ColALetter{#1}}%
+  \settowidth{\CD@DummyLen}{\CD@ColAText}%
+  \ifdim \CD@DummyLen >\CD@ColALen%                 % Spaltentitel l"anger als
+    \setlength{\CD@ColALen}{\CD@DummyLen}\fi%       % l"angster Spalteneintrag?
+  \settowidth{\CD@ColBLen}{\CD@ColBLetter{#2}}%
+  \settowidth{\CD@DummyLen}{\CD@ColBText}%
+  \ifdim \CD@DummyLen >\CD@ColBLen%                 % Spaltentitel l"anger als
+    \setlength{\CD@ColBLen}{\CD@DummyLen}\fi%       % l"angster Spalteneintrag?
+  \settowidth{\CD@ColCLen}{\CD@ColCLetter{#3}}%
+  \settowidth{\CD@DummyLen}{\CD@ColCText}%
+  \ifdim \CD@DummyLen >\CD@ColCLen%
+    \setlength{\CD@ColCLen}{\CD@DummyLen}\fi%
+  \CD@CalcLinesLeft%
+  \setcounter{MoreCnt}{0}%
+  \ifx \CD@empty#1\CD@empty%
+    \setcounter{CD@NoOfCols}{3}%
+    \setlength{\CD@ColDLen}{\textwidth}%
+    \addtolength{\CD@ColDLen}{-\CD@ColBLen}%
+    \addtolength{\CD@ColDLen}{-\CD@ColCLen}%     % maximale Breite der letzten
+    \addtolength{\CD@ColDLen}{-6\tabcolsep}%     % Spalte berechnet
+    \addtolength{\CD@ColDLen}{-1\arrayrulewidth}%
+    \def\Item##1##2##3{%
+      \global\def\CD@ColBEntry{##1}\global\def\CD@ColCEntry{##2}%
+      %\DataTabEnd{##3}%
+      \setcounter{MaxMoreCnt}{0}\CountMore{##1}%
+      \setcounter{MaxMoreCnt}{\value{MoreCnt}}%
+      \CountMore{##2}\ifnum\value{MaxMoreCnt}<\value{MoreCnt}%
+      \setcounter{MaxMoreCnt}{\value{MoreCnt}}\fi%
+      \DataTabCheck{##3}%
+      \ifnum \value{NewDataTable}>0%
+        \\ \hline\hline\ignorespaces%
+        \ifx \CD@empty##1\CD@empty%
+          \global\def\CD@ColBEntry{\CD@ColBMemo}%
+          \ifx \CD@empty##2\CD@empty%
+            \global\def\CD@ColCEntry{\CD@ColCMemo}\fi\fi\ignorespaces%
+      \fi\ifnum \value{NewDataTable}=2%
+        \global\def\CD@ColBMemo{##1}\global\def\CD@ColCMemo{##2}%
+      \fi\ifnum \value{NewDataTable}<1%
+        \ifx \CD@empty##1\CD@empty%
+          \ifx \CD@empty##2\CD@empty \\ \cline{3-3}%
+          \else \global\def\CD@ColCMemo{##2}\\ \cline{2-3} \fi%
+        \else \global\def\CD@ColBMemo{##1}\global\def\CD@ColCMemo{##2}%
+          \\ \hline \fi\fi\ignorespaces%
+      \CD@ColBLetter{\CD@ColBEntry} & \CD@ColCLetter{\CD@ColCEntry} &%
+      \setcounter{NewDataTable}{0}%
+      \settowidth{\CD@DummyLen}{##3}%
+      \ifdim \CD@DummyLen>\CD@ColDLen%
+        \begin{minipage}[t]{\CD@ColDLen}%
+          \OptParam##3\rule{0mm}{0mm}[]]\end{minipage}%
+      \else\begin{minipage}[t]{\CD@DummyLen}%
+          \OptParam##3\rule{0mm}{0mm}[]]\end{minipage}%
+      \fi \ignorespaces}%
+    \global\def\Headline{\CD@ColBText & \CD@ColCText & \CD@ColDText}%
+    \setcounter{NewDataTable}{2}%\DataTabHead%
+  \else%
+    \setcounter{CD@NoOfCols}{4}%
+    \setlength{\CD@ColDLen}{\textwidth}%
+    \addtolength{\CD@ColDLen}{-\CD@ColALen}%
+    \addtolength{\CD@ColDLen}{-\CD@ColBLen}%
+    \addtolength{\CD@ColDLen}{-\CD@ColCLen}%     % maximale Breite der letzten
+    \addtolength{\CD@ColDLen}{-8\tabcolsep}%     % Spalte berechnet
+    \addtolength{\CD@ColDLen}{-1\arrayrulewidth}%
+    \def\Item##1##2##3##4{%
+      \global\def\CD@ColAEntry{##1}\global\def\CD@ColBEntry{##2}%
+      \global\def\CD@ColCEntry{##3}%
+      \setcounter{MaxMoreCnt}{0}\CountMore{##1}%
+      \setcounter{MaxMoreCnt}{\value{MoreCnt}}%
+      \CountMore{##2}\ifnum\value{MaxMoreCnt}<\value{MoreCnt}%
+      \setcounter{MaxMoreCnt}{\value{MoreCnt}}\fi%
+      \CountMore{##3}\ifnum\value{MaxMoreCnt}<\value{MoreCnt}%
+      \setcounter{MaxMoreCnt}{\value{MoreCnt}}\fi%
+      \DataTabCheck{##4}%
+      \ifnum \value{NewDataTable}>0%
+        \\ \hline\hline\ignorespaces%
+        \ifx \CD@empty##1\CD@empty%
+          \global\def\CD@ColAEntry{\CD@ColAMemo}%
+          \ifx \CD@empty##2\CD@empty%
+            \global\def\CD@ColBEntry{\CD@ColBMemo}%
+            \ifx \CD@empty##3\CD@empty%
+              \global\def\CD@ColCEntry{\CD@ColCMemo}\fi\fi\fi\ignorespaces%
+      \fi\ifnum \value{NewDataTable}=2%
+        \global\def\CD@ColBMemo{##1}\global\def\CD@ColCMemo{##2}%
+        \global\def\CD@ColDMemo{##3}%
+      \fi \ifnum \value{NewDataTable}=0%
+        \ifx \CD@empty##1\CD@empty%
+          \ifx \CD@empty##2\CD@empty%
+            \ifx \CD@empty##3\CD@empty \\ \cline{4-4}%
+            \else \global\def\CD@ColCMemo{##3}\\ \cline{3-4} \fi%
+          \else \global\def\CD@ColBMemo{##2}\global\def\CD@ColCMemo{##3}%
+            \\ \cline{2-4} \fi%
+        \else \global\def\CD@ColBMemo{##2}\global\def\CD@ColCMemo{##3}%
+          \global\def\CD@ColAMemo{##1}\\ \hline \fi\fi%
+      \CD@ColALetter{\CD@ColAEntry} & \CD@ColBLetter{\CD@ColBEntry}&%
+      \CD@ColCLetter{\CD@ColCEntry} &%
+      \setcounter{NewDataTable}{0}%
+      \settowidth{\global\CD@DummyLen}{##4}%
+      \ifdim \CD@DummyLen>\CD@ColDLen%
+        \begin{minipage}[t]{\CD@ColDLen}%
+          \OptParam##4\rule{0mm}{0mm}[]]\end{minipage}%
+      \else\begin{minipage}[t]{\CD@DummyLen}%
+          \OptParam##4\rule{0mm}{0mm}[]]\end{minipage}%
+      \fi \ignorespaces}%
+    \global\def\Headline{\CD@ColAText & \CD@ColBText & \CD@ColCText & \CD@ColDText}%
+    \setcounter{NewDataTable}{2}%\DataTabHead%
+  \fi%
+}
+\def\endDataDescript{\\ \hline \end{tabular}\end{center}}
+
+%%---------------------------------------------------------------------
+%% Sonstige kleine n"utzliche Befehle
+%%---------------------------------------------------------------------
+%% \Tilde  erzeugt eine Tilde  (~ erzeugt Akzente o."A.)
+\def\Tilde{\char126}
+
+%% \_ erzeugt einen Unterstrich (_), sch"oner als das TeX-Original
+\def\_{\underline{\hspace{1ex}}\nobreak\hspace{.2ex}}
+
+%% \Degree  erzeugt ein Grad-Symbol
+\def\Degree{\char023}
+
+%% \Bslash  erzeugt einen Backslash
+\def\Bslash{{\tt\char92\/}}
+
+%% \Ptr  erzeugt einen Pointer '->'
+\def\Ptr{\protect\nobreak\protect\mbox{\tt -\hskip-.1em\char062}\protect\nobreak}
+
+%% \In   erzeugt einen Eingabe-Operator '>>'
+\def\In{\protect\nobreak\protect\mbox{\tt\char062\hskip-.1em\char062}\protect\nobreak}
+
+%% \Out  erzeugt einen Ausgabe-Operator '<<'
+\def\Out{\protect\nobreak\protect\mbox{\tt\char060\hskip-.1em\char060}\protect\nobreak}
+
+%%---------------------------------------------------------------------
+%% Befehle f"ur hervorgehobene Textabschnitte
+\def\CR#1{\niCR{#1}%         % ClassRef
+  \ifnum \value{IdxRefDepth}>0 \IndexClassRef{#1}\fi}
+\def\niCR#1{{\sl #1}}%       % ClassRef (ohne Indexeintrag)
+\def\MR#1{\niMR{#1}%         % MethodRef
+  \ifnum \value{IdxRefDepth}>1 \IndexMethodRef{#1}\fi}
+\def\niMR#1{{\em #1}}%       % MethodRef (ohne Indexeintrag)
+\def\KW#1{{\sc #1}}          % KeyWord
+\def\ME#1{{\sc #1}}          % MenuEntry
+\def\VN#1{\niVN{#1}%         % VariableName
+  \ifnum \value{IdxRefDepth}>3 \IndexVarRef{#1}\fi}
+\def\niVN#1{{\sf #1}}        % VariableName (ohne Indexeintrag)
+\def\TN#1{\niTN{#1}%         % TypName
+  \ifnum \value{IdxRefDepth}>2 \IndexTypeRef{#1}\fi}
+\def\niTN#1{{\sf #1}}        % TypName (ohne Indexeintrag)
+\def\FN#1{{\tt #1}}          % FileName
+\def\IO#1{{\tt #1}}          % InputOutput
+\def\ON#1{{\sl #1}}          % ObjectName
+\def\PC#1{{\bf #1}}          % ProcedureCall
+\def\RR#1{\mbox{$<$}#1\mbox{$>$}}  % ReplacementRef
+\def\EM#1{{\em #1}}          % Texthervorhebung (emphasized)
+\def\BF#1{{\bf #1}}          % Texthervorhebung (fett)
+\def\UL#1{\underline{#1}}    % Unterstreichen
+%% \KEY{TASTE}
+%% erzeugt einen Kasten mit abgerundeten Ecken um TASTE herum
+\def\KEY#1{\settowidth{\CD@BoxWidth}{#1}
+  \setlength{\unitlength}{1ex}%
+  \mbox{\rm\begin{picture}(0,2.3)
+  \put(0.2,.58){\oval(1.5,2.8)[l]{}}
+  \end{picture}%
+  \rule[1.95ex]{\CD@BoxWidth}{.3pt}\hspace{-\CD@BoxWidth}#1%
+  \hspace{-\CD@BoxWidth}\rule[-.90ex]{\CD@BoxWidth}{.75pt}%
+  \begin{picture}(.8,2.3)\thicklines
+  \put(-.2,.58){\oval(1.5,2.75)[r]{}}
+  \end{picture}}}
+
+%%
+%% ----- Befehl f"ur umrahmten Textabschnitt
+%%
+\def\Important#1{\settowidth{\global\CD@ParamLen}{#1}%
+  \setlength{\CD@DummyLen}{\textwidth}\addtolength{\CD@DummyLen}{-2\fboxsep}%
+  \addtolength{\CD@DummyLen}{-2\fboxrule}%
+  \ifdim\CD@ParamLen>\CD@DummyLen\setlength{\CD@ParamLen}{\CD@DummyLen}\fi%
+  \begin{center}\fbox{\begin{minipage}[b]{\CD@ParamLen}#1\end{minipage}}%
+\end{center}}
+
+%%
+%% ----- Einbinden einer Grafik im Postscriptformat:
+%%
+\def\postscript#1#2#3#4{\begin{figure}[htb]\begin{center}{~\mbox{\epsffile{#1}}}\protect\caption[#2]{\label{#4}#3}\end{center}\end{figure}}
+
+%%---------------------------------------------------------------------
+%% Umgebung zur Erzeugung von formatiertem Pseudocode
+%%
+%% \begin{PseudoCode}[TITLE]
+%% \While {CONDITION} TEXT \EndWhile
+%% \For {CONDITION} TEXT \EndFor
+%% \Repeat TEXT \Until {CONDITION}
+%% \If {CONDITION} TEXT \Elsif {CONDITION} TEXT ... \Else TEXT \EndIf
+%% \Switch [CONDITION] \Case{CONTITION} TEXT ... \Default TEXT \EndSwitch
+%% \Call {PROCEDURE}
+%% \end{PseudoCode}
+
+%% Kommandos zur Erzeugung der Schluesselwoerter:
+\def\PKey{\bf}
+\def\TitleA{{\PKey{procedure }}}\def\TitleB{}
+\def\WhileA{{\PKey{while (}}}\def\WhileB{{\PKey{) do}}}
+  \def\WhileC{{\PKey{od}}}
+\def\ForA{{\PKey{for (}}}\def\ForB{{\PKey{) do}}}
+  \def\ForC{{\PKey{od}}}
+\def\RepeatA{{\PKey{repeat}}}\def\RepeatB{{\PKey{until (}}}
+  \def\RepeatC{{\PKey{)}}}
+\def\IfA{{\PKey{if (}}}\def\IfB{{\PKey{) then}}}
+  \def\IfC{{\PKey{fi}}}
+\def\ElsifA{{\PKey{elsif (}}}\def\ElsifB{{\PKey{) then}}}
+\def\ElseA{{\PKey{else}}}
+\def\SwitchAA{{\PKey{switch \{}}}
+\def\SwitchBA{{\PKey{switch (}}}\def\SwitchBB{{\PKey{) \{}}}
+\def\SwitchC{{\PKey{\}}}}
+\def\CaseA{{\PKey{case (}}}\def\CaseB{{\PKey{)}}}
+\def\DefaultA{{\PKey{default}}}
+\def\CallA{{\PKey{call }}}\def\CallB{}
+
+%%----------------------
+%% Pseudo-Code Umgebung
+%%----------------------
+\def\PseudoCode{\CD@ifnextchar [{\PSEUDO}{\PSEUDO[]}}
+\def\PSEUDO[#1]{
+  \global\newcount\c@MARKno
+  \c@MARKno=0
+  \ifx\CD@empty#1\CD@empty\else {\par\TitleA#1\TitleB\vspace{\parskip}}\fi
+  \parskip0pt
+
+  \def\SETmark{}
+  \def\newline{\SETmark\par\def\SETmark{}}
+
+%% Pseudo-Code Befehle
+%% -------------------
+  \def\While##1{\newline\WhileA##1\WhileB\newline\DEEPER}
+  \def\EndWhile{\end{list}\WhileC\newline}
+
+  \def\For##1{\newline\ForA##1\ForB\newline\DEEPER}
+  \def\EndFor{\end{list}\ForC\newline}
+
+  \def\Repeat{\newline\RepeatA\DEEPER}
+  \def\Until##1{\newline\end{list}\RepeatB##1\RepeatC\newline}
+
+  \def\If##1{\newline\IfA##1\IfB\newline\DEEPER}
+  \def\Elsif##1{\newline\end{list}\ElsifA##1\ElsifB
+    \newline\DEEPER}
+  \def\Else{\newline\end{list}\ElseA\newline\DEEPER}
+  \def\EndIf{\newline\end{list}\IfC\newline}
+
+  \def\Switch{\def\INswitch{\def\INswitch{\end{list}}}
+    \CD@ifnextchar [{\SWITCHby}{\DIRECTswitch}}
+  \def\DIRECTswitch{\newline\SwitchAA\DEEPER}
+  \def\SWITCHby[##1]{\newline\SwitchBA##1\SwitchBB\newline\DEEPER}
+  \def\Case##1{\newline\INswitch\CaseA##1\CaseB\newline\DEEPER}
+  \def\Default{\newline\INswitch\DefaultA\newline\DEEPER}
+  \def\EndSwitch{\newline\INswitch\end{list}\SwitchC\newline}
+
+  \def\Call##1{\newline\CallA##1\CallB\newline}
+
+%% Befehl fuer Art der Markierung
+  \def\theMARKno{(\arabic{MARKno})}
+
+%% Befehl zur Markierung von Zeilen im Pseudocode (mit oder ohne Label)
+  \def\Mark{\CD@ifnextchar [{\REFmark}{\REFmark[]}}
+  \def\REFmark[##1]{\def\SETmark{\global\refstepcounter{MARKno}
+    \edef\@currentlabel{\csname theMARKno\endcsname}%
+    \ifx\CD@empty##1\CD@empty\else \label{##1}\fi
+    \hfill{\bf\theMARKno}}}
+}
+
+\def\endPseudoCode{\newline}
+
+%%---------------------------------------------------------------------------
+%% interner Befehl fuer Einrueckungen mittels der List-Umgebung
+%%---------------------------------------------------------------------------
+  \def\DEEPER{\begin{list}{}{%
+    \setlength\itemsep{0pt}\setlength\parsep{0pt}%
+    \setlength\parskip{0pt}\setlength\topsep{0pt}%
+    \setlength\listparindent{0em}\setlength\leftmargin{1.5em}%
+    \setlength\itemindent{0em}\setlength\partopsep{0pt}}%
+    \item[]}
+%%---------------------------------------------------------------------------
+
+%%---------------------------------------------------------------------------
+%% Befehl zur Ermittlung der Anzahl der Elemente einer durch Komma getrennten
+%% Liste von Eintraegen
+%%---------------------------------------------------------------------------
+\def\NoOfParams#1{\setcounter{CD@ParamCount}{0}%
+  \CntParams#1,[]]\arabic{CD@ParamCount}}
+\def\CntParams#1,#2[]]{\ifx \CD@empty#2\CD@empty
+    \ifx \CD@empty#1\CD@empty
+    \else \stepcounter{CD@ParamCount}\fi
+  \else \stepcounter{CD@ParamCount}\CntParams#2[]]\fi }
+%%---------------------------------------------------------------------------
+
+%%---------------------------------------------------------------------------
+%% Befehl zur Ausgabe der Kurzuebersicht ueber Klassen & Methoden
+%%---------------------------------------------------------------------------
+\def\ClassOverview{\CD@ifnextchar({\CD@Overview}{\CD@Overview()}}
+\def\CD@Overview(#1){\CD@ifnextchar[{\CD@COV{#1}}{\CD@COV{#1}[]}}
+\def\CD@COV#1[#2]{{\ifx \CD@empty#2\CD@empty%
+    \immediate\closeout\ClassViewFile%
+    \def\CD@COFname{\jobname.cof}%
+  \else \def\CD@COFname{#2}\fi
+  \openin1=\CD@COFname\relax
+  \ifeof1 \closein1\typeout{no class-overview-file '\CD@COFname'}\else
+    \closein1
+    \ifx\CD@empty#1\CD@empty
+      \def\CD@Headline{\ClassSection{"Ubersicht "uber die Klassen}}
+      \def\rightmark{\theClassSection{} "Ubersicht "uber die Klassen}
+      \def\leftmark{\theClassSection{} "Ubersicht "uber die Klassen}
+    \else%
+      \def\CD@Headline{\ClassSection{#1}}
+      \def\rightmark{\theClassSection{} #1}
+      \def\leftmark{\theClassSection{} #1}
+    \fi%
+    \newcounter{CD@ViewState}
+    \setlength{\CD@DummyLen}{\textwidth}%
+    \addtolength{\CD@DummyLen}{-1\columnsep}%
+    \setlength{\CD@BoxWidth}{.5\CD@DummyLen}%
+    \def\Class##1##2{\rule{\CD@BoxWidth}{.5pt}\vskip1.5ex%
+      {\large\niCR{##1}}%
+      \global\setcounter{CD@ViewState}{0}%
+      \hangindent=5em\hangafter=1%
+      \ifx\CD@empty##2\CD@empty\else \quad$\rightarrow$ ##2\fi\vskip.5ex\par}
+    \def\Father##1{\hspace{2em}Basisklasse:
+      \settowidth{\CD@DummyLen}{Basisklasse: }%
+      \addtolength{\CD@DummyLen}{2em}\hangafter=1 \hangindent=\CD@DummyLen%
+      \CR{##1}\par}
+    \def\Public##1##2{\ifnum\value{CD@ViewState}=1 \else%
+      \ifnum\value{CD@ViewState}>0\fi \hspace{2em}\"offentliche Methoden:
+      \par\fi\hangindent=5em\hangafter=1%
+      \global\setcounter{CD@ViewState}{1}\hspace{4em}\niMR{##1} (##2)\par}
+    \def\Protected##1##2{\ifnum\value{CD@ViewState}=2 \else%
+      \ifnum\value{CD@ViewState}>0 \fi \hspace{2em}gesch\"utzte Methoden:
+      \par\fi\hangindent=5em\hangafter=1%
+      \global\setcounter{CD@ViewState}{2}\hspace{4em}\niMR{##1} (##2)\par}
+    \def\EndClass{\ifnum\value{CD@ViewState}>0\fi%
+      \global\setcounter{CD@ViewState}{0}\par\vskip1.5ex%
+      \rule[2pt]{\CD@BoxWidth}{.5pt}\hskip-\CD@BoxWidth}
+    {\parskip0pt%
+     \if@twocolumn[\CD@Headline]\input{\CD@COFname}
+     \else\twocolumn[\CD@Headline]\input{\CD@COFname}\onecolumn\fi}
+  \fi}}
+
+\endinput
+%%
+%% End of file `ClassDoc.sty'.

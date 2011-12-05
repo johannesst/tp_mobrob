@@ -1,0 +1,301 @@
+\documentclass[a4paper]{report}
+\usepackage{a4}
+\usepackage{doku}
+\usepackage[ngerman]{babel}
+\usepackage{longtable}
+%\usepackage[draft]{graphicx}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{color}
+\usepackage[dvips]{epsfig}
+\usepackage{bbm}
+\usepackage[latin1]{inputenc}
+\usepackage{nomencl}
+\usepackage[normalem]{ulem}
+\newcommand{\ve}[1]{\mbox{\boldmath$#1$}}
+\newcommand{\ma}[1]{\mbox{\boldmath$#1$}}
+\newcommand{\eR}{\mbox{$\varepsilon I\;R$}}
+\renewcommand{\today}{10.Dezember 2011}
+
+\begin{document}
+
+\begin{titlepage}
+        \setcounter{page}{1}
+        \let\footnotesize\small
+        \let\footnoterule\relax
+        \headsep 1.5cm
+        \vskip -4cm
+        \centerline{\Huge\bf Technische Universit\"at Braunschweig}
+        \vskip 3.4cm
+        \begin{center}
+            \begin{minipage}[t][7cm][c]{13.5cm}
+                \begin{center}
+                    {\large{Teamprojekt}\par}
+                    \vskip 0.5cm
+		    {\LARGE\bf Koodinierte Ballsuche mit }
+                    \vskip 0.25cm
+                    {\LARGE\bf mobilen Robotern}
+                    \vskip 0.5cm
+                    {\Large\bf Martin Mikolas, Markus Reschke, Johannes
+		    Starosta}
+                    \vskip 0.25cm
+
+
+                    {\large\bf Betreuer:
+                    \begin{tabular}[t]{c}{René Iser}\end{tabular}}
+                    \vskip 0.75cm
+                    {\large\bf{\today}\par}
+                \end{center}
+            \end{minipage}
+        \end{center}
+        \vskip 1.5cm
+        \begin{figure}[h]
+            \begin{center}
+                \epsfig{file = TU-Logo.eps}
+            \end{center}
+        \end{figure}
+
+
+
+        \vskip 1cm
+        \centerline{\LARGE\bf Institut f\"ur Robotik und Prozessinformatik}
+            \vskip 1cm
+        \centerline{\LARGE\bf Prof.~Dr.~F.~Wahl}
+
+
+
+
+    \end{titlepage}
+
+    \declaration{den \today}
+
+    \setcounter{footnote}{0}
+    \pagenumbering{roman}
+    \begin{abstract}Bei der vorliegenden Ausarbeitung handelt es sich
+      um die Dokumentation unseres Teamprojektes zur ,,Koordinierten
+      Suche mit mobilen Robotern''. Wir werden zunächst die
+      Vorarbeiten vorstellen, auf denen wir ausbauten, bevor wir unser
+      System näher vorstellen. Zum Schluss folgt noch eine kritische
+      Bewertung unserer Ergebnisse.
+    \end{abstract}
+
+%    \raisebox{-12cm}{\hspace{5cm}\huge \textsc{To Loriot}}
+ %   \newpage
+
+%    \markright{Danksagungen}
+%    \quote{ { \bf \Large  Danksagungen } \originalTeX
+%    \\
+%    \\
+%    Unser Teamprojekt wäre nicht möglich gewesen, wenn wir nicht auf
+%    wesentliche Vorarbeiten hätten zirück
+%    I am very grateful to many people who helped me during my thesis in various
+%    manners.
+%    First, I wish to thank the entire staff of the Institute for Robotics and
+%    Process Control for their helpful discussions and the truly great working atmosphere.
+%    Particularly, I would like to thank Erich Kozlowski for his
+%    helpful advice and tremendous encouragement during my student jobs at the Institute
+%    and especially throughout this work.
+%    Moreover, I am indebted to my family and my friends for their overwhelming
+%    support throughout the last years.
+%    Furthermore, I wish to thank Hans Meiser and Birte Karalus for their advice on
+%    language issues.
+%    Finally, I would like to thank the Institut für Mathematische
+%    Stochastik, the Institute for Computational Mathematics, and the
+%    Institute for Communications Technology for their kind provision
+%    of literature.
+%    \\ } { Walter Horstmann }
+
+
+    \tableofcontents
+    \listoffigures
+    \listoftables
+    \newpage
+%     \begin{minipage}{16cm}
+%         {\bf \Large Nomenclature}
+%         \\\\\\
+
+%         {\bf \large Greek Letters\\\\}
+%         \begin{tabular}{ll}
+%                 $\ve{\alpha}$ & Vector denoting the angular acceleration of the sensor frame\\
+%                 $\alpha_{i}$ & DH-parameter\\
+%                 $\beta$ & Fudge factor employed in the APF and the DUKF\\
+%                 $\ve{\chi}$ & Noise sample function\\
+%                 $\Sigma$& $\Sigma$-points of the UKF to the true noise distribution\\
+%                 $\delta$ & Fudge factor\\
+%                 $\Delta$ & Variable denoting a difference\\
+%                 $\Delta \gamma$ & Angle of rotation around $\ve{\omega}$\\
+%                 $\Delta t$ & Interval between two sampling points\\
+%                 $\eta$ & Scaling parameter of the UKF\\
+%                 $\gamma$ & Influence factor of the Robbins-Monroe update scheme\\
+%                 $\lambda$ & Forgetting factor in the RLS algorithm; scaling parameter of the DUKF\\
+%                 $\omega$ & Vector denoting the angular velocity of the sensor frame\\
+%                 $\omega_{i}$ & Joint angular velocity\\
+%                 $^{i}\omega_{i}$ & Vector denoting the angular velocity vector of link $i$\\
+%                 $\ma{\Omega}$ & Matrix parameterizing a sinusoidal
+%                 trajectory\\
+%                 $\ve{\varphi}$ & Vector containing the inertial
+%                 parameters of a load\\
+%                 $\ve{\varphi^{dyn}}$ & Inertial parameter vector containing
+%                 all ten inertial parameters\\
+%                 $\ve{\varphi_{ext}}$ & Inertial parameter vector augmented by
+%                 the force/torque offsets\\
+%                 $\ve{\varphi^{sta}}$ & Inertial parameter vector containing
+%                 the mass and the products of the mass and the COM coordinates\\
+%                 $\rho$ & Fudge factor in the $MAD$ calculation\\
+%                 $\varsigma$ & Factor employed in trajectory
+%                 optimization\\
+%                 $\sigma$ & Variance of the prediction error; singular value\\
+%                 $\ve\sigma$ & $\Sigma$-points that predict the
+%                 measurements\\
+%                 $\ve\sigma$ & $\Sigma$-point that predict the
+%                 measurements\\
+%                 $\ve\sigma$ & $\Sigma$-point describing the state
+%                 and its prediction\\
+%                 $\tau$ & Threshold\\
+%                 $\theta$ & DH-parameter; fudge factor\\
+%                 $\ve{\upsilon_{k}^{i}}$ & Particle\\
+%                 $\xi_{i,k}$ & Factor weighting the sine part of
+%                 the sinusoidal joint angle function of joint $i$\\
+%                 $\zeta_{i,k}$ & Factor weighting the cosine part of
+%                 the sinusoidal joint angle function of joint $i$\\
+%             \end{tabular}
+%                 \end{minipage}
+% \begin{minipage}{16cm}
+%                 {\bf \Large Nomenclature}
+%                 \\\\\\
+%                 {\bf \large Roman Letters\\\\}
+%                 \begin{tabular}{ll}
+%                 $\ve{a}$ & Vector denoting the linear acceleration of the sensor frame\\
+%                 $a_{i}$ & DH-parameter\\
+%                 $\ma{B}$ & State transition matrix of the Kalman
+%                 filter\\
+%                 $\ve{c}$ & Coordinates of the center of mass of the load w.r.t. the sensor frame\\
+%                 $c(P)$ & Constraints function\\
+%                 $\ma{C}$ & Information matrix\\
+%                 $d_{i}$ & DH-parameter\\
+%                 $diag(\ma{X})$ & diagonal matrix with the elements of
+%                 $\ma{X}$ on its main diagonal\\
+%                 $e$ & Prediction error of the Kalman filter and
+%                 LS-based identification algorithms\\
+%                 $|\ve{e_{rel}}|$ & absolute value of the relative
+%                 parameter error\\
+%                 $E[x]$ & Expected value of $x$\\
+%                 $\ma{E}$ & Error matrix of the identification variables
+%                 according to error model B\\
+%                 $f$ & frequency\\
+%                 $f_{exc,i}$ & base frequency of superposed sinusoidal
+%                 functions describing the rotation of joint $i$\\
+%                 $f_{exc,min}$ & minimum base frequency of the manipulator joints\\
+%                 $f_{s}$ & Sampling frequency\\
+%                 $\ve{f}$ & Vector denoting the force exerted by the sensor on the load\\
+%                 $\ve{f_{o}}$ & Force offset\\
+%                 $\ma{F_{des}}$ & desired object frame\\
+%                 $\ma{F_{est}}$ & estimated object frame\\
+%                 $\ve{g}$ & Gravity vector w.r.t. to the sensor frame\\
+%                 $g_{0}$ & gravitational constant \\
+%                 $\ma{I}$ & Identity matrix\\
+%                 $\ma{J}$ &\begin{math}\ma{J}=\left(\begin{array}{lll}j_{xx} & j_{xy} & j_{xz}\\j_{xy} & j_{yy} & j_{yz}\\j_{xz} & j_{yz} & j_{zz}
+%                 \\\end{array}\right)\end{math}  Inertia matrix expressed w.r.t. the sensor coordinate frame\\
+%                 $\ma{J_{c}}$ & Inertia matrix expressed w.r.t. the center of mass
+%                         of the load\\
+%                 $\ma{J_{kk}}$ & Moment of inertia around the $k$-axis\\
+%                 $\ma{J_{kl}}$ & Product of inertia w.r.t. the
+%                     $k,l$-plane\\
+%                 $m$ & Mass of the load\\
+%                 $\ve{m}$ & Vector denoting the torque exerted by
+%                 the sensor on the load\\
+%                 $\ve{m_{o}}$ & Torque offset\\
+%                 $N$ & Variable denoting quantities\\
+%                 $orth(\ma{X})$ & Orthonormal basis of matrix X\\
+%                 $p(x)$ & probability that $x$ occurs\\
+%                 $\ve{p\;^{load,i}_{s}}$ & Point $i$ of the load
+%                 bounding box expressed w.r.t. the sensor frame\\
+%                 $\ma{P}$ & Error covariance matrix of the Kalman filter
+%                 and RLS-based methods\\
+%                 $q_{i}$ & Joint angle of joint $i$\\
+%                 $\dot{q}_{i}$ & Joint angular velocity of joint
+%                 $i$\\
+%                 $\ddot{q}_{i}$ & Joint angular acceleration of joint
+%                 $i$\\
+%                 $q_{i,0}$ & Initial joint angle of joint $i$\\
+%                 $q_{ii}$ & Element of the process noise covariance
+%                 matrix\\
+%                 $\ma{Q}$ & Process noise covariance matrix\\
+%                 $\ve{r}$ & Vector pointing from the origin of the base
+%                       reference frame to the center of mass of the
+%                       load\\
+%                 $^{j}_{i}\!R$ & rotation matrix relating the
+%                 frames $i$ and $j$\\
+%                 $r_{ii}$ & Element of the measurement noise covariance
+%                 matrix\\
+%                 $\ma{R}$ & Measurement noise covariance matrix\\
+%                 $s$ & sample standard deviation\\
+%                 $t$ & Point in time or period of time\\
+%                 $t_{acq}$ & Acquisition time of measurements for sensor resets\\
+%                 $t_{c}$ & control period of the position
+%                 controller\\
+%                 $t_{max}$ & maximum identification time\\
+%                 $t_{s}$ & Sampling period\\
+%                 \end{tabular}
+%                 \end{minipage}
+% \begin{minipage}{16cm}
+%                 {\bf \Large Nomenclature}
+%                 \\\\\\
+%                 {\bf \large Roman Letters\\\\}
+%                 \begin{tabular}{ll}
+%                 $t_{sta}$ & Period of time after which JR3 sensor
+%                 temperature has stabilized\\
+%                 $\ma{^{i}_{j}T}$ & homogeneous transformation matrix
+%                 relating frame $i$ and $j$\\
+%                 $\ma{U}$ & Left singular matrix\\
+%                 $\ve{v}$ & Measurement noise vector of the Kalman
+%                 filter\\
+%                 $\ma{V}$ & Right singular matrix\\
+%                 $\ve{w}$ & Process noise vector of the Kalman
+%                 filter\\
+%                 $\ma{W}$ & Instrumental variables matrix\\
+%                 $\ve{x}$ & State of the Kalman filter, the DUKF, and the APF\\
+%                 $\ve{y}$ & Measurement vector of the Kalman
+%                 filter\\
+%                 \end{tabular}
+%                 \end{minipage}
+
+\input{einleitung}%worum gehts?
+\input{hauptteil}%Wie haben wir die Aufgabe gelöst?
+                 %Softwarearchitektur! 
+                 % - client: inklusive SonarParticelFilter, Balldetection
+                 % - server: inklusive Bahnplanung und ggf. weiterer
+                 % Algorithmen
+                 %
+\input{evaluation}%Beschreibung einiger Versuche (sowohl erfolgreich),
+                  %als auch der fails (Lokalisierung nur in Mitte des
+                  %Raumes zuverlässig, Balldetection gibt
+                  %falsePositives wenn weißes Licht zuviele rote
+                  %Partikel enthält)
+\input{zusammenfassung} % Zusammenfassung halt :)
+
+
+ \begin{appendix}
+% dazu anhang mit installationsanleitung und ggf. weiteren Kram.
+
+\end{appendix}
+
+%literatur? Vielleicht die quelle des bahnplanungsalgorithmuses?
+%\begin{thebibliography}{99}
+%        \addcontentsline{toc}{chapter}{Bibliography}
+%        \bibitem[HORST06]{horst}\textsc{Horstmann, Werner}:
+%        \textsl{Das Fressverhalten der gemeinen Steinlaus bei Gegenlicht}.
+%        Springer, Berlin, March 2006.
+%
+%
+%\end{thebibliography}
+
+
+
+\end{document}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

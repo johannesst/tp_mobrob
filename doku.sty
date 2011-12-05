@@ -1,0 +1,326 @@
+%------------------------------------------------------------------------------
+%
+% iRP-Dokument-Style fuer Studien- & Diplomarbeiten
+% (c) 1992 C.Laloni
+%
+%------------------------------------------------------------------------------
+
+% Voreinstellung der Layoutparameter ------------------------------------------
+\parindent = 0pt
+
+\hoffset=0cm
+\oddsidemargin 0pt
+\evensidemargin 0pt
+\marginparwidth 2cm
+
+\marginparsep 10pt
+\topmargin -20pt
+\headheight 14pt
+\headsep 1.5cm
+%\footheight 12pt
+\footskip 30pt
+
+\textheight 22cm
+\textwidth 15.94cm
+\columnsep .733cm
+\columnseprule 0pt
+
+%------------------------------------------------------------------------------
+% Seitenlayout incl. Kopfzeile ------------------------------------------------
+%------------------------------------------------------------------------------
+%\if@twoside \def\ps@headings{\let\@mkboth\markboth
+%\def\@oddfoot{}\def\@evenfoot{}\def\@evenhead{\rm \thepage\hfil \sl
+%\leftmark}\def\@oddhead{\hbox{}\sl \rightmark \hfil
+%\rm\thepage}\def\chaptermark##1{\markboth {\uppercase{\ifnum \c@secnumdepth
+%>\m@ne
+% \@chapapp\ \thechapter. \ \fi ##1}}{}}\def\sectionmark##1{\markright
+%{\uppercase{\ifnum \c@secnumdepth >\z@
+% \thesection. \ \fi ##1}}}}
+%\else \def\ps@headings{\let\@mkboth\markboth
+%\def\@oddfoot{}\def\@evenfoot{}\def\@oddhead{\hbox {}\sl \rightmark \hfil
+%\rm\thepage}\def\chaptermark##1{\markright {\uppercase{\ifnum \c@secnumdepth
+%>\m@ne
+% \@chapapp\ \thechapter. \ \fi ##1}}}}
+%\fi
+% (report)
+\if@twoside
+    \def\ps@headings{%
+    \let\@mkboth\markboth\def\@oddfoot{}\def\@evenfoot{}\def\@evenhead{
+        \vbox to 0pt{%
+        \hbox to \textwidth{\rm \thepage\hfil \sl \leftmark}
+        \vskip3pt\hrule\vss}}
+        \def\@oddhead{
+        \vbox to 0pt{%
+        \hbox to\textwidth{\hbox{}\sl \rightmark \hfil \rm\thepage}
+        \vskip3pt\hrule\vss}}
+        \def\chaptermark##1{%
+        \markboth{ \ifnum \c@secnumdepth >\m@ne \ \thechapter\ \fi ##1}{}}
+    \def\sectionmark##1{%
+        \markright{ \ifnum \c@secnumdepth >\z@ \thesection\ \fi ##1}}}
+\else
+    \def\ps@headings{%
+        \let\@mkboth\markboth\def\@oddfoot{}\def\@evenfoot{}\def\@oddhead{%
+            \vbox to 0pt{%
+                \hbox to \textwidth{\hbox{}\sl \rightmark \hfil \bf\thepage}%
+                \vskip3pt\hrule\vss}}
+    \def\chaptermark##1{%
+        \markright{\ifnum \c@secnumdepth >\m@ne \ \thechapter\ \fi ##1}}}
+\fi
+\pagestyle{headings}
+
+% -----------------------------------------------------------------------------
+%\def\ftype@table{1}
+
+%------------------------------------------------------------------------------
+% Kapitelueberschriften neu setzen --------------------------------------------
+%------------------------------------------------------------------------------
+%\def\chapter{\clearpage \thispagestyle{plain} \global\@topnum\z@
+%\@afterindentfalse \secdef\@chapter\@schapter}
+% (report)
+\def\chapter{\clearpage \global\@topnum\z@
+\@afterindentfalse \secdef\@chapter\@schapter}
+
+%\def\@makechapterhead#1{ \vspace*{50pt} { \parindent 0pt \raggedright
+% \ifnum \c@secnumdepth >\m@ne \huge\bf \@chapapp{} \thechapter \par
+% \vskip 20pt \fi \Huge \bf #1\par
+% \nobreak \vskip 40pt } }
+% (rep11)
+\def\@makechapterhead#1{\vspace*{1cm}{\parindent 0pt \raggedright
+  \ifnum \c@secnumdepth >\m@ne \Large\bf\thechapter\ \
+  \fi \Large \bf #1 \par
+  \nobreak \vskip .5cm } }
+
+%\def\@makeschapterhead#1{ \vspace*{50pt} { \parindent 0pt \raggedright
+% \Huge \bf #1\par
+% \nobreak \vskip 40pt } }
+% (rep11)
+\def\@makeschapterhead#1{ \vspace*{1cm} { \parindent 0pt \raggedright
+ \Large \bf #1 \par
+ \nobreak \vskip .5cm  } }
+
+%------------------------------------------------------------------------------
+% -----------------------------------------------------------------------------
+%------------------------------------------------------------------------------
+%\def\part{\cleardoublepage \thispagestyle{plain} \if@twocolumn \onecolumn
+%\@tempswatrue \else \@tempswafalse \fi \hbox{}\vfil \secdef\@part\@spart}
+\def\part{\cleardoublepage \thispagestyle{plain} \if@twocolumn \onecolumn
+\@tempswatrue \else \@tempswafalse \fi \hbox{}\vfil
+\bgroup \centering \secdef\@part\@spart}
+
+%\def\@part[#1]#2{\ifnum \c@secnumdepth >-2\relax \refstepcounter{part}
+%\addcontentsline{toc}{part}{\thepart \hspace{1em}#1}\else
+%\addcontentsline{toc}{part}{#1}\fi \markboth{}{}
+% {\centering \ifnum \c@secnumdepth >-2\relax \huge\bf\partname{} \thepart \par
+%\vskip 20pt \fi \Huge \bf #2\par}\@endpart}
+% (report)
+\def\@part[#1]#2{\ifnum \c@secnumdepth >-2\relax \refstepcounter{part}
+ \addcontentsline{toc}{part}{\thepart \hspace{1em}#1}\else
+ \addcontentsline{toc}{part}{#1}\fi \markboth{}{}
+              \ifnum \c@secnumdepth >-2\relax \huge\bf \partname\ \thepart \par
+ \vskip 20pt \fi \huge \bf #1\@endpart}
+
+%\def\@endpart{\vfil\newpage \if@twoside \hbox{} \thispagestyle{empty}
+% \newpage
+% \fi \if@tempswa \twocolumn \fi}
+% (report)
+\def\@endpart{\par\egroup \vfil\newpage \if@twoside \hbox{}
+  \thispagestyle{empty}
+  \newpage
+  \fi \if@tempswa \twocolumn \fi}
+
+%\def\@spart#1{{\centering \Huge \bf #1\par}\@endpart}
+% (report)
+\def\@spart#1{\huge \bf #1\@endpart}
+
+%------------------------------------------------------------------------------
+% Sectionenueberschriften neu setzen ------------------------------------------
+%------------------------------------------------------------------------------
+%\def\section{\@startsection {section}{1}{\z@}{-3.5ex plus -1ex minus
+% -.2ex}{2.3ex plus .2ex}{\Large\bf}}
+\def\section{\@startsection{section}{1}{\z@}{-3.5ex plus -1ex minus
+ -.2ex}{2.3ex plus .2ex}{\large\bf}}
+
+%\def\subsection{\@startsection{subsection}{2}{\z@}{-3.25ex plus -1ex minus
+% -.2ex}{1.5ex plus .2ex}{\large\bf}}
+\def\subsection{\@startsection{subsection}{2}{\z@}{-3.25ex plus -1ex minus
+ -.2ex}{1.5ex plus .2ex}{\bf}}
+
+%\def\subsubsection{\@startsection{subsubsection}{3}{\z@}{-3.25ex plus
+% -1ex minus -.2ex}{1.5ex plus .2ex}{\normalsize\bf}}
+\def\subsubsection{\@startsection{subsubsection}{3}{\z@}{-3.25ex plus
+ -1ex minus -.2ex}{1.5ex plus .2ex}{\bf}}
+
+
+%------------------------------------------------------------------------------
+% die Titelseite --------------------------------------------------------------
+%------------------------------------------------------------------------------
+\def\maketitle#1#2#3#4#5{%
+    \begin{titlepage}
+    \let\footnotesize\small
+    \let\footnoterule\relax
+    \setcounter{page}{0}
+    \null
+    \vskip .2cm
+    \centerline{\huge\bf Technische Universit\"at Braunschweig}
+    \vskip 4.4cm
+    \vbox to 14.5cm{
+      \begin{center}
+        {\Large\bf {#1}\par}
+        \vskip 1cm
+        {
+            \Large\bf
+            \lineskip .75em
+            \begin{tabular}[t]{c}{#2} \end{tabular}
+            \par
+        }\vfil
+        {\large\bf{#4}\par}
+        \vskip 1.5cm
+           {\large\bf Betreuer: \begin{tabular}[t]{c}{#3}\end{tabular}}
+        \vskip 1.5cm
+        {\large\bf{#5}\par}    
+      \end{center}
+    \par      
+    \begin{figure}[ht]
+        \begin{center}
+            \epsffile{Grafik1.eps}
+        \end{center}
+    \end{figure}
+      
+      
+
+    \vskip 2cm
+    \centerline{\Large\bf Institut f\"ur Robotik und Prozessinformatik}
+        \vskip 1cm
+    \centerline{\Large\bf Prof.~Dr.~F.~Wahl}}
+    \end{titlepage}
+    \setcounter{footnote}{0}
+    \let\maketitle\relax%
+}
+
+
+%------------------------------------------------------------------------------
+% Kurzfassung englisch --------------------------------------------------------
+%------------------------------------------------------------------------------
+
+\def\abstract{%
+    \begin{titlepage}
+%    \c@page\z@
+%    \global\@topnum\z@
+%    \@afterindentfalse
+    \vbox to 1.3cm{}
+      \centerline{\Large\bf\abstractname}
+    \vbox to 1cm{}
+}
+\def\endabstract{\end{titlepage}}
+%\def\endabstract{\par\vfil\null\newpage}
+
+
+
+
+%------------------------------------------------------------------------------
+% Inhaltsverzeichnis ----------------------------------------------------------
+%------------------------------------------------------------------------------
+\def\tableofcontents{
+    \begin{titlepage}
+    \@restonecolfalse
+     \if@twocolumn\@restonecoltrue\onecolumn
+     \fi
+    \c@page\z@
+    \chapter*{\contentsname\@mkboth{\contentsname}{\contentsname}}
+    \@starttoc{toc}
+    \if@restonecol\twocolumn
+    \fi
+    \end{titlepage}
+}
+
+%------------------------------------------------------------------------------
+% Erklaerung ------------------------------------------------------------------
+%------------------------------------------------------------------------------
+\def\declaration#1{{
+  \begin{titlepage}
+  \vbox to \vsize{
+    \vfill
+    \centerline{\Large\bf Erkl{\"a}rung}
+    \vspace{1cm}
+
+    Hiermit erkl\"aren wir, dass die vorliegende Arbeit selbst\"andig
+        nur unter Verwendung der aufgef\"uhrten Hilfsmittel von uns
+        erstellt wurde.
+    \vspace{2cm}
+
+    Braunschweig, #1\\
+    \vspace{2cm}
+
+    Unterschrift\\
+    \vfill
+  }
+  \end{titlepage}
+}}
+
+%------------------------------------------------------------------------------
+% Widmung ---------------------------------------------------------------------
+%------------------------------------------------------------------------------
+\def\quote#1#2{{
+  \begin{titlepage}
+  \vbox to \vsize{
+    \vfill
+    \vbox{#1}
+    \hbox to \hsize{\hfil {\sl #2}\quad}
+    \vskip4truecm
+  }
+  \end{titlepage}
+}}
+
+%------------------------------------------------------------------------------
+% Alle veraenderungen die hier folgen habe ich auch nicht verstanden (cla) ----
+%------------------------------------------------------------------------------
+\def\eqnarray{%
+    \stepcounter{equation}%]
+    \let\@currentlabel=\theequation%
+    \global\@eqnswtrue
+    \global\@eqcnt\z@%
+    \tabskip\@centering%
+    \let\\=\@eqncr%
+    $$%
+    \halign to \displaywidth\bgroup%
+        \@eqnsel%
+        \hskip\@centering
+            $\displaystyle\tabskip\z@{##}$&%
+        \global\@eqcnt\@ne
+            %\hskip 2\arraycolsep%
+        \hfil${{}##{}}$\hfil&%
+        \global\@eqcnt\tw@%
+        %\hskip 2\arraycolsep%
+        $\displaystyle\tabskip\z@{##}$%
+        \hfil%
+        \tabskip\@centering&%
+        \llap{##}%
+        \tabskip\z@%
+        \cr%
+}
+
+% -----------------------------------------------------------------------------
+\def\@sect#1#2#3#4#5#6[#7]#8{%
+    \ifnum #2>\c@secnumdepth %
+         \def\@svsec{}%
+    \else
+        \refstepcounter{#1}%
+    \edef\@svsec{\csname the#1\endcsname\hskip.5em}%
+    %\edef\@svsec{\csname the#1\endcsname\hskip 1em}%
+    \fi
+    \@tempskipa #5\relax%
+    \ifdim \@tempskipa>\z@ %
+        \begingroup #6\relax%
+            \@hangfrom{\hskip #3\relax\@svsec}{\interlinepenalty \@M #8\par}
+        \endgroup%
+        \csname #1mark\endcsname{#7}%
+        \addcontentsline{toc}{#1}{\ifnum #2>\c@secnumdepth \else%
+                      \protect\numberline{\csname the#1\endcsname}\fi#7}%
+    \else%
+        \def\@svsechd{#6\hskip #3\@svsec #8\csname #1mark\endcsname{#7}%
+                      \addcontentsline{toc}{#1}{\ifnum #2>\c@secnumdepth \else%
+                      \protect\numberline{\csname the#1\endcsname}\fi#7}}%
+    \fi%
+    \@xsect{#5}%
+}
+\endinput
