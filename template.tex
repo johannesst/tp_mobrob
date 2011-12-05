@@ -9,13 +9,16 @@
 \usepackage{color}
 \usepackage[dvips]{epsfig}
 \usepackage{bbm}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{nomencl}
 \usepackage[normalem]{ulem}
+\usepackage{listings}
+
 \newcommand{\ve}[1]{\mbox{\boldmath$#1$}}
 \newcommand{\ma}[1]{\mbox{\boldmath$#1$}}
 \newcommand{\eR}{\mbox{$\varepsilon I\;R$}}
 \renewcommand{\today}{10.Dezember 2011}
+\lstset{tabsize=2,breaklines=true,breakatwhitespace=true, numbers=left}
 
 \begin{document}
 
@@ -42,7 +45,7 @@
 
 
                     {\large\bf Betreuer:
-                    \begin{tabular}[t]{c}{RenÈ Iser}\end{tabular}}
+                    \begin{tabular}[t]{c}{Ren√© Iser}\end{tabular}}
                     \vskip 0.75cm
                     {\large\bf{\today}\par}
                 \end{center}
@@ -51,7 +54,7 @@
         \vskip 1.5cm
         \begin{figure}[h]
             \begin{center}
-                \epsfig{file = TU-Logo.eps}
+							\includegraphics{TU-Logo.pdf}
             \end{center}
         \end{figure}
 
@@ -73,9 +76,9 @@
     \pagenumbering{roman}
     \begin{abstract}Bei der vorliegenden Ausarbeitung handelt es sich
       um die Dokumentation unseres Teamprojektes zur ,,Koordinierten
-      Suche mit mobilen Robotern''. Wir werden zun‰chst die
+      Suche mit mobilen Robotern''. Wir werden zun√§chst die
       Vorarbeiten vorstellen, auf denen wir ausbauten, bevor wir unser
-      System n‰her vorstellen. Zum Schluss folgt noch eine kritische
+      System n√§her vorstellen. Zum Schluss folgt noch eine kritische
       Bewertung unserer Ergebnisse.
     \end{abstract}
 
@@ -86,8 +89,8 @@
 %    \quote{ { \bf \Large  Danksagungen } \originalTeX
 %    \\
 %    \\
-%    Unser Teamprojekt w‰re nicht mˆglich gewesen, wenn wir nicht auf
-%    wesentliche Vorarbeiten h‰tten zir¸ck
+%    Unser Teamprojekt w√§re nicht m√∂glich gewesen, wenn wir nicht auf
+%    wesentliche Vorarbeiten h√§tten zir√ºck
 %    I am very grateful to many people who helped me during my thesis in various
 %    manners.
 %    First, I wish to thank the entire staff of the Institute for Robotics and
@@ -99,7 +102,7 @@
 %    support throughout the last years.
 %    Furthermore, I wish to thank Hans Meiser and Birte Karalus for their advice on
 %    language issues.
-%    Finally, I would like to thank the Institut f¸r Mathematische
+%    Finally, I would like to thank the Institut f√ºr Mathematische
 %    Stochastik, the Institute for Computational Mathematics, and the
 %    Institute for Communications Technology for their kind provision
 %    of literature.
@@ -261,7 +264,7 @@
 %                 \end{minipage}
 
 \input{einleitung}%worum gehts?
-\input{hauptteil}%Wie haben wir die Aufgabe gelˆst?
+\input{hauptteil}%Wie haben wir die Aufgabe gel√∂st?
                  %Softwarearchitektur! 
                  % - client: inklusive SonarParticelFilter, Balldetection
                  % - server: inklusive Bahnplanung und ggf. weiterer
@@ -269,9 +272,9 @@
                  %
 \input{evaluation}%Beschreibung einiger Versuche (sowohl erfolgreich),
                   %als auch der fails (Lokalisierung nur in Mitte des
-                  %Raumes zuverl‰ssig, Balldetection gibt
-                  %falsePositives wenn weiﬂes Licht zuviele rote
-                  %Partikel enth‰lt)
+                  %Raumes zuverl√§ssig, Balldetection gibt
+                  %falsePositives wenn wei√ües Licht zuviele rote
+                  %Partikel enth√§lt)
 \input{zusammenfassung} % Zusammenfassung halt :)
 
 
