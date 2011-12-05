@@ -1,0 +1,149 @@
+\chapter{Integration bestehender Projekte in ein neues Buildsystem für den
+Client}
+
+\section{Warum ein neues Buildsystem?}
+Die Ballerkennung und der Sonarpartikelfilter hängen von vielen Altprojekten
+ab. Das Beispiel für die Steuerung der Pioneer 3-DX hing zudem von der ARIA
+Bibliothek\footnote{http://robots.mobilerobots.com/wiki/ARIA} ab. Bei den
+Altprojekten fanden sich auch zum Teil fest kodierte Pfade. Da auch die
+Konvertierung der Solutions in das VS 2010 Format meistens fehlschlug und auch
+ARIA nicht mit der mitgelieferten Solution unter VS 2010 gebaut werden konnte,
+haben wir uns für den Client für den Einsatz eines neuen Buildsystems
+entschlossen. Aufgrund der Einfacheit der Beschreibung der Buildvorgänge für
+die einzelnen zu integrierenden Projekte und dem Hinzufügen neuer
+Unterprojekte, sowie der Möglichkeit, von einem konkreten Buildsystem abhängig
+zu sein sowie existierender Erfahrungen mit dem System, fiel die Wahl auf
+CMake\footnote{http://www.cmake.org/}. Bei CMake handelt es sich um ein
+open-source Metabuildsystem. Es erzeugt Build-Vorschriften für andere
+Buildsysteme (u.a. GNU make, nmake, msbuild). Somit wäre es bei Bedarf auch
+Möglich gewesen, auf eine andere Visual Studio Version umzusteigen ohne
+die Solutions zu konvertieren oder neu zu erstellen.
+
+\section{Integration der Projekte}
+Zuerst wurde eine passende Ordnerstrukur angelegt: include für Header-Dateien,
+src für die cpp-Dateien der einzelnen Projekt, bin für eventuell zum Linken benötigte
+Kompillate, deren Quellen nicht in den Build-Prozess integrierbar waren und
+build als Zielordner für erzeugte Buildfiles.
+
+Als nächstes wurde für das Projekt im Ordner des Clients eine
+CMakeLists.txt-Datei angelegt:
+
+\begin{lstlisting}
+cmake_minimum_required (VERSION 2.6) 
+project (TP_WS_2010) 
+
+include_directories (include)
+include_directories (include/ControlExample)
+include_directories (include/erob/)
+include_directories (include/Balldetection)
+include_directories (include/p3dxSteuerung)
+include_directories (include/StochasticLib)
+include_directories (include/PioneerMRClient)
+include_directories (include/Aria)
+include_directories (include/OccupancyGridMap)
+include_directories (include/irpVideo/DirectShow)
+link_directories (${TP_WS_2010_BINARY_DIR})
+link_directories (${TP_WS_2010_SOURCE_DIR}/lib/)
+add_subdirectory (src)
+\end{lstlisting}
+
+Diese definiert den Namen des Projektes (wichtig
+für Referenzen auf z.b. das Stammverzeichnis des Projektes oder das
+Buildverzeichnis, da die entprechenden Variablennamen mit dem Projektnamen + \_
+als Präfix versehen werden. Zudem wurden die include-Verzeichnisse und zum
+Linken relevante Verzeichnisse festgelegt. Danach wurde das src-Verzeichnis als
+Projektunterordner hinzugefügt. Dadurch werden die Anweisungen in der
+CMakeLists.txt des Unterordners auch ausgeführt. Dies ermöglicht es, für die
+einzelnen Unterprojekte jeweils eine eigene kleine CMakeLists.txt zu verwenden.
+
+Die CMakeLists.txt bindet nun alle Sourceordner der Unterprojekte ein:
+
+\begin{lstlisting}
+cmake_minimum_required (VERSION 2.6)
+
+add_subdirectory (irpUtils)
+add_subdirectory (irpMath)
+add_subdirectory (irpImage)
+add_subdirectory (irpVideo)
+add_subdirectory (irpFeatureExtraction)
+add_subdirectory (alglib)
+add_subdirectory (DistanceMap)
+add_subdirectory (irpCamera)
+add_subdirectory (irpV3d)
+add_subdirectory (StochasticLib)
+add_subdirectory (Visualization)
+add_subdirectory (CamCalib)
+add_subdirectory (Balldetection)
+add_subdirectory (mathtest)
+add_subdirectory (SonarParticleFilter)
+add_subdirectory (PioneerMRClient)
+add_subdirectory (OccupancyGridMap)
+add_subdirectory (Balldetection_Test)
+add_subdirectory (Aria)
+add_subdirectory (p3dxSteuerung)
+add_subdirectory (p3dxSteuerung_threaded)
+add_subdirectory (calibrate)
+#add_subdirectory (ControlExample)
+add_subdirectory (utils)
+add_subdirectory (kinect)
+add_subdirectory (networkTest)
+\end{lstlisting}
+
+Bei den Unterprojekten gibt es zwei Arten: Bibliotheken und Anwendungen.
+
+Die CMakeList.txt einer Bibliothek sieht wie folgt aus:
+
+\begin{lstlisting}
+cmake_minimum_required (VERSION 2.6) 
+
+file(GLOB src "*.cpp")
+file(GLOB includes "../../include/irpCamera/*.h")
+
+add_library (irpCamera ${src} ${includes})
+\end{lstlisting}
+
+Die CMakeList.txt einer Anwendung sieht so aus:
+\begin{lstlisting}
+cmake_minimum_required (VERSION 2.6) 
+
+file(GLOB src "*.cpp")
+file(GLOB includes "../../include/p3dxSteuerung/*.h")
+add_executable (p3dxSteuerung_threaded ${src} ${includes})
+target_link_libraries (p3dxSteuerung_threaded irpUtils MINPACK fftw rfftw  DirectShow irpFeatureExtraction irpMath  alglib irpImage irpCamera irpVideo irpV3d glew CamCalib Visualization StochasticLib OccupancyGridMap SonarParticleFilter ws2_32 winmm advapi32 Aria DistanceMap Balldetection)
+
+\end{lstlisting}
+
+Zuerst werden alle cpp-Dateien zur Variablen src hinzugfügt, danach die
+Includes zur Variablen include. Je nachdem, ob es sich um eine Bibliothek oder
+Anwendung handelt, wird diese mit add\_library(name dateien) oder
+add\_executable(name dateien) hinzugefügt. Die Include-Dateien müssen dabei
+aber eigentlich nicht explizit hinzugefügt werden, dies geschieht nur, damit
+sie auch in einer VS Solution in der Dateiliste auftauchen. Bei Anwendungen
+können nun mit target\_link\_libraries(exename libraries) noch die zu linkenden
+Bibliotheken angegeben werden.
+
+Es gab ein paar Probleme bei der Integration: zum einen mussten zuerst die
+Abhängigkeiten zwischen den Unterprojekten ermittelt werden, dies geschah mit
+Hilfe der originalen VS Solutions sowie durch Ausprobieren. Zum anderen gab es
+manchmal Dateien, die zwar in den Quellen lagen, jedoch in nicht in den
+Solutions auftauchten. Diese konnten den Buildprozess stören und mussten daher
+entfernt werden TODO: Beispiel raussuchen, wenn noch überhaupt möglich.
+Außerdem waren an ein paar Stellen kleinere Änderungen am Quellcode nötig, um
+ihn mit MSVC 2010 oder der Struktur unseres include-Ordners kompatibel zu machen.
+
+\section{HOWTO: Hinzufügen eines neuen Unterprojektes}
+Das Hinzufügen eines neuen Unterprojektes ist relativ einfach.
+Zuerst wird ein Unterverzeichnis für das Projekt im include-Ordner und eines im
+src-Ordner angelegt. Dann kopiert man die includes in den neuen Unterordner im
+include-Ordner. Dabei ist darauf zu achten, dass die Pfade in
+\#include-Direktiven relative zum include-Ordner sein sollten. Danach kopiert
+man die cpp-Dateien in den neuen Unterordner im src-Verzeichnis.
+
+Danach erstellt man in diesem Ordner eine CMakeLists.txt ähnlich wie oben,
+jenachdem ob ex sich um eine Anwendung oder Bibliothek handelt. Man fügt zuerst
+die cpp-Dateien und Includes hinzu, fügt dann mit add\_library oder
+add\_executable Buildtargets hinzu und gibt eventuell noch zu linkende
+Bibliotheken bei ANwendungen an mit target\_link\_libraries.
+
+\section{HOWTO: Bauen des Clients mit VS 2010}
+TODO: Bauen mit der CMake GUI beschreiben

@@ -8,33 +8,33 @@
 Das Ziel der koordinierten Suche besteht darin, dass die im Raum bzw. im
 Suchterrain befindlichen mobilen Roboter miteinander das gesuchte Ziel
 finden. Diese Suche setzt voraus, dass sich die Roboter kollisionsfrei
-im Raum bewegen. Sie dürfen weder mit Objekten aus der Umgebung, noch
+im Raum bewegen. Sie dÃ¼rfen weder mit Objekten aus der Umgebung, noch
 mit anderen Robotern, die ebenfalls auf der Suche nach dem gegebenen
 Objekt sind, kollidieren. Zur Umsetzung dieser Aufgabe stanen eine
-Ad-hoc-Lösung und schließlich eine Server-Client-Lösung zu Auswahl, auf
-die die Entscheidung fiel. Dies ermöglicht eine paaralele Entwicklung
+Ad-hoc-LÃ¶sung und schlieÃŸlich eine Server-Client-LÃ¶sung zu Auswahl, auf
+die die Entscheidung fiel. Dies ermÃ¶glicht eine paaralele Entwicklung
 von Client und Server, was eine einfachere Aufgabenverteilung im Team
-ermöglicht. Ausserdem kann dann auf den Server eine Visualisierung der
+ermÃ¶glicht. Ausserdem kann dann auf den Server eine Visualisierung der
 Ballsuche erfolgen, indem eine Karte des Raumes, sowie der darin
 befindlichen Roboter sowie (nach erfolgreicher Suche) des Balls in der
-GUI des Servers angezeigt wird. Der Client ist dann nur noch für das
+GUI des Servers angezeigt wird. Der Client ist dann nur noch fÃ¼r das
 Abfahren der von Server vorgebenen Postionen, sowie die Lokalisierung
 im Raum und Ballerkennung in seiner unmittelbaren Umgebung
-zuständig. \\\\
+zustÃ¤ndig. \\\\
 Zum Erreichen des Ziels standen uns bis zu drei mobile Roboter 
     ,,Pioneer-3DX'' der Firma ,,adept mobilerobots'' zur
-    Verfügung. Dazu konnten wir diverse Libaries des Instituts
+    VerfÃ¼gung. Dazu konnten wir diverse Libaries des Instituts
     nutzen. Die wichtigsten schon vorhandenen Komponenten waren aber
     der SonarPartikelfilter, sowie die Ballerkennung:
     \begin{itemize}
     \item Der SonarPartikelfilter ging auf ein vorheriges Teamprojekt
-      zurück. Mit ihm konnten wir die Position des Roboters im Raum
+      zurÃ¼ck. Mit ihm konnten wir die Position des Roboters im Raum
       relativ  genau bestimmen. Diese diente zum einen als
-      Basis für die Bahnplanung. Zum anderen war dies die Basis zur
+      Basis fÃ¼r die Bahnplanung. Zum anderen war dies die Basis zur
       Bestimmung der Position eines erkannten Balls.
     \item Die Ballerkennung konnten wir aus der Bachelorarbeit von
-      Tobias Breuer übernehmen. Sie stelle uns eine API zur Verfügung,
-      worüber wir den Ball finden, sowie seine genaue Position
+      Tobias Breuer Ã¼bernehmen. Sie stelle uns eine API zur VerfÃ¼gung,
+      worÃ¼ber wir den Ball finden, sowie seine genaue Position
       bestimmen konnten.
     \end{itemize}
 Unsere Softwarearchitektur bestand somit aus folgenden Komponenten:
@@ -42,14 +42,14 @@ Unsere Softwarearchitektur bestand somit aus folgenden Komponenten:
 \item Der Server: Er nimmt die Bahnplanung, sowie Kollisionsvermeidung
   vor und steuert bis zu drei Clients. Gleichzeitig dient er als
   Visualisierung des aktuellen Status der Ballsuche.
-\item Der Client: Eine Steuersoftware für die Roboter. Sie ist dafür
-  zuständig, die vom Server vorgebene Bahnplanung umzusetzen. Dafür
+\item Der Client: Eine Steuersoftware fÃ¼r die Roboter. Sie ist dafÃ¼r
+  zustÃ¤ndig, die vom Server vorgebene Bahnplanung umzusetzen. DafÃ¼r
   nutzt er den SonarPartikelfilter, um seine eigene Position im Raum
-  zu bestimmen. Außerdem nimmt er die eigentliche Ballerkennung vor
+  zu bestimmen. AuÃŸerdem nimmt er die eigentliche Ballerkennung vor
   und bestimmt aus den dabei erhalten Informationen und der durch den
   Partikelfilter erhaltenen Position die Position des Balles im Raum.es
 \end{itemize}
-Im nächsten Abschnitt folgt nun eine genauere Beschreibung unserer Software-Architektur
+Im nÃ¤chsten Abschnitt folgt nun eine genauere Beschreibung unserer Software-Architektur
 %Es folgt nun die Beschreibung
 %%% Local Variables: 
 %%% mode: latex
