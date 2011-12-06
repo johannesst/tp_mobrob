@@ -4,3 +4,10 @@
 *.lof
 *.log
 *.dvi
+*.make
+*.fls
+*~
+*.d
+\#*\#
+*.temp
+.#*
