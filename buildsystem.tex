@@ -2,16 +2,21 @@
 Client}
 
 \section{Warum ein neues Buildsystem?}
-Die Ballerkennung und der Sonarpartikelfilter hängen von vielen Altprojekten
+Die Ballerkennung und der Sonarpartikelfilter hängen von vielen
+Altprojekten
 ab. Das Beispiel für die Steuerung der Pioneer 3-DX hing zudem von der ARIA
 Bibliothek\footnote{http://robots.mobilerobots.com/wiki/ARIA} ab. Bei den
 Altprojekten fanden sich auch zum Teil fest kodierte Pfade. Da auch die
-Konvertierung der Solutions in das VS 2010 Format meistens fehlschlug und auch
-ARIA nicht mit der mitgelieferten Solution unter VS 2010 gebaut werden konnte,
+Konvertierung der Solutions in das VS 2010 Format meistens fehlschlug und
+auch
+ARIA nicht mit der mitgelieferten Solution unter VS 2010 gebaut werden
+konnte,
 haben wir uns für den Client für den Einsatz eines neuen Buildsystems
-entschlossen. Aufgrund der Einfacheit der Beschreibung der Buildvorgänge für
+entschlossen. Aufgrund der Einfacheit der Beschreibung der Buildvorgänge
+für
 die einzelnen zu integrierenden Projekte und dem Hinzufügen neuer
-Unterprojekte, sowie der Möglichkeit, von einem konkreten Buildsystem abhängig
+Unterprojekte, sowie der Möglichkeit, von einem konkreten Buildsystem
+abhängig
 zu sein sowie existierender Erfahrungen mit dem System, fiel die Wahl auf
 CMake\footnote{http://www.cmake.org/}. Bei CMake handelt es sich um ein
 open-source Metabuildsystem. Es erzeugt Build-Vorschriften für andere
@@ -20,8 +25,10 @@ Möglich gewesen, auf eine andere Visual Studio Version umzusteigen ohne
 die Solutions zu konvertieren oder neu zu erstellen.
 
 \section{Integration der Projekte}
-Zuerst wurde eine passende Ordnerstrukur angelegt: include für Header-Dateien,
-src für die cpp-Dateien der einzelnen Projekt, bin für eventuell zum Linken benötigte
+Zuerst wurde eine passende Ordnerstrukur angelegt: include für
+Header-Dateien,
+src für die cpp-Dateien der einzelnen Projekt, bin für eventuell zum Linken
+ benötigte
 Kompillate, deren Quellen nicht in den Build-Prozess integrierbar waren und
 build als Zielordner für erzeugte Buildfiles.
 
@@ -29,8 +36,8 @@ Als nächstes wurde für das Projekt im Ordner des Clients eine
 CMakeLists.txt-Datei angelegt:
 
 \begin{lstlisting}
-cmake_minimum_required (VERSION 2.6) 
-project (TP_WS_2010) 
+cmake_minimum_required (VERSION 2.6)
+project (TP_WS_2010)
 
 include_directories (include)
 include_directories (include/ControlExample)
@@ -49,12 +56,16 @@ add_subdirectory (src)
 
 Diese definiert den Namen des Projektes (wichtig
 für Referenzen auf z.b. das Stammverzeichnis des Projektes oder das
-Buildverzeichnis, da die entprechenden Variablennamen mit dem Projektnamen + \_
+Buildverzeichnis, da die entprechenden Variablennamen mit dem Projektnamen
++ \_
 als Präfix versehen werden. Zudem wurden die include-Verzeichnisse und zum
-Linken relevante Verzeichnisse festgelegt. Danach wurde das src-Verzeichnis als
+Linken relevante Verzeichnisse festgelegt. Danach wurde das src-Verzeichnis
+ als
 Projektunterordner hinzugefügt. Dadurch werden die Anweisungen in der
-CMakeLists.txt des Unterordners auch ausgeführt. Dies ermöglicht es, für die
-einzelnen Unterprojekte jeweils eine eigene kleine CMakeLists.txt zu verwenden.
+CMakeLists.txt des Unterordners auch ausgeführt. Dies ermöglicht es, für
+die
+einzelnen Unterprojekte jeweils eine eigene kleine CMakeLists.txt zu
+verwenden.
 
 Die CMakeLists.txt bindet nun alle Sourceordner der Unterprojekte ein:
 
@@ -94,7 +105,7 @@ Bei den Unterprojekten gibt es zwei Arten: Bibliotheken und Anwendungen.
 Die CMakeList.txt einer Bibliothek sieht wie folgt aus:
 
 \begin{lstlisting}
-cmake_minimum_required (VERSION 2.6) 
+cmake_minimum_required (VERSION 2.6)
 
 file(GLOB src "*.cpp")
 file(GLOB includes "../../include/irpCamera/*.h")
@@ -104,46 +115,75 @@ add_library (irpCamera ${src} ${includes})
 
 Die CMakeList.txt einer Anwendung sieht so aus:
 \begin{lstlisting}
-cmake_minimum_required (VERSION 2.6) 
+cmake_minimum_required (VERSION 2.6)
 
 file(GLOB src "*.cpp")
 file(GLOB includes "../../include/p3dxSteuerung/*.h")
 add_executable (p3dxSteuerung_threaded ${src} ${includes})
-target_link_libraries (p3dxSteuerung_threaded irpUtils MINPACK fftw rfftw  DirectShow irpFeatureExtraction irpMath  alglib irpImage irpCamera irpVideo irpV3d glew CamCalib Visualization StochasticLib OccupancyGridMap SonarParticleFilter ws2_32 winmm advapi32 Aria DistanceMap Balldetection)
+target_link_libraries (p3dxSteuerung_threaded irpUtils MINPACK fftw rfftw
+DirectShow irpFeatureExtraction irpMath  alglib irpImage irpCamera irpVideo
+ irpV3d glew CamCalib Visualization StochasticLib OccupancyGridMap
+SonarParticleFilter ws2_32 winmm advapi32 Aria DistanceMap Balldetection)
 
 \end{lstlisting}
 
 Zuerst werden alle cpp-Dateien zur Variablen src hinzugfügt, danach die
-Includes zur Variablen include. Je nachdem, ob es sich um eine Bibliothek oder
+Includes zur Variablen include. Je nachdem, ob es sich um eine Bibliothek
+oder
 Anwendung handelt, wird diese mit add\_library(name dateien) oder
 add\_executable(name dateien) hinzugefügt. Die Include-Dateien müssen dabei
-aber eigentlich nicht explizit hinzugefügt werden, dies geschieht nur, damit
+aber eigentlich nicht explizit hinzugefügt werden, dies geschieht nur,
+damit
 sie auch in einer VS Solution in der Dateiliste auftauchen. Bei Anwendungen
-können nun mit target\_link\_libraries(exename libraries) noch die zu linkenden
+können nun mit target\_link\_libraries(exename libraries) noch die zu
+linkenden
 Bibliotheken angegeben werden.
 
 Es gab ein paar Probleme bei der Integration: zum einen mussten zuerst die
-Abhängigkeiten zwischen den Unterprojekten ermittelt werden, dies geschah mit
-Hilfe der originalen VS Solutions sowie durch Ausprobieren. Zum anderen gab es
+Abhängigkeiten zwischen den Unterprojekten ermittelt werden, dies geschah
+mit
+Hilfe der originalen VS Solutions sowie durch Ausprobieren. Zum anderen gab
+ es
 manchmal Dateien, die zwar in den Quellen lagen, jedoch in nicht in den
-Solutions auftauchten. Diese konnten den Buildprozess stören und mussten daher
+Solutions auftauchten. Diese konnten den Buildprozess stören und mussten
+daher
 entfernt werden TODO: Beispiel raussuchen, wenn noch überhaupt möglich.
-Außerdem waren an ein paar Stellen kleinere Änderungen am Quellcode nötig, um
-ihn mit MSVC 2010 oder der Struktur unseres include-Ordners kompatibel zu machen.
+Außerdem waren an ein paar Stellen kleinere Änderungen am Quellcode nötig,
+um
+ihn mit MSVC 2010 oder der Struktur unseres include-Ordners kompatibel zu
+machen.
 
 \section{HOWTO: Hinzufügen eines neuen Unterprojektes}
 Das Hinzufügen eines neuen Unterprojektes ist relativ einfach.
-Zuerst wird ein Unterverzeichnis für das Projekt im include-Ordner und eines im
-src-Ordner angelegt. Dann kopiert man die includes in den neuen Unterordner im
+Zuerst wird ein Unterverzeichnis für das Projekt im include-Ordner und
+eines im
+src-Ordner angelegt. Dann kopiert man die includes in den neuen Unterordner
+ im
 include-Ordner. Dabei ist darauf zu achten, dass die Pfade in
-\#include-Direktiven relative zum include-Ordner sein sollten. Danach kopiert
+\#include-Direktiven relative zum include-Ordner sein sollten. Danach
+kopiert
 man die cpp-Dateien in den neuen Unterordner im src-Verzeichnis.
 
 Danach erstellt man in diesem Ordner eine CMakeLists.txt ähnlich wie oben,
-jenachdem ob ex sich um eine Anwendung oder Bibliothek handelt. Man fügt zuerst
+jenachdem ob ex sich um eine Anwendung oder Bibliothek handelt. Man fügt
+zuerst
 die cpp-Dateien und Includes hinzu, fügt dann mit add\_library oder
 add\_executable Buildtargets hinzu und gibt eventuell noch zu linkende
-Bibliotheken bei ANwendungen an mit target\_link\_libraries.
+Bibliotheken bei Anwendungen an mit target\_link\_libraries.
 
 \section{HOWTO: Bauen des Clients mit VS 2010}
-TODO: Bauen mit der CMake GUI beschreiben
+\begin{enumerate}
+	\item CMake für Windows (Version min. 2.6) herunterladen und installieren
+ \footnote{http://www.cmake.org/}
+	\item CMake GUI starten
+	\item Unter "Where is the source code" den Pfad des Client-Verzeichnisses
+ eintragen und unter "Where to build the binaries" den Pfad zu dem
+Verzeichnis, wo die Solution für den Client erstellt werden soll
+	\item Auf "Configure" klicke, "Visual Studio 2010" und "Use default
+native compilers" auswählen, dann auf Finish klicken. Auf das Ende des
+Einrichtens warten.
+	\item Auf "Generate" klicken
+	\item Im ausgewählten Zielverzeichnis befindet sich nun eine VS 2010
+Solution (TP\_WS\_2010.sln). Diese kann nun ganz normal mit VS 2010
+geöffnet und gebaut werden. (F7 oder Strg-Alt-F7)
+\end{enumerate}

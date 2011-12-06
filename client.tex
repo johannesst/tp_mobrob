@@ -1,0 +1,26 @@
+\chapter{Der Client}
+Der Client in unserer Client-Server-Architektur ist für das Anfahren der
+einzelnen Routenpunkte und die Erkennung des Balls zuständig. Dazu haben
+wir für die Lokalisierung die uns zu Verfügung gestellte Implementierung
+eines Sonar-Partikelfilters und für die Ballerkennung die Implementierung
+aus einer Bachelorarbeit von Tobias Breuer verwendet.
+
+Am Partikelfilter haben wir ein paar Änderungen vorgenommen. Es gab keine
+Möglichkeit, von außerhalb des Filters auf die Koordinaten und die
+Ausrichtung des Roboters zuzugreifen. Dazu wurden die Methoden StartFilter
+und findBestParticle so erweitert, dass die aktuelle Position des Roboters
+und seine Ausrichtung als Zeiger auf das erste Element eines double-Arrays
+([x,y,Theta, Partikelwsk.]) zurückgegeben wird. Da dieses in
+findBestParticle dynamisch mit new alloziiert wird, muss es, wenn es nicht
+mehr beötigt wird, mit delete[] gelöscht werden. Außerdem ist nun möglich
+die Anzahl der Sonare von außerhalb des Filters ohne neukompillieren
+einzustellen. Die Visualisierungen wurden aus Performancegründen entweder
+entfernt oder deaktiviert. Zudem wurde für eine einfachere Auswertung und
+weil die Partikelvisualisierung öfter zu Abstürzen unseres Programms
+geführt hat der Filter um eine Funktion erweitert, die, wenn in der
+particleSet.cpp takeADump true ist, bei jedem Filtern alle Partikel als
+Tripel aus x,y und der Partikelwsk. in eine Datei schreibt. Die Datei hat
+dabei als Prefix eine Zahl im Namen, die bei 0 beginnend nach jedem Filtern
+ um 1 erhöht wird. Passend dazu wurde ein Visualisierer geschrieben, der
+die Partikelmenge grafisch darstellt, auf den noch später eingegangen wird.
+
