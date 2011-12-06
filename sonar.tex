@@ -1,0 +1,37 @@
+\subsection{Sonar-Partikelfilter}
+\label{sec:sonarparticlefilter}
+Es nutzt das im Roboter integrierte
+Sonarsystem, um anhand einer Karte die Position des Roboters im Raum
+zu bestimmen. Dazu bedienen wir uns seiner Klasse particleSet. 
+Mit dem Konstruktor \lstinline|particleSet::particleSet(const char *map_path, const char *wskTxT_path, bool use_ray_casting, int max_x, int min_x, int max_y, int min_y,int map_size, int map_res, int numofParticle, ArRobot *p3dx)| erzeugen wir ein Objekt
+\lstinline|particleSet| mit der Partikelmenge. Dabei übergeben wir ihm auch den Pfad zur
+Karte des Raumes und legen fest, ob wir Raycasting benutzen oder
+nicht, sowie die Auflösung und Koordinaten der Karte.  \\
+Nach Erzeugen des Partikelmengen-Objektes können wir dann mit der
+Methode \lstinline|particleSet::startFilter()| die aktuellen
+Koordinaten des Roboters abfragen. \\\\
+Am Partikelfilter haben wir ein paar Änderungen vorgenommen. Es gab keine
+Möglichkeit, von außerhalb des Filters auf die Koordinaten und die
+Ausrichtung des Roboters zuzugreifen. Dazu wurden die Methoden
+\lstinline|double* StartFilter()|
+und \lstinline|double* findBestParticle()| so erweitert, dass die aktuelle Position des Roboters
+und seine Ausrichtung als Zeiger auf das erste Element eines Arrays
+\lstinline|double* ([x,y,Theta, Partikelwsk.])| zurückgegeben wird. Da dieses in
+\lstinline|double * findBestParticle()| dynamisch mit new alloziiert wird, muss es, wenn es nicht
+mehr beötigt wird, mit \lstinline|delete[]| gelöscht werden. Außerdem ist nun möglich
+die Anzahl der Sonare von außerhalb des Filters ohne neukompillieren
+einzustellen. Die Visualisierungen wurden aus Performancegründen entweder
+entfernt oder deaktiviert. Zudem wurde für eine einfachere Auswertung und
+weil die Partikelvisualisierung öfter zu Abstürzen unseres Programms
+geführt hat der Filter um eine Funktion erweitert, die, sofern dies
+beim Kompilieren der Software aktiviert wurde,  bei jedem Filtern alle Partikel als
+Tripel aus x,y und der Partikelwsk. in eine Datei schreibt. Die Datei hat
+dabei als Prefix eine Zahl im Namen, die bei 0 beginnend nach jedem Filtern
+ um 1 erhöht wird. Passend dazu wurde ein Visualisierer geschrieben, der
+die Partikelmenge grafisch darstellt, auf den noch später eingegangen
+wird.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "template"
+%%% End: 

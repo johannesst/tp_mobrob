@@ -18,31 +18,4 @@ b
 \section{Server}
 \label{sec:server}
 
-\section{Client}
-\label{sec:client}
-
-\subsection{SonarParticleFilter}
-\label{sec:sonarparticlefilter}
-Hierbei handelt es sich um ein vorheriges Teamprojekt, auf dass wir
-zurückgreifen konnten. Es nutzt das im Roboter integrierte
-Sonarsystem, um anhand einer Karte die Position des Roboters im Raum
-zu bestimmen. Dazu bedienen wir uns seiner Klasse particleSet. 
-Mit dem Konstruktor \lstinline|particleSet::particleSet(const char
-*map_path, const char *wskTxT_path, bool use_ray_casting, int max_x,
-int min_x, int max_y, int min_y,int map_size, int map_res, int
-numofParticle, ArRobot *p3dx)| erzeugen wir ein Objekt
-\lstinline|particleSet| mit der Partikelmenge. Dabei übergeben wir ihm auch den Pfad zur
-Karte des Raumes und legen fest, ob wir ray_casting benutzen oder
-nicht, sowie die Auflösung und Koordinaten der Karte.  \\
-Nach Erzeugen des Partikelmengen-Objektes können wir dann mit der
-Methode \lstinline|particleSet::startFilter()| die aktuellen
-Koordinaten des Roboters abfragen.
-\subsection{Balldetection}
-\label{sec:balldetection}
-
-
-
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "template"
-%%% End: 
+\input{client}

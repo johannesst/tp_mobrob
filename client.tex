@@ -1,112 +1,22 @@
-\chapter{Der Client}
+\section{Client}
+\label{sec:client}
 Der Client in unserer Client-Server-Architektur ist für das Anfahren der
 einzelnen Routenpunkte und die Erkennung des Balls zuständig. Dazu haben
 wir für die Lokalisierung die uns zu Verfügung gestellte Implementierung
 eines Sonar-Partikelfilters und für die Ballerkennung die Implementierung
-aus einer Bachelorarbeit von Tobias Breuer verwendet.
+aus einer Bachelorarbeit von Tobias Breuer verwendet. Wir beschreiben
+im Folgenden zunächst, wie wir den Partikelfilter und die
+Ballerkennung genutzt haben. Anschließend wird die Funktionsweise des
+Clients beschrieben.
 
-Am Partikelfilter haben wir ein paar Änderungen vorgenommen. Es gab keine
-Möglichkeit, von außerhalb des Filters auf die Koordinaten und die
-Ausrichtung des Roboters zuzugreifen. Dazu wurden die Methoden StartFilter
-und findBestParticle so erweitert, dass die aktuelle Position des Roboters
-und seine Ausrichtung als Zeiger auf das erste Element eines double-Arrays
-([x,y,Theta, Partikelwsk.]) zurückgegeben wird. Da dieses in
-findBestParticle dynamisch mit new alloziiert wird, muss es, wenn es nicht
-mehr beötigt wird, mit delete[] gelöscht werden. Außerdem ist nun möglich
-die Anzahl der Sonare von außerhalb des Filters ohne neukompillieren
-einzustellen. Die Visualisierungen wurden aus Performancegründen entweder
-entfernt oder deaktiviert. Zudem wurde für eine einfachere Auswertung und
-weil die Partikelvisualisierung öfter zu Abstürzen unseres Programms
-geführt hat der Filter um eine Funktion erweitert, die, wenn in der
-particleSet.cpp takeADump true ist, bei jedem Filtern alle Partikel als
-Tripel aus x,y und der Partikelwsk. in eine Datei schreibt. Die Datei hat
-dabei als Prefix eine Zahl im Namen, die bei 0 beginnend nach jedem Filtern
- um 1 erhöht wird. Passend dazu wurde ein Visualisierer geschrieben, der
-die Partikelmenge grafisch darstellt, auf den noch später eingegangen wird.
 
-Der Client selber arbeitet folgendermaßen:
-
-Beim Start wird die Datei config.cfg eingelesen, wenn diese nicht gefunden
-wird, nutzt der Client die fest eingestellten Standardwerte. Die config.cfg
-hat folgende Struktur:
-
-\begin{lstlisting}
-#Kommentarzeile (wird ignoriert)
-Sonaranzahl als int
-#Kommentarzeile (wird ignoriert)
-COM-Port, an dem der Roboter angeschlossen ist, als String
-#Kommentarzeile (wird ignoriert)
-Schrittweite fuer die Anlerndrehungen als int in Grad
-#Kommentarzeile (wird ignoriert)
-Anzahl der 360Grad Drehungen als int
-#Kommentarzeile (wird ignoriert)
-Server-IP als String
-#Kommentarzeile (wird ignoriert)
-Pixel in der Karte pro mm als double
-\end{lstlisting}
-
-Ein Beispielkonfiguration für den Fahrstuhlvorraum wäre z. B.
-\begin{lstlisting}
-#Anz Sensoren
-8
-#COM Port
-COM5
-#Schrittweite fuer die Anlerndrehungen
-15
-#Anzahl der 360Grad Drehungen
-1
-#Server-IP
-134.169.36.241
-#Pixel pro mm
-0.05081
-\end{lstlisting}
-Die Standardwerte sind (16, COM3, 45, 0, 127.0.0.1, 1).
-
-Danach wird die Verbindung zum Roboter hergestellt und der Partikelfilter
-mit 10000 Partikeln initialisiert und das erste Mal gefiltert. Danach
-erfolgt die konfigurierte Anzahl an Drehungen in der konfigurierten
-Schrittweite um die erste Positionierung zu verbessern. Nach jedem
-Drehschritt wird einmal gefiltert. Nach den Drehungen wird noch einmal
-gefiltert und der Rückgabewert als Startposition genommen. Erst jetzt wird
-die Verbindung zum Server hergestellt und die Roboterposition übermittelt,
-sowie ein Thread gestartet, der regelmäßig die RobotInformation,
-PathInformation und SearchInformation mit dem Server abgleicht. Der Client
-wartet dann erstmal so lange, bis der Server in der SearchInformation pause
- = false sendet. Sobald pause = true, wird ein weiterer Thread zur
-Ballerkennung gestartet und der Client geht in seine Fahrschleife über, die
- erst endet, wenn der Ball gefunden wurde oder stoppt, wenn pause = true.
- Der Client wartet dann auf den nächsten anzufahrenden Punkt vom Server,
-sobald er diesen erhalten hat fährt der Roboter den Punkt an.
-
-Dies geschieht schrittweise:\\
-Zuerst wird die Richtung und der Drehwinkel der Drehung für eine
-Ausrichtung zum Punkt berechnet. Dazu wird der Winkel zwischen dem
-Ausrichtungsvektor des Roboters und dem Punkt berechnet und dann geprüft,
-ob der Vektor zwischen Roboterposition und dem Punkt um den ermittelten
-Winkel im Uhrzeigersinn oder gegen den Uhrzeigersinn von der
-Roboterausrichtung aus liegt um die Drehrichtung zu ermitteln. Dann wird
-der Roboter entprechend der ermittelten Werte zum Punkt hin gedreht.
-Dann wird, falls pause in der SearchInformation auf true ist, solange
-gewartet, bis pause wieder false ist. Danach wird
-drivingTime * driveLengthWeight ms gefahren, wobei drivingTime die
-Fahrtzeit pro Schritt ist und driveLengthWeight ein Anpassungsfaktor der
-Fahrzeit ist für den Fall, dass die Reststrecke in weniger als drivingTime
-zurückgelegt werden kann. Dazu wird aus den gefahrenen Strecken in jedem
-Fahrtschritt und der jeweiligen Fahrtzeit die Strecke in px pro ms
-berechnet und über die Schritte der exponentiell geglätteter Mittelwert
-berechnet, woraus dann driveLengthWeight für die Reststrecke berechnet wird
-, wenn die zu klein für die normale drivingTime ist.
-
-Dann wird eine neue Ausrichtung zum Punkt berechnet und mit der aktuellen
- verglichen, verkürzt sich dadurch die Entfernung zum Ziel, wird der
-Roboter neu ausgerichtet, ansonsten wird die alte Ausrichtung beibehalten.
-Danach wird wieder eine Teilstrecke gefahren usw. bis sich dem Punkt auf
-einen Abstand < delta\_pos angenährt wurde.
-Danach wird gewartet, bis der Server das erreichen des Punktes registriert
-hat und ein neuer, anzufahrender punkt übermittelt wurde.
+\input{balldetection}
+\input{sonar}
+\input{funktionsweise}
 
 
 
-
-
-
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "template"
+%%% End: 
