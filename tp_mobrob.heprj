@@ -1,0 +1,23 @@
+<XMLConfigSettings>
+	<FILEINFO type="ProjectFile"/>
+	<Properties>
+		<RootDirectory>D:\\dev\\projects\\tp_mobrob</RootDirectory>
+		<CRLFMode>-1</CRLFMode>
+	</Properties>
+	<NODES>
+		<File name="D:\\dev\\projects\\tp_mobrob\\.gitignore"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\buildsystem.tex"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\ClassDoc.sty"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\doku.sty"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\einleitung.tex"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\evaluation.tex"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\hauptteil.tex"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\Makefile"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\Makefile.ini"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\template.tex"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\TU-Logo.eps"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\TU-Logo.eps.new"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\TU-Logo.pdf"/>
+		<File name="D:\\dev\\projects\\tp_mobrob\\zusammenfassung.tex"/>
+	</NODES>
+</XMLConfigSettings>
