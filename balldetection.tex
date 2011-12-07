@@ -3,8 +3,8 @@
 \label{sec:balldetection}
 Die Ballerkennung läuft in einen eigenen Thread im Client, da sie und
 die Fahrschleife des Roboters sich gegenseitig blockieren
-würden. Dabei greift sie auf das Kamerabild einer Logitech Webcam
-(TODO Typ einfügen!) zurück. Nach Initialisierung der Ballerkennung
+würden. Dabei greift sie auf das Kamerabild einer Logitech Webcam Pro 9000
+zurück. Nach Initialisierung der Ballerkennung
 werden folgende Schritte durchgeführt, bis der Ball gefunden oder die
 Suche abgebrochen wurde:
 \begin{enumerate}
@@ -17,9 +17,9 @@ Suche abgebrochen wurde:
   beendet und die Koordinaten des Balls werden wie folgt bestimmt:
   \begin{enumerate}
   \item Mit den Methode \lstinline|getDistanceToBall()| und
-    \lstinline|getAngleToBall()| wird die Entfernung und der Winkel
-    zum Ball abgerufen. Daraus und der aktuellen Position des Roboters
-    wird die Ballposition bestimmt.
+    \lstinline|getAngleToBall()| wird die Entfernung (in mm) und der Winkel
+    zum Ball abgerufen. Daraus wird zusammen mit der aktuellen Position des Roboters
+    die Ballposition bestimmt.
   \item Danach wird die gefundene Position zum Server übertragen
   \end{enumerate}
 \item Ist die Wahrscheinlichkeit hingegen kleiner als 80 \% wird mit
@@ -33,13 +33,13 @@ den Details der Ballerkennung beschäftigen zu müssen. Sie verfolgt
 folgenden Ansatz: Im Kamerabild wird nach roten Pigmenten
 gesucht. Erreichen diese eine gewisse Anzahl, sucht die Software nach
 kreisförmigen Objekten, die diese Pigmente enthalten. Je nachdem,
-wieweit diese Kriterien erfüllt sind, berechnet die Software eine
+wie weit diese Kriterien erfüllt sind, berechnet die Software eine
 Wahrscheinlichkeit, ob sich im aktuellen Bild ein Ball befindet und
 die Entfernung und den Winkel zum vermuteten Ball. Um vernünftige
 Werte zu erhalten ist es unabdingbar, die Software vorher zu
 kalibrieren. Nichts destotrotz kann es zu false Positives
-kommen. Näheres zur Kalibrierung sowie zur Häufigkeit und Ursachen von
-false Positives finden sich im Abschnitt \ref{cha:evaluation} ab Seite \pageref{cha:evaluation}.
+kommen. Näheres zur Kalibrierung sowie zur Häufigkeit und den Ursachen von
+False Positives finden sich im Abschnitt \ref{cha:evaluation} ab Seite \pageref{cha:evaluation}.
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "template"
