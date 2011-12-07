@@ -18,8 +18,16 @@ Suche abgebrochen wurde:
   \begin{enumerate}
   \item Mit den Methode \lstinline|getDistanceToBall()| und
     \lstinline|getAngleToBall()| wird die Entfernung (in mm) und der Winkel
-    zum Ball abgerufen. Daraus wird zusammen mit der aktuellen Position des Roboters
-    die Ballposition bestimmt.
+    zum Ball (in Grad von der Mitte des Bildes aus ($0^\circ$), links positiv, rechts
+		negativ) abgerufen. Daraus wird zusammen mit der aktuellen Position des Roboters
+    die Ballposition bestimmt, dazu wird zuerst der Ausrichtungsvektor des
+		Roboters um -WinkelZumBall gedreht. Dann wird die Entfernung zum Ball
+		ermittelt, da diese in mm ist, muss die Entfernung in px umgerechnet
+		werden. Dazu dient der Wert pixelPerMm aus der Konfiguration, welcher
+		die Auflösung der Karte in px/mm angibt. Um nun die Ballposition zu
+		erhalten, wird der gedrehte Ausrichtungsvektor (ein Einheitsvektor) mit
+		pixelPerMm * EntfernungZumBall skalar multipliziert und auf den aktuellen
+		Positionsvektor raufaddiert.
   \item Danach wird die gefundene Position zum Server übertragen
   \end{enumerate}
 \item Ist die Wahrscheinlichkeit hingegen kleiner als 80 \% wird mit
