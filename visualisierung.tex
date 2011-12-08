@@ -1,0 +1,23 @@
+\section{Visualisierung der Partikelmengen des Partikelfilters}
+Da die im Partikelfilter integrierte Visualisierung der Partikelmenge
+nicht immer funktionierte und es auch keine direkte SPeichermöglichkeit der
+ Bilder gab, haben wir den Partikelfilter, so erweitert, dass die
+Partikelmenge in eine Datei geschrieben werden kann (
+\ref{sec:sonarparticlefilter}) und passend dazu ein Skript (in Python unter
+ Benutzung von pygame geschrieben), welches die Partikel anhand der Daten
+ aus einer Partikelmengendatei über ein Bild legt. Dieses ist im Ordner
+ Visualisierung im SVN-Repository unter dem Namen visualize.py zu finden.
+
+ \subsection{HOWTO: Installieren der Abhängigkeiten des
+Visualisierungsskriptes und Benutzung dessen}
+ \begin{itemize}
+	 \item Python 3.2 herunterladen und installieren\footnote{http://python.org/ftp/python/3.2.2/python-3.2.2.msi}
+	 \item pygame 1.9.2a0 für Python 3.2 installieren \footnote{http://pygame.org/ftp/pygame-1.9.2a0.win32-py3.2.msi}
+	 \item Python 3.2 zum PATH hinzufügen
+	 \item cmd/Eingabeaufforderung öffnen
+	 \item In den Ordner Visualisierung des Repositories wechseln
+	 \item Das Visualisierungsskript kann nun folgendermaßen benutzt werden:\\
+	 		\lstinline|python visualize.py (Dateiname des Bildes) (Dateiname der Partikelmengendatei)| \\
+ 			z.b. \lstinline|python visualize.py OccuMap.bmp visual.log|
+	 \item Das Ausgabebild hat dann den Namen V\_(Dateiname der Partikelmengendatei)\_(Dateiname des Bildes)
+\end{itemize}
