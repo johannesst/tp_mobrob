@@ -15,12 +15,30 @@
 \usepackage{nomencl}
 \usepackage[normalem]{ulem}
 \usepackage[]{listings}
+\usepackage{setspace}
 
 \newcommand{\ve}[1]{\mbox{\boldmath$#1$}}
 \newcommand{\ma}[1]{\mbox{\boldmath$#1$}}
 \newcommand{\eR}{\mbox{$\varepsilon I\;R$}}
 \renewcommand{\today}{10.Dezember 2011}
-\lstset{language=C++,tabsize=2,breaklines=true,breakatwhitespace=true, numbers=left}
+   \definecolor{darkgray}{rgb}{0.95,0.95,0.95}
+   \definecolor{darkgreen}{rgb}{0.0,0.48,0.0}
+   \lstset{language=C++,
+       aboveskip = 10pt,
+       belowskip = 10pt,
+       backgroundcolor=\color{darkgray},
+       numbers=left, numberstyle=\small,
+       stepnumber=1, numbersep=8pt,
+       columns = fixed,
+       breaklines=true
+       breakatwhitespace=true
+       keywordstyle=\color{blue},
+       commentstyle=\color{darkgreen},
+       basicstyle=\small,
+       showspaces = false,
+       showtabs = false,
+       lineskip=-1pt,
+       tabsize=2}
 
 \begin{document}
 
@@ -266,6 +284,7 @@
 %                 \end{tabular} 
 %                 \end{minipage} 
  
+\setstretch{1.5}
 \input{einleitung}%worum gehts? 
 \input{hauptteil}%Wie haben wir die Aufgabe gelöst? 
                  %Softwarearchitektur!  
@@ -279,6 +298,7 @@
                   %falsePositives wenn weißes Licht zuviele rote 
                   %Partikel enthält) 
 \input{zusammenfassung} % Zusammenfassung halt :) 
+\setstretch{1}
  
  
 % \begin{appendix} 
