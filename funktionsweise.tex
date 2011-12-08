@@ -4,11 +4,11 @@
 
 Der Client selber arbeitet folgendermaßen:
 
-Beim Start wird die Datei config.cfg eingelesen, wenn diese nicht gefunden
+Beim Start wird die Konfiguration aus der  Datei config.cfg eingelesen, wenn diese nicht gefunden
 wird, nutzt der Client die fest eingestellten Standardwerte. Die config.cfg
 hat folgende Struktur:
 
-\begin{lstlisting}
+\begin{lstlisting}[captionpos=b,caption={Aufbau der config.cfg},label={aufbau_config}]
 #Kommentarzeile (wird ignoriert)
 Sonaranzahl als int
 #Kommentarzeile (wird ignoriert)
@@ -25,7 +25,7 @@ Pixel in der Karte pro mm als double
 
 Ein Beispielkonfiguration für den Fahrstuhlvorraum vor dem
 Robotik-Labor im Braunschweiger Informatikzentrum wäre z. B.
-\begin{lstlisting}
+\begin{lstlisting}[captionpos=b,caption={Ein Beispiel für eine komplette config.cfg},label={beispiel_config}]
 #Anz Sensoren
 8
 #COM Port

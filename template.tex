@@ -4,6 +4,7 @@
 \usepackage[ngerman]{babel}
 \usepackage{longtable}
 %\usepackage[draft]{graphicx}
+\usepackage{nofloat}
 \usepackage{graphicx}
 \usepackage{tikz}
 %\usepackage{graphics}
@@ -13,7 +14,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{nomencl}
 \usepackage[normalem]{ulem}
-\usepackage{listings}
+\usepackage[]{listings}
 
 \newcommand{\ve}[1]{\mbox{\boldmath$#1$}}
 \newcommand{\ma}[1]{\mbox{\boldmath$#1$}}
@@ -112,7 +113,8 @@
 
     \tableofcontents
     \listoffigures 
-    \listoftables 
+    \lstlistoflistings
+    %\listoftables 
     \newpage 
 %     \begin{minipage}{16cm} 
 %         {\bf \Large Nomenclature} 
@@ -279,10 +281,10 @@
 \input{zusammenfassung} % Zusammenfassung halt :) 
  
  
- \begin{appendix} 
+% \begin{appendix} 
 % dazu anhang mit installationsanleitung und ggf. weiteren Kram. 
-\include{buildsystem} 
-\end{appendix} 
+%\include{buildsystem} 
+%\end{appendix} 
  
 %literatur? Vielleicht die quelle des bahnplanungsalgorithmuses? 
 %\begin{thebibliography}{99} 

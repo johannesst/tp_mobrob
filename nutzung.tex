@@ -1,11 +1,70 @@
 
-\chapter{Erstellung und Nutzung der Software}
+\chapter{Erstellung der Software}
 \label{cha:erstellung}
-In diesen Abschnitt beschreiben wir die Erstellung und Nutzung der
-Software. 
-\input{aufbau_projektbaum}
-\input{erstellung}
+In diesen Abschnitt beschreiben wir den Erstellungsprozess der
+Software. Dazu beschreiben wir erst die Struktur des Projektes, den
+Aufbau des Buildsystems für den Client und schließlich den Erstellungsprozess für
+Client und Server.
+% und am Ende schließlich
+%die Benutzung von Client und Server.
 
+\input{aufbau_projektbaum}
+\input{buildsystem}
+\input{erstellung}
+\chapter{Nutzung der Software}
+\label{cha:nutzung}
+\section{Client}
+\label{sec:client-1}
+
+\subsection{Kalibrierung der Balldetection}
+\label{sec:kalibr-der-balld}
+Die Ballerkennung muss zunächst kalibriert werden, da ansonsten keine
+brauchbaren Ergebnisse erzielt werden können. Dies ist deshalb nötig,
+da die Ausrichtung der auf dem Roboter montierten Webcam
+entscheidenden Einfluss auf die von der Ballerkennung ermittelten
+Werte hat. Zur VisualStudio Solution ,,TP2010/11'' gehört auch ein
+Unterprojekt calib. Nach Erstellung der ausführbaren Datei calib.exe
+ist diese an folgende Stelle des Projektbaums zu kopieren:
+\verb|\client\src\calibrate\| \\ 
+Für die folgenden Schritte werden dann ein Schachbrett sowie ein
+Maßband oder Ähnliches benötigt. 
+Danach geht man folgendermaßen vor:
+\begin{itemize}
+\item Man stellt das Schachbrett und den Roboter in einen Abstand von
+  ca 1 Meter voneinander entfernt so auf, dass die Kamera auf die
+  Mitte des Schachbrettes zeigt:
+ TODO: bild einfügen
+\item Danach misst man mit dem Maßband die Entfernung zwischen Roboter
+  und Schachbrett, sowie den Abstand vom Schachbrett zum Boden:
+TODO: bild einfügen
+\item Anschließend startet man die Batchdatei \verb|calibrate.cmd| im
+  Ordner \verb|\client\src\calibrate\|. Nun muss man noch die
+  Kameranummer, sowie die im vorherigen Schritt ermittelten
+  Entfernungen in mm angeben und die Kalibrierung startet:
+TODO: bild einfügen
+\item Die Kalibrierung ist erfolgreich, wenn folgendes Muster im
+  Kamerabild angezeigt wird, dann ist im Batch-Skript die Ausführung
+  des Kalibiertools mit <STRG>-C zu unterbrechen. Auf die Nachfrage,
+  ob auch die Batchdatei unterbrochen werden soll, gibt man ,,n'' ein.
+\item Danach sollte ein neuer Ordner im aktuellen Verzeichnis mit den
+  Kalibrierdaten sein.
+\end{itemize}
+
+\subsection{Einrichtung des Clients}%Konfiguration und Nutzung des Clients}
+\label{sec:einrichtung-client}
+Der Client wird über die Datei \verb|config.cfg| eingerichtet. Eine
+Erklärung und ein Beispiel findet sich im Abschnitt
+\ref{sec:funktionsweise} auf Seite \pageref{config_aufbau}. Die Datei
+muss sich im gleichen Verzeichnis wie die ausführbare Datei
+\verb|p3dxSteuerung.exe| befinden. Ausserdem benötigt der Client die
+Daten der Kalibrierung und Karten für die Lokalisierung. Idealerweise
+erzeugt man sich für die *exe-Datei und anderen benötigten Dateien ein
+eigenes Verzeichnis, wo alle benötigten Dateien rein kopiert werden.  Hierzu
+empfiehlt sich folgender Aufbau des Laufzeitverzeichnisses: 
+
+\subsection{Benutzung des Clients}
+\label{sec:benutz-des-clients}
+%Zunächst 
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "template"

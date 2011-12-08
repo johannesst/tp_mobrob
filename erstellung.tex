@@ -1,0 +1,30 @@
+
+
+\section{Erstellung von Client und Server mit Visual Studio  2010}
+Da der Client mit Hilfe des im vorherigenen Abschnitts auf CMake
+basierenden Buildystems erzeugt wird, sind hier mehr Schritte als beim
+Server notwendig:
+\begin{enumerate}
+	\item CMake für Windows (Version min. 2.6) herunterladen und installieren
+  \footnote{http://www.cmake.org/}
+	\item CMake GUI starten
+	\item Unter "Where is the source code" den Pfad des Client-Verzeichnisses
+ eintragen und unter "Where to build the binaries" den Pfad zu dem
+Verzeichnis, wo die Solution für den Client erstellt werden soll
+	\item Auf "Configure" klicke, "Visual Studio 2010" und "Use default
+native compilers" auswählen, dann auf Finish klicken. Auf das Ende des
+Einrichtens warten.
+	\item Auf "Generate" klicken
+	\item Im ausgewählten Zielverzeichnis befindet sich nun eine
+          Visual Studio 2010
+Solution (TP\_WS\_2010.sln). 
+\item Außerdem befindet sich im Unterordner ,,PioneerMRServer'' im
+Projektbaum eine Solution für den
+Server (PioneerMRServer.sln). Beide Solutions können ganz normal mit 
+Visual Studio 2010 geöffnet und gebaut werden (F7 oder STRG-Alt-F7).
+\end{enumerate}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "template"
+%%% End: 

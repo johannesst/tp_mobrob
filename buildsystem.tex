@@ -1,7 +1,7 @@
-\chapter{Integration bestehender Projekte in ein neues Buildsystem für den
+\section{Integration bestehender Projekte in ein neues Buildsystem für den
 Client}
 \label{cha:integr-best-proj}
-\section{Warum ein neues Buildsystem?}
+\subsection{Warum ein neues Buildsystem?}
 Die Ballerkennung und der Sonarpartikelfilter hängen von vielen
 Altprojekten
 ab. Das Beispiel für die Steuerung der Pioneer 3-DX hing zudem von der ARIA
@@ -24,7 +24,7 @@ Buildsysteme (u.a. GNU make, nmake, msbuild). Somit wäre es bei Bedarf auch
 Möglich gewesen, auf eine andere Visual Studio Version umzusteigen ohne
 die Solutions zu konvertieren oder neu zu erstellen.
 
-\section{Integration der Projekte}
+\subsection{Integration der Projekte}
 Zuerst wurde eine passende Ordnerstrukur angelegt: include für
 Header-Dateien,
 src für die cpp-Dateien der einzelnen Projekt, bin für eventuell zum Linken
@@ -35,7 +35,7 @@ build als Zielordner für erzeugte Buildfiles.
 Als nächstes wurde für das Projekt im Ordner des Clients eine
 CMakeLists.txt-Datei angelegt:
 
-\begin{lstlisting}
+\begin{lstlisting}[captionpos=b,caption={CMakeLists.txt für das Buildsystem des Clients}]
 cmake_minimum_required (VERSION 2.6)
 project (TP_WS_2010)
 
@@ -69,7 +69,8 @@ verwenden.
 
 Die CMakeLists.txt bindet nun alle Sourceordner der Unterprojekte ein:
 
-\begin{lstlisting}
+\begin{lstlisting}[captionpos=b,caption={CMakeLists.txt für den Sourceordner}]
+%\begin{lstlisting}
 cmake_minimum_required (VERSION 2.6)
 
 add_subdirectory (irpUtils)
@@ -103,8 +104,9 @@ add_subdirectory (networkTest)
 Bei den Unterprojekten gibt es zwei Arten: Bibliotheken und Anwendungen.
 
 Die CMakeList.txt einer Bibliothek sieht wie folgt aus:
-
-\begin{lstlisting}
+\begin{lstlisting}[captionpos=b,caption={CMakeLists.txt einer Bibliothek am
+    Beispiel irpCamera}]
+%\begin{lstlisting}
 cmake_minimum_required (VERSION 2.6)
 
 file(GLOB src "*.cpp")
@@ -114,7 +116,7 @@ add_library (irpCamera ${src} ${includes})
 \end{lstlisting}
 
 Die CMakeList.txt einer Anwendung sieht so aus:
-\begin{lstlisting}
+\begin{lstlisting}[captionpos=b,caption={CMakeLists.txt des Clients}]
 cmake_minimum_required (VERSION 2.6)
 
 file(GLOB src "*.cpp")
@@ -153,7 +155,8 @@ um
 ihn mit MSVC 2010 oder der Struktur unseres include-Ordners kompatibel zu
 machen.
 
-\section{HOWTO: Hinzufügen eines neuen Unterprojektes}
+\subsection{Hinzufügen eines neuen Unterprojektes}
+\label{sec:hinz-eines-neuen-unterprojektes}
 Das Hinzufügen eines neuen Unterprojektes ist relativ einfach.
 Zuerst wird ein Unterverzeichnis für das Projekt im include-Ordner und
 eines im
@@ -171,22 +174,6 @@ die cpp-Dateien und Includes hinzu, fügt dann mit add\_library oder
 add\_executable Buildtargets hinzu und gibt eventuell noch zu linkende
 Bibliotheken bei Anwendungen an mit target\_link\_libraries.
 
-\section{HOWTO: Bauen des Clients mit VS 2010}
-\begin{enumerate}
-	\item CMake für Windows (Version min. 2.6) herunterladen und installieren
- \footnote{http://www.cmake.org/}
-	\item CMake GUI starten
-	\item Unter "Where is the source code" den Pfad des Client-Verzeichnisses
- eintragen und unter "Where to build the binaries" den Pfad zu dem
-Verzeichnis, wo die Solution für den Client erstellt werden soll
-	\item Auf "Configure" klicke, "Visual Studio 2010" und "Use default
-native compilers" auswählen, dann auf Finish klicken. Auf das Ende des
-Einrichtens warten.
-	\item Auf "Generate" klicken
-	\item Im ausgewählten Zielverzeichnis befindet sich nun eine VS 2010
-Solution (TP\_WS\_2010.sln). Diese kann nun ganz normal mit VS 2010
-geöffnet und gebaut werden. (F7 oder Strg-Alt-F7)
-\end{enumerate}
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "template"

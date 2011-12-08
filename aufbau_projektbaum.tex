@@ -1,12 +1,18 @@
 
 \section{Aufbau des Projektbaums}
 \label{sec:aufbau_projektbaum}
-Der aus dem SVN ausgecheckte Projektbaum  ist wie folgt aufgebaut:\\
+Der aus dem SVN ausgecheckte Projektbaum  ist wie folgt aufgebaut:\\% \\\\
+%\\\\\parbox{1.0\linewidth}{
+%{1.0\linewidth}
+%\begin{minipage}{1.0\textwidth}
+
+\begin{nofloat}{figure}%{l}{1\textwidth}
+\centering
 \begin{tikzpicture}
 %\tikz 
 [font=\footnotesize,
-       grow=right, level 1/.style={sibling distance=3em},
-                   level 2/.style={sibling distance=1em}, level distance=2cm]
+       grow=right, level 1/.style={sibling distance=3.5em},
+                   level 2/.style={sibling distance=1em}, level distance=3cm]
   \node {TP2010\_11} % root
      child { node {binaries}}
      child {node {client}}
@@ -16,19 +22,33 @@ Der aus dem SVN ausgecheckte Projektbaum  ist wie folgt aufgebaut:\\
   child{node {Visualisierung}
     }; %
 \end{tikzpicture}
+\caption{Projektbaum nach svn checkout}  
+\end{nofloat}
+%\end{minipage}
+%\newpage 
+%\begin{minipage}{1.0\textwidth}
 Da beim Client es nötig war, diverse Libaries des Institutes für
 Robotik und Prozessinformatik (IRP) der technischen Universität
 Braunschweig sowie den Sonar-Partikelfilter und die Ballerkennung zu
 integrieren, wurde dazu eine besondere Buildumgebung auf Basis von
 CMake geschaffen. Sie
 wird im Abschnitt \ref{cha:integr-best-proj} ab Seite
-\pageref{cha:integr-best-proj} beschrieben. Einen ersten Überblick
+\pageref{cha:integr-best-proj} beschrieben.   
+
+%\parbox{\textwidth}{
+Einen ersten Überblick
 über die Struktur des Ordners ,,client'' gibt folgende Baumübersicht:\\
+%\begin{minipage}{1.0\linewidth}
+%\end{minipage}
+%\ \\
+
+\begin{nofloat}{figure}%{i}{\textwidth}
+\centering
 \begin{tikzpicture}
 %\tikz 
 [font=\footnotesize,
-       grow=right, level 1/.style={sibling distance=3em},
-                   level 2/.style={sibling distance=1em}, level distance=2cm]
+       grow=right, level 1/.style={sibling distance=3.5em},
+                   level 2/.style={sibling distance=1em}, level distance=3cm]
   \node {client} % root
      child { node {build}}
      child {node {dlls}}
@@ -38,6 +58,11 @@ wird im Abschnitt \ref{cha:integr-best-proj} ab Seite
   child{node {src}
     }; %
 \end{tikzpicture}
+  \caption{Projektbaum im Unterordner client}
+\end{nofloat}  
+%\ \\
+%\begin{minipage}{1.0\textwidth}
+  
 Der Ordner ,,build'' enthält die durch CMake generierten VisualStudio
 Projekte und fertig gebauten ausführbaren Dateien und DLLs. Die Ordner
 ,,dlls'' und ,,lib'' enthalten zur Erzeugung und Ausführung der
@@ -48,8 +73,10 @@ enthalten. \\\\
 Die Notwendigkeit einer gesondereten Buildinfrastruktur war beim
 Server (PioneerMRServer) nicht 
 gegeben, da dieser nicht von den Institutsbibliotheken
-abhängt. Entsprecht reichte es dort, ein normales VisualStudio Projekt
+abhängt. Entsprechend reichte es dort, ein normales VisualStudio Projekt
 zu erstellen. 
+
+%\end{minipage}
 
 %%% Local Variables: 
 %%% mode: latex
