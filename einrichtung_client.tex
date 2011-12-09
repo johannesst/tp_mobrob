@@ -1,0 +1,16 @@
+
+\subsection{Einrichtung des Clients}%Konfiguration und Nutzung des Clients}
+\label{sec:einrichtung-client}
+Zunächst müssen die Webcam des Roboters und dessen serielle
+Schnittstelle  mit dem Laptop, auf dem die Clientsoftware läuft,
+verbunden  werden. Anschließend wird der Client über  die Datei \verb|config.cfg| eingerichtet. Eine
+Erklärung und ein Beispiel finden sich im Abschnitt
+\ref{sec:funktionsweise} auf Seite \pageref{aufbau_config}. Die Datei
+muss sich im gleichen Verzeichnis wie die ausführbare Datei
+\verb|p3dxSteuerung_threaded.exe| befinden. Ausserdem benötigt der
+Client ein Batchskript zum Starten, die
+Daten der Kalibrierung und Karten für die Lokalisierung. Idealerweise
+erzeugt man sich für die *exe-Datei und anderen benötigten Dateien ein
+eigenes Verzeichnis, wo alle benötigten Dateien rein kopiert werden.  Hierzu
+empfiehlt sich folgender Aufbau des Laufzeitverzeichnisses: 
+
