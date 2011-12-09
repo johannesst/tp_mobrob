@@ -12,5 +12,85 @@ Client ein Batchskript zum Starten, die
 Daten der Kalibrierung und Karten für die Lokalisierung. Idealerweise
 erzeugt man sich für die *exe-Datei und anderen benötigten Dateien ein
 eigenes Verzeichnis, wo alle benötigten Dateien rein kopiert werden.  Hierzu
-empfiehlt sich folgender Aufbau des Laufzeitverzeichnisses: 
-
+empfiehlt sich der in Abbildung \ref{aufbau_laufzeit} skizzierte
+Aufbau des Laufzeitverzeichnisses. Die Bedeutung der Elemente der
+Verzeichnisstruktur ist der Tabelle
+\ref{bedeutung_namen} zu entnehmen.
+\begin{nofloat}{figure}%{l}{1\textwidth}
+\label{aufbau_laufzeit}
+\centering
+\begin{tikzpicture}
+%\tikz 
+[font=\footnotesize,
+       grow=right, level 1/.style={sibling distance=5em}
+                   level 2/.style={sibling distance=6em}, level distance=5cm]
+  \node {p3dxSteuerung} % root
+     child { node {config}}
+     child {node {client}
+       child {node {Aria.dll}}
+       child {node {calib.exe}}
+       child {node {Calibrate.cmd}}
+       child {node {rayCasting}
+         child{node {Elevator2cm.bmp}}
+         child{node {Elevator.BMP}}
+         child{node {OccuMap.bmp}}
+       }
+       child {node {config.cfg}}
+       child {node{balldetection\_test.exe}}
+       child {node {p3dxSteuerung\_threaded.exe}}
+       child {node {libzmq.dll}}
+      % child {node {CamNo}}
+       child {node {Start.bat}}
+       child {node {wskKarte}
+         child{node{Box.BMP}}
+         child{node{Box.txt}}
+         child{node {Elevator2.txt}}
+         child{node {Elevator.BMP}}
+         child{node {Elevator.txt}}
+         }
+       child {node {wtee.exe}}
+   };
+\end{tikzpicture}
+\caption{Empfohlener Aufbau des Laufzeitverzeichnisses}  
+\end{nofloat}
+\begin{nofloat}{table}{
+    %\begin{table}
+      \centering
+      \begin{tabular}{|c|p{0.8\linewidth}|}
+        \hline 
+        Name & Bedeutung \\ \hline
+        config & Vereichnis mit den *xml-Kalibrierungsdateien\\ \hline
+        client & Verzeichnis mit den Programmdateien des Clients\\ \hline
+        Aria.dll, libzmq.dll & DLLs, die vom Client zur Ansteuerung
+        des Roboters und zur Interprozesskommunikation benötigt werden
+        \\ \hline
+        %Datei der libAria, wird zur Ansteuerung des
+        %Roboters benötigt\\ \hline
+        calib.exe & Hilfstool zur Kalibrierung der Ballerkennung
+        \footnote{Basierend auf der balldetection\_test.exe von Tobias Breuer}\\ \hline
+        Calibrate.cmd &  Wrapper-Batchskript für die Kalibrierung \\ \hline
+        rayCasting,  wskKarte & Verzeichnisse mit Raumkarten im
+        BMP-Format\\ \hline
+        config.cfg & Konfigurationsdatei für den Client\\ \hline
+        balldetection\_test.exe & Miniprogramm zum Testen der
+        Ballerkennung \footnote{Geschrieben von Tobias Breuer}\\ \hline
+        wtree.exe & Windows-Tool, um Bildschirmausgaben von
+        DOS-Programmen zu loggen und trotzdem am Bildschirm
+        auszugeben.\footnote{OpenSource von Ryan Buhl unter der
+          Mozilla Public License}\\ \hline
+        Start.bat & Batch-Skript, um den Client auszuführen und
+        gleichzeitig ein Logging mittels wtree.exe zu ermöglichen.
+        %und gleichzeitigen
+        %Ausgaben voder Ausgabe des Clients
+        %\footnote{Dieses T
+       \\ \hline
+      \end{tabular}
+      \caption{Die Dateien des Laufzeitverzeichnisses und ihre Bedeutung}
+      \label{bedeutung_namen}
+   % \end{table}
+}
+\end{nofloat}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "template"
+%%% End: 
