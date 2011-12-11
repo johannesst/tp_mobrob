@@ -1,0 +1,23 @@
+\section{Lokalisierung mit den Sonar-Partikelfilter}
+Bei unseren Versuchen die Position des Roboters im Raum zu bestimmen,
+stiessen wir recht früh auf Probleme: So wurde regelmäßig eine
+komplett falsche Position im Raum bestimmt oder aber (gerade wenn der
+Roboter sich nahe einer Wand befand) die dem Roboter gegenüberliegende
+Position am anderen Ende des Raums als Position erkannt.  Nach
+mehreren Versuchen stellten wir schließlich fest, dass die
+Lokalisierung besonders zuverlässig war, wenn der Roboter beim Start
+des Clients sich in der Mitte des Raums befand, sodass bei der
+Initialisierung des Partikelfilters durch die initiale Rotation der
+Abstand zu den Wänden zu beiden Seiten gleich war. Um nun der Ursache
+dieses Phänomens auf die Spur zu kommen, haben wir dann unser eigenes
+Visualisierungsskript geschrieben. Wir beschreiben nun zunächst die
+Funktionsweise und Installation des Skriptes, bevor wir uns den
+Ergebnissen zuwenden.
+\input{visualisierung}
+
+%\input{visualisierung}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "template"
+%%% End:

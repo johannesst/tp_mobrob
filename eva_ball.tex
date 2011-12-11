@@ -1,0 +1,31 @@
+
+\section{False Positives bei der Ballerkennung}
+\label{sec:false-positives-bei}
+Wie bereits im Abschnitt \ref{sec:balldetection} erwähnt, kann es bei
+der Ballerkennung zu False Positives kommen. Diese liegen in der
+Funktionsweise der Ballerkennung begründet: Nach Aufnahme des
+Kamerabildes wird das Bild vom RGB- in den HSV-Farbraum umgewandelt,
+der anschließend nach roten Partikeln gefiltert wird. Erreichen diese
+einen gewissen Schwellwert, werden diese nach kreisförmigen Objekten
+durchsucht. Anschließend wird die Wahrscheinlichkeit berechnet, ob es
+sich dabei um einen Ball handelt. Wenn nun aber im Kamerabild so ein
+rotes Objekt ist (z.B: Ein anderer p3dx-Roboter), wird dieses mit
+hoher Wahrscheinlichkeit als ,,Ball'' erkannt. In unseren Versuchen
+wurden unter anderen der Feuerlöscher des Labors, aber auch die roten
+Schränke gerne als ,,Bälle'' erkannt. Dies konnten wir durch Aufbau
+eines geeigneten Sichtschutzes verhindern, allerdings kam es immer
+noch zu false Positives an Stellen, wo weder ein rotes Objekt, noch
+sonst irgendein Objekt vorhanden war. Wir konnten schließlich durch
+Rückfrage mit Tobias Breuer klären, dass dann höchstwahrscheinlich im
+Licht der den Vorraum des Fahrstuhl vor dem Robotiklabor beleuchtenden
+Lampen soviele Rot-Partikel vorhanden sind, dass auch da unter
+Umständen false Positives auftauchen können. Aus Zeitgründen war es
+uns leider nicht mehr möglich zu testen, ob das Ausschalten der Lampen
+zu einer Verbesserung geführt hätte. An und für sich wäre das aber die
+logische Konsequenz aus der vermuteten Ursache und auch die leichteste
+Möglichkeit, diese Vermutung auf ihren Wahrheitsgehalt zu überprüfen.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "template"
+%%% End:
