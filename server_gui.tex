@@ -1,0 +1,51 @@
+\section{Benutzung der grafischen Benutzeroberfläche (GUI) des Servers} \label{serv:Gui}
+Zur Visualisierung der im Projekt implementieren Funktionen wurde mittels der objektorientierten Klassenbibliothek der Microsoft Foundation Class (MFC) eine Benutzeroberfläche erstellt. Abgeleitet von der Klasse "CFormView" dient das äußere Fenster als Gerüst für die benötigten Aktions- und Einstellungselemente, sowie für die Darstellung der Karte und des Protokollierungsfensters. 
+
+\begin{figure}[h]
+		\centering
+		\includegraphics[width=15cm]{\bilderpath server_gui.png}
+		\caption{Pioneer Mobile Robot Server - GUI.}
+		\label{serv:fig:gui}
+\end{figure}
+
+In der Abbildung \ref{serv:fig:gui} sind die Elemente des Programms zu sehen, die dem Benutzer die Steuerung ermöglichen und eine Übersicht des aktuellen Status geben. Auf der linken Seite der grafischen Oberfläche ist zu sehen, dass der Server bis zu drei mobile Roboter verwalten kann. Dargestellt werden die Roboter in ihrern jeweiligen Farbe und ihrem abzufahrenden Pfad, falls diese Einstellung ausgewählt wurde, auf der Karte, die den größten visuellen Teil der Benutzeroberfläche ausmacht. In der folgenden Abbildung \ref{serv:fig:props} sind die spezifischen Robotereinstellungen und Roboterinformationen vergrößert dargestellt.\\
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=6cm]{\bilderpath server_robot_props.png}
+	\caption{Robotereinstellungen und -informationen.}
+	\label{serv:fig:props}
+\end{figure}
+
+
+Durch das betätigen des "`Verbinden/Trennen"'-Buttons aus Abbildung \ref{serv:fig:props} wird eine Netzwerkverbindung geöffnet und auf eine eingehende Verbindung eines Clients gewartet. Es kann nur jeweils auf eine Verbindung gewartet werden. In dieser Zeit werden die die restlichen "`Verbinden"'-Buttons für den Benutzer deaktiviert. Sichtbar wird ein eingehende Verbindung, wenn der Button von "`Abbrechen"' auf "`Trennen"' wechselt und die deaktivierten Buttons wieder aktiviert sind. Verbindet sich ein Roboter mit dem Server werden die Positionsinformationen übertragen und mit der Position und Ausrichtung im entsprechenden Feld dargestellt. Als weiterer Hinweis wird zudem noch die entsprechende IP-Adresse und der Port der eingehenden Verbindung angegeben, um den verbundenen Rechner zu identifizieren und damit die dargestellten Roboter auf der Oberfläche den realen Robotern zuzuordnen. Für jeden Roboter kann im Dropdown-Menu mit der Beschriftung "`Bahnplanung"' eine separate Bahnplanung ausgewählt werden, die vom Server zu gegebenen Zeitpunkten berechnet wird (sieht Kapitel Bahnplanung \ref{serv:kbk}). Mit der Aktivierung der Option "`Path by Click"' kann der Benutzer manuell, mittels Klicken in die Karte, einen Pfad für den Roboter bestimmen. Zur Darstellung des Pfads, der durch die Bahnplanung oder mittels "`Path by Click"' erstellt wurde, muss die ComboBox "`Path darstellen"' aktiviert sein.\\ 
+
+\begin{figure}[h]
+	\centering	
+	\includegraphics[width=6cm]{\bilderpath server_allgemeine_einstellungen.png}
+	\caption{Allgemeine Einstellungen.}
+	\label{serv:fig:general}
+\end{figure}
+
+In Abbildung \ref{serv:fig:general} sind die allgemeinen Einstellungen vergrößert dargestellt. Die allgemeinen Einstellungen beinhalten die Auswahl der Koordination (siehe Kapitel \ref{serv:kbk}), die im DropDown-Feld ausgewählt werden kann, sowie die Möglichkeit zur Darstellung der Karte, durch Selektion der Radio-Buttons, zwischen der Wabenkarte und dem Roboterscan (siehe Kapitel \ref{serv:maps}). Der "`Start/Stop"'-Button startet und beendet die Suche. Diese Einstellung verhindert ein sofortiges starten des Suchvorgangs nach einer eingehenden Verbindung.
+
+\begin{figure}[h]
+	\centering	
+	\includegraphics[width=15cm]{\bilderpath server_info.png}
+	\caption{Globale Informationselemente.}
+	\label{serv:fig:info}
+\end{figure}
+
+In Abbildung \ref{serv:fig:info} sind die globalen
+Informationselemente aufgeführt, wie sie in Abbildung \ref{serv:Gui}
+im oberen Fensterbereich zu sehen sind. Der Bereich, der die
+Debuginformationen und Benutzernachrichten darstellt, ist eine
+modifizierte ListBox, die ursprünglicherweise als Auswahlfeld
+verwendet wird. Jedoch wurde diese Option für die verwendeten Zwecke
+deaktiviert. Die Informationen der dargestellten Karte werden
+innerhalb des Gruppenrahmen "`Map Information"' angezeigt. Darunter
+fällt die Skalierung der angezeigten Karte, die Koordinate des
+Ursprungs der angezeigten Karte, die Anzahl der in der Karte
+befindlichen Waben und die Cursor Position auf die der Mauszeiger
+besitzt, wenn dieser auf einen Punkt der Karte zeigt. Die
+Informationen der Karte sind in Kapitel \ref{serv:maps} auf Seite \pageref{serv:maps} nachzulesen. 

@@ -1,0 +1,45 @@
+\section{Evaluierung des Servers}
+\label{sec:eval-des-serv}
+%\input{eva_client}
+
+%Bei der Kommunikation war zu testen, pob
+%\input{eva_kommunikation}
+\subsection{Client-Server Kommunikation}
+Die zu testende Funktionalität ist das Übermitteln der Zielpunkte der
+geplanten Bahn an den Client und der Empfang der Roboterpositionen vom
+Client durch den Server. Bei unseren Experimenten traten keinerlei
+Probleme auf. 
+\subsection{Bahnplanung}
+Die Bahnplanung soll ja eine möglichst zuvällige Auswahl von Punkten
+treffen, sodass die Roboter möglichst viele im Raum verteile
+Positionen anfahren, sodass irgendwann der Roboter den Ball nahe genug
+kommt, um ihm zu erkennen. Dies leistet die Bahnplanung ohne Probleme.
+\subsection{Kollisonsvermeidung}
+Hier ergab sich das Problem, dass wir bei unseren Versuchen nur mit
+einen Roboter arbeiten konnten, da unsere Laptops schon durch den
+ersten Roboter, sowie den Server ,,belegt'' waren. Somit konnten wir
+mit den realen Roboter nur testen, ob die Kollision mit Wänden
+vermieden wurde. Dies klappte in der Tat ohne Probleme. Nur einmal
+wurde die Wand doch angefahren. Dies war darauf zurückzuführen, dass
+die Positionserkennung mit dem Sonar-Partikelfilter kurzfristig einen
+Ausreißer hatte (vgl. hierzu auch den Abschnitt
+\ref{sec:lokal-mit-den} ab Seite \pageref{sec:lokal-mit-den}). Somit
+war aus Sicht der Kollisonsvermeidung keine Gefahr vorhanden und
+brauchte somit auch nicht abgewehrt werden. Im Endeffekt ist dieser
+,,Fehlschlag'' also kein Zeichen, dass die Kollisionsvermeidung nicht
+funktionieren würde. \\\\
+Um nun das Verhalten der Bahnplanung und Kollisionsvermeidung bei
+mehreren Robotern zu testen, wurde auf den im Abschnitt
+\ref{serv:testclient} auf Seite \pageref{serv:testclient}
+beschriebenen Testclient zurückgegriffen, der das Verhalten des
+Clients emuliert. Wir haben insgesamt drei virtuelle Testclients mit
+dem Server verbunden und konnten somit die Kollisionsvermeidung testen.
+%Bei der Bahnplanung ergab sich das Problem, dass uns nur ein Roboter
+%zum Testen zur Verfügung 
+%input{eva_bahnplanung}
+%\input{eva_kollision}
+%Client-Server Kommunikation, die Bahnplanung und Kollisionsvermei
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "template"
+%%% End:

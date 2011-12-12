@@ -1,8 +1,10 @@
 \documentclass[a4paper]{report}
 \usepackage{a4}
 \usepackage{doku}
-\usepackage[ngerman]{babel}
+
 \usepackage{longtable}
+	\usepackage[ngerman]{babel}
+	\usepackage[numbers,sort&compress]{natbib}
 %\usepackage[draft]{graphicx}
 \usepackage{nofloat}
 \usepackage{graphicx}
@@ -16,29 +18,43 @@
 \usepackage[normalem]{ulem}
 \usepackage[]{listings}
 \usepackage{setspace}
-
+\usepackage{nomencl}
+\usepackage[normalem]{ulem}
+\usepackage{subfigure} 
+\usepackage{subfig} 
+%	\usepackage{graphics}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amssymb} 
+\usepackage{setspace}
+\usepackage{pifont} %Für ein Kreuz \ding{55}
+\usepackage{amsfonts} %Für ein Haken \checkmark
+\usepackage{multirow} 	
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{ifpdf}
+	\usepackage{placeins}
+	\usepackage{bbm}
 \newcommand{\ve}[1]{\mbox{\boldmath$#1$}}
 \newcommand{\ma}[1]{\mbox{\boldmath$#1$}}
 \newcommand{\eR}{\mbox{$\varepsilon I\;R$}}
 \renewcommand{\today}{10.Dezember 2011}
-   \definecolor{darkgray}{rgb}{0.95,0.95,0.95}
-   \definecolor{darkgreen}{rgb}{0.0,0.48,0.0}
-   \lstset{%language=C++,
-       aboveskip = 10pt,
-       belowskip = 10pt,
-       backgroundcolor=\color{darkgray},
-       numbers=left, numberstyle=\small,
-       stepnumber=1, numbersep=8pt,
-       columns = fixed,
-       breaklines=true
-       breakatwhitespace=true
-       keywordstyle=\color{blue},
-       commentstyle=\color{darkgreen},
-       basicstyle=\small,
-       showspaces = false,
-       showtabs = false,
-       lineskip=-1pt,
-       tabsize=2}
+	\definecolor{darkgray}{rgb}{0.95,0.95,0.95}
+	\definecolor{darkgreen}{rgb}{0.0,0.48,0.0}
+	\lstset{language=C++,
+		aboveskip = 10pt,
+		belowskip = 10pt,
+		backgroundcolor=\color{darkgray},
+		numbers=left, numberstyle=\small, 
+		stepnumber=1, numbersep=8pt,
+		columns = fixed,
+		keywordstyle=\color{blue},
+		commentstyle=\color{darkgreen},
+		basicstyle=\ttfamily\small,
+		showspaces = false,
+		showtabs = false,		
+		lineskip=-1pt,
+		tabsize=2}
 
 \begin{document}
 

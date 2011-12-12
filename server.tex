@@ -1,0 +1,313 @@
+\def\bilderpath{bilder/}
+
+\section{Server}\label{serv:Server}
+
+Der Server dient zum einen als zentraler Netzwerk-Einstiegspunkt für alle Clients, und zum anderen auch für die Koordination der Suche und Bahnplanung der verbundenen mobilen Roboter auf der bereitgestellten Karte des Raumes. Die Schnittstelle zwischen Server und Client wurde so gering wie möglich gehalten um sowohl den Server als auch den Client so dynamisch wie möglich verweden zu können.
+
+\subsection{Grafische Benutzeroberfläche (GUI)}\label{serv:archGui}
+Zur Visualisierung der im Projekt implementieren Funktionen wurde
+mittels der objektorientierten Klassenbibliothek der Microsoft
+Foundation Class (MFC) eine Benutzeroberfläche erstellt. Abgeleitet
+von der Klasse "CFormView" dient das äußere Fenster als Gerüst für die
+benötigten Aktions- und Einstellungselemente, sowie für die
+Darstellung der Karte und des Protokollierungsfensters.  Die GUI wird
+näher im Abschnitt \ref{serv:gui} ab Seite \pageref{serv:gui} beschrieben.
+\subsection{Netzwerkverbindung}\label{serv:netzwerkverbindung}
+Für die Kommunikation zwischen Server und Client dient eine TCP-IP-Socket-Verbindung. Wie in Abbildung \ref{serv:fig:netzwerkverbindung} zu sehen, kann nach individuellen Initialisierungsschritten von Server von Client eine Datenverbindung aufgabaut werden, in der die entsprechenden Nutzdaten für die Robobter und für die Serversoftware übertragen wird.
+
+\begin{figure}[h]
+	\centering	
+	\includegraphics[width=8cm]{\bilderpath server_client_verbindung.png}
+	\caption{Server-Client Kommunikationsverbindung.}
+	\label{serv:fig:netzwerkverbindung}
+\end{figure}
+
+\subsubsection{Verbindungsaufbau}
+
+Zum erstellen einer Socket-Verbindung muss zunächst ein Socket, unter Angabe von Protokoll und Übertragungsart, erstellt werden. Anschließen wird an diesen Socket die Inforamtion über den Service angeheftet. Darunter fallen Kommunikationsart (bsp. TCP oder UDP), Adressdomain (host:port oder UNIX Pathname) und der verwendete Port. Als letzter Initialisierungsschritt, muss die Anzahl der Verbindungen, die der Socket zulässt, angegeben werden. Ist die Initialisierung erfolgt, kann der Socket auf eine Verbindung aus dem Netzwerk warten. Dies geschieht mit der Funktion {\it accept(...)}, die das Programm bzw. den Thread blockiert, bis eine Verbindung eingegangen wird. Für weitere Verbindungen muss die {\it accept(..)}-Funktion erneut aufgerufen werden. Der Rückgabewert der Funktion entspricht der Socketnummer und die Variable die als Referenz der Funktion übergebenden wird, enthält nach der eingehenden Verbindung die Informationen über den verbundenen Client. In der Auflistung \ref{serv:lst:serverconn} werden die essentiellen Befehle für die Verbindung des Servers zusammengefasst.
+
+\begin{lstlisting}[frame=tb,captionpos=b,caption=Socket Connection - Server., label=serv:lst:serverconn]
+//Zusammenfassung der Implementierung aus der SocketConnection.cpp
+#pragma comment(lib,"WSOCK32.LIB")
+
+SOCKET cSocket;
+sockaddr_in service;
+int tempsize;
+struct sockaddr_in tempstr;
+tempsize = sizeof(tempstr);	
+
+service.sin_family = AF_INET; 								//Domain								
+service.sin_addr.s_addr = htonl(INADDR_ANY);	//initialisietung der Adresse
+service.sin_port = htons(7410);								//Port
+
+//Socket erstellen
+cSocket =  socket(AF_INET,SOCK_STREAM,IPPROTO_TCP); 			
+//Service anheften
+bind(cSocket, (SOCKADDR*)&service, sizeof(service)); 
+//Anzahl der Verbindung (CONNECTION_COUNT) angeben
+listen(cSocket,CONNECTION_COUNT);														
+
+//Auf Verbindung warten
+int acception = accept(cSocket, (struct sockaddr*)&tempstr, &tempsize); 
+
+\end{lstlisting}
+
+Um eine Verbindung aufzubauen muss der Client zunächst, wie der Server, einen Socket erstellen. Anschließend kann direkt durch Angabe der Adressdomain, der IP-Adresse und dem Port eine Verbindung mit dem wartenden Server eingegangen werden, wie in Listing \ref{serv:lst:clientconn} gezeigt. Während des Versuches eine Verbindung mit dem Server einzugehen wird das Programm bzw. der Thread geblockt bis die Verbindung zustande gekommen ist oder ein interner Timeout den Verbindungsversuch terminiert.
+
+\begin{lstlisting}[frame=tb,captionpos=b,caption=Socket Connection - Client., label=serv:lst:clientconn]
+//Zusammenfassung der Implementierung aus der Connection.cpp das Clients
+
+#pragma comment(lib,"WSOCK32.LIB")
+int m_socket;
+struct sockaddr_in m_serverAddress;
+
+m_serverAddress.sin_addr.S_un.S_addr = inet_addr('192.168.1.1');	//Server-IP
+m_serverAddress.sin_port = htons(7410);						//Port
+m_serverAddress.sin_family = AF_INET;							//Domain	
+
+//Socket erstellen
+m_socket = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+//Mit Server verbinden
+int check = connect(m_socket, (sockaddr*)&m_serverAddress,
+													sizeof(m_serverAddress)) ;
+\end{lstlisting}
+
+\subsubsection{Datenaustausch}
+Zum Senden und Empfangen von Daten wurde eine Reihenfolge von Aktionen festgelegt, da ein Paket, das gesendet wurde, auch von der Gegenseite empfangen werden muss. Dieser Ablauf wird in Abbildung \ref{serv:fig:datenaustausch} dargestellt. Neben den Nutzdaten für und über die mobilen Roboter werden desweiteren ACK's gesendet, die ein erfolgreiches Empfangen signalisieren. Diese Implementierung wurde zunächst für die ersten Testreihen genutzt und sollte im späteren Verlauf entfernt werden. Jedoch erwiesen diese sich als nützlich zur Fehlererkennnung bei einer Übergebe falscher Daten und sind aus Programmstabilitätsgründen erhalten geblieben.
+
+\begin{figure}[h]
+	\centering	
+	\includegraphics[width=8cm]{\bilderpath server_client_datenaustausch.png}
+	\caption{Server-Client Datenaustausch.}
+	\label{serv:fig:datenaustausch}
+\end{figure}
+
+Der Austausch der Informationen erfolgt in erstellten Datenstrukturen, die in Kapitel \ref{serv:datenstrukturen} erläutert werden. Diese angelegten und mit Informationen erfüllten Strukturen werden zu einem Zeitpunkt vom Server bzw. Client gesendet und vom jeweils anderen Kommunikationspartner empfangen. Dies erfolgt über die in Listing \ref{serv:lst:sendenempfangen} angegebenen Funktionen. Mittels der Übergabe des Sockets der Verbingung, werden die Daten zwischen den korrekten Kommunikationspartnern ausgetauscht. Sowohl die zu sendenden Daten als auch die zu empfangenden Daten befinden sich in der Struktur, die als Referenz an die Funktion übergeben wird. Nach dem Ausführen der Funktion wird ein ganzzahliger Wert zurückgegeben. Dieser entspricht der Anzahl der übermittelten Bytes. Sollten keine Daten übertragen werden gibt die Funktion einen negativen Wert zurück.
+
+\begin{lstlisting}[frame=tb,captionpos=b,caption=Senden und Empfangen., label=serv:lst:sendenempfangen]
+int check;
+struct Information info;
+
+//Daten senden (die Variable muss Daten enthalten)
+check = send(getSocket(),(char*)info,sizeof(Information),0);
+
+//Daten empfangen
+check = recv(getSocket(),(char*)info,sizeof(Information),0);
+\end{lstlisting}
+
+\subsubsection{Datenstrukturen für den Datenaustausch}\label{serv:datenstrukturen}
+
+Die Datenstrukturen für den Datenaustausch konzentrieren sich auf die wesentlichen Informationen, die zwischen dem Server und einem Client ausgetauscht werden müssen. Ziel war es eine möglichst kleine und allgemeine Schnittstelle zu konstruieren um eine Verwendung mit weiteren Robotern nicht auszuschließen. Beispielsweise wäre die Übertragung der Ultraschallsensordaten des Roboters, nicht durch Roboter anderer Modelle möglich und wurde daher auch nicht in die Übertragungsstruktur aufgenommen. Die in Listing \ref{serv:lst:str:robotinfo}, \ref{serv:lst:str:searchinfo} und \ref{serv:lst:str:pathinfo}  zu sehenden Strukturen, sind die Informationsträger, die zwischen dem Server und dem Client übertragen werden.
+
+\begin{lstlisting}[frame=tb,captionpos=b,caption=Datenstruktur RobotInformation., label=serv:lst:str:robotinfo]
+struct RobotInformation
+{			
+	Point pos;					//Aktuelle Standordsinformationen des Roboters
+	int angle;					//Angle in GRAD!!!
+
+	bool ballDetected;	//Ball gefunden?
+	Point ballPos;			//Position des gefundenen Balles
+
+	bool needPathTable; //Neuen Pfad anfordern
+
+	bool pointReached; 	//Ein Punkt wurde erreicht
+};
+\end{lstlisting}
+
+Die RobotInformation-Struktur aus \ref{serv:lst:str:robotinfo} beinhaltet Informationen über den aktuellen Status des Roboters. Dazu gehören die Koordinaten an denen sich der mobile Roboter zum Übertragungszeitpunkt befindet. Zur Visualisierung auf der Karte des Servers wird außerdem noch die Ausrichtung des Roboters übermittelt, die als Winkel der x-Achse und der Blickrichtung definiert ist. Sollte der Roboter einen Ball im Raum detektieren, wird diese Information inklusive der Ballposition Übertragen. Die Ballposition ist dabei für die Darstellung auf der Karte nötig.\\ Während der Roboter die vom Server generierten Wege abfährt, werden zwei Signalisierungstypen benötigt. Zum einen wird, für die Darstellung der Karte des Servers, signalisiert, dass ein Punkt der Liste erreicht wurde, der beim nächsten Zeichnen der Karte gelöscht werden kann und zum anderen wird signalisiert, dass ein neuer Pfad benötigt wird, sobald alle Punkte abgearbeitet wurden. 
+
+\begin{lstlisting}[frame=tb,captionpos=b,caption={Datenstruktur  SearchInformation.}, label=serv:lst:str:searchinfo]
+struct SearchInformation
+{
+	int transmissionPathTableSize;	//Pfadl"ange von PathInformation
+
+	bool ballDetected;							//Ball wurde gefunden
+	
+	bool pause;											//Suche Aktiviert/Deaktiviert
+};
+\end{lstlisting}
+
+In der Struktur SearchInformation aus \ref{serv:lst:str:searchinfo} werden Informationen vom Server an den mobilen Client gesendet. Diese Informationen signalisieren dem Roboter den Zustand der Suche. Pausiert die Suche, so sollte der Roboter sich nicht im Raum bewegen. Andersfalls läuft sie Suche und der Roboter darf die Fahrt aufnehmen. Wurde der Ball von einem der in der Suche verwendeten Roboter gefunden, ist die Suche beendet und damit können auch alle Roboter ihre Suche beenden. Dies wird durch die Variable ballDetected signalisiert. Desweiteren muss die Größe des zu übertragenden Pfades mitgeteilt werden, denn zur Übertragung von Daten muss stets die Größe der zu übermittelnden Daten angegeben werden.
+
+\begin{lstlisting}[frame=tb,captionpos=b,caption=Datenstruktur PathInformation., label=serv:lst:str:pathinfo]
+struct PathInformation
+{
+	std::vector<Point> pathList;		//Liste des Pfades
+};
+\end{lstlisting}
+
+Die PathInformation aus \ref{serv:lst:str:pathinfo} Übermittelt die vom Server generierten Pfade, die durch den Bahnplaner enstanden sind. Dieser Vorgang erfolgt, sobald der Client eine neue Liste von Wegpunkten anfordert. \\
+
+Aus den Strukturen der Listings \ref{serv:lst:str:robotinfo}, \ref{serv:lst:str:searchinfo} und \ref{serv:lst:str:pathinfo} ergibt sich schließlich die in Abbildung \ref{serv:fig:schnittstelle} dargstellte Schnittstelle, die im  definierten Regeltakt zwischen Server und Client übertragen wird.
+
+\begin{figure}[h]
+	\centering	
+	\includegraphics[width=8cm]{\bilderpath server_client_schnittstelle.png}
+	\caption{Schnittstelle zwischen Server und Client.}
+	\label{serv:fig:schnittstelle}
+\end{figure}
+
+\subsection{Testclient}\label{serv:testclient}
+
+Zum Testen der Anwendung wurde eine Testclientumgebung implementiert. Diese dient zur Prüfung der Netzwerkverbindung und Simulation der mobilen Roboter ohne die Verwendung eines realen Roboters. Die Client-Konsolen-Applikation verbindet sich nach dem starten mit dem Server und füllt die Daten der Schnittstelle mit fiktiven Informationen. Um das Verhalten eines Roboters zu simulieren, wird, bei einer gestarteten Suche, in jedem Zeitschritt die benötigte Orientierung ermittelt und in diese Richtung eine vordefinierte Länge zurückgelegt. Kollisionen und anderen unerwarteten Vorkommnisse werden nicht berücksichtigt.
+
+\subsection{Karte - Wabenkarte und Roboterscan}\label{serv:maps}
+
+Zur Navigation der Roboter muss der Raum, in dem sie sich bewegen sollen, bekannt sein. Dazu sind in einer Karte in Positionen von Hindernissen (z.B. Wände) und freie Flächen hinterlegt. Die Punkte und die dazugehörigen Informationen sind in einer Bitmap-Bilddatei kodiert. Sie besitzt eine Grauwerttiefe von 8 Bit und kann damit 256 verschiedene Informationen über einen Punkt enthalten. Die Datei, die zur aktuellen Beschaffenheit des Raumes passt muss in das System geladen werden und in einem $n\times m$ Array gespeichert werden, um weitere Berechnungen im Programm durchzuführen. Dabei entspricht $m$ der Höhe und $n$ der Breite des Bildes in Pixel. Für den Roboter bedeutet dies, dass dieser sich nur auf den Koordinaten im Raum bewegen darf, die auf der Karte einen Wert von 255 besitzen. Alle anderen Werte bzw. Punkte sind nicht befahrbar, da sie ein Hindernis darstellen. \\
+Da sich schnell herausstellt, dass die Berechnung auf einer Karte mit einer Höhe und Breite von jeweils 800 Pixeln mindestens 640.000 Rechenschritte benötigt und dadurch das Berechnen eines Pfades viel Zeit in Anspruch nimmt, kam die Idee den Vorgang zu beschleunigen. \\
+Die Lösung ist die Karte zu verkleinern, da eine so hohe Auflösung des Raumes nicht benötigt wird. Dazu wird eine neue Karte erstellt, die in der Höhe und Breite um den Faktor $F$ kleiner ist. Damit wird die Rechenzeit um den Faktor $\frac{1}{F^2}$ beschleunigt. Die Pixel der neuen Karte werden im Programm als Wabe (in Anlehnung zu Bienenwabe, engl. "`comb"') und die Karte als Wabenkarte bezeichnet. Eine Wabe repräsentiert die Information von $F^2$ Pixeln. Um eine maximale Sicherheit zu erhalten, ist eine Wabe für den Roboter nur befahrbar, wenn alle korrespondierenden Pixel der Originalen Karte für den Roboter befahrbar sind. Das stark vergrößerte Ergebnis der  Umwandlung einer Roboterscankarte (Abbildung \ref{serv:fig:roboterscan}) zu einer Wabenkarte wird in Abbildung \ref{serv:fig:wabenkarte}, wobei die grünen Kästen den Rand der Wabe markieren und in der Datenstrukur im System nicht vorhanden sind. Die GUI ermöglicht, wie in Kapitel \ref{serv:Gui} beschrieben, das wechseln der Ansichten für die Darstellung der Karte.
+
+\begin{figure}[H]
+	\begin{minipage}[b]{8cm} 	
+	\centering
+	\includegraphics[width=7cm]{\bilderpath server_robotscanmitgitter.png}
+	\caption{Roboterscanausschnitt.}
+	\label{serv:fig:roboterscan}
+	\end{minipage}
+	\hfill	
+	\begin{minipage}[b]{8cm} 
+	\centering	
+	\includegraphics[width=7cm]{\bilderpath server_combgitter.png}
+	\caption{Resultierende Wabenkarte.}
+	\label{serv:fig:wabenkarte}
+	\end{minipage}
+\end{figure}
+
+\subsection{Der Regeltakt}\label{serv:regeltakt}
+
+Mit dem Verbindungsaufbau wird für jeden Roboter ein separater Thread gestartet. Nach der eingehenden Verbindung verweilt jeder Thread in einer Dauerschleife, die durch den Benutzer beendet werden kann und damit die Verbindung zwischen den Geräten trennt. Die Dauerschleife terminiert ebenfalls, wenn die Verbindung zum Roboter, durch einen Verbindungsabbruch oder beenden des Clients, getrennt wird. Wird die Schleife beendet, so wird auch der Thread beendet und der Server ist bereit für eine erneute Verbindung mit einem Roboter. \\
+
+Während des Schleifendurchlaufs werden im Regeltakt alle Operationen durchgeführt, um die erforderlichen Daten, die der Roboter benötigt, breitzustellen und zu übertragen, sowie alle Informationen, die der Server benötigt, für die Darstellung, Speicherung und Weiterverarbeitung, bereitzustellen und zu setzen. Bevor die Schleife beginnt werden alle notwendigen Variabeln, darunter fallen auch die RobotInformation und SearchInformation, initalisiert und anschließend der Begin der Dauerschleife eingeleitet. Durch die Initialisierung wird festgelegt, dass der Client noch keinen neuen Pfad benötigt, deshalb wird im ersten Durchlauf der Schleife die Ermittlung eines Punktes durch die Koordination, die generierung des Pfads der Bahnplanung und Bestimmung kollisionsfreier Fahrten der Kollisionsvermeidung  übersprungen. Dies führt direkt zur ersten Nutzdatenübertragung zwischen Server und Client. Dabei erhält der Server die Positionsdaten des Roboters. Diese werden direkt in den entsprechenden Variablen gespeichert, um bei erneutem Zeichnen der Karte die aktuelle Position des Roboters darstellen zu können. An dieser Stelle endet die Schleife und der Prozess beginnt von vorne. Vor dem Neubeginn der Schleife wir vorweg noch eine Sleep eingefügt, der die Threadkontrolle abgibt und dem System erlaubt während dieser Wartezeit andere Operationen durchzuführen. Sollte der Client einen neuen Pfad angefordert haben, wird dieser, im nächsten Durchlauf, mittels der Koordination, Bahnplanung und Kollisionsvermeidung generiert (Kapitel \ref{serv:kbk}). Der erstellte Pfad sowie die Länge des zu übergebenden Pfades und der Status der Suche werden in den entsprechenden Strukturen gespeichert und anschließend übermittelt. Schließlich ergibt sich aus dem schematischen Programmcode aus \ref{serv:lst:thread} der in Abbildung \ref{serv:fig:regeltakt} dargestellte Verlauf für den Regeltakt.\\
+
+\begin{lstlisting}[frame=tb,captionpos=b,caption=Thread des Regeltaktes., label=serv:lst:thread]
+#define SLEEPTIME 500
+Ponint point;
+
+while(holdConnection) 					//Dauerschleife
+{	
+	if(needPathTable)
+	{
+		//Punkt durch Koordination ermitteln
+		point = GetNextPoint(pSelfRob->robotId);
+		
+		//Pfad durch Bahnplanung ermitteln
+		CreateNextPath(robotId, robot->position ,point, &internalPathList);
+		
+		//Kollisionen verhindern
+		avCollision->savePath(robot->position, &internalPathList);
+	} 	
+	
+	//Nutzdaten"ubertragung
+	connection->Transmit(robotInformation, searchInformation, internalPathList);
+	
+	//Abgabe der Threadkontrolle
+	Sleep(SLEEPTIME);
+	
+	//Abbruch einleiden
+	holdConnection = changeConnectionStatus();
+}
+
+\end{lstlisting}
+
+
+\begin{figure}[h]
+	\centering	
+	\includegraphics[width=15cm]{\bilderpath server_regeltakt.png}
+	\caption{Programmablauf des Roboter-Threads.}
+	\label{serv:fig:regeltakt}
+\end{figure}
+
+Die Länge der Wartezeit nach einer Schleife kann vom Benutzer im Programm festgelegt werden. Während der Versuche hat sich die Wartezeit von 500ms als gutes Maß bewährt. Für die Zeit $t_{Takt}$ in der eine Übertragung pro Thread erfolgt ergibt sich demnach aus: 
+\begin{equation}
+t_{Takt} = t_{Operationen}+t_{Warten}
+\end{equation}
+mit $t_{Operationen}$ als die Zeit die benötigt wird um die Operationen Koordination, Bahnplanung und Kollisionsvermeidung durchzuführen und $t_{Warten}$ als feste Wartezeit, die vom Benutzer angegeben wird. Da die Zeit $t_{Operationen}$ für jeden Takt unterschiedlich ist, ist folglich auch die Zeit des Regeltakts unregelmäßig. 
+
+\subsection{Koordination, Bahnplanung und Kollisionsvermeidung}\label{serv:kbk}
+\subsubsection{Koordination}
+Der Weg, den die Roboter während der Suche zurücklegen, wird durch die Koordination, Bahnplanung und Kollisionsverbeidung berechnet und festgelegt. Die Koordination ermittelt einen neuen Punkt im Raum, den der Roboter als nächstes anfahren soll. Dies geschieht global. Das bedeutet, dass alle Roboter gemeinsam nach dem gleichen Koordinationsalgorithmus fahren. Strategie für eine Koordination wäre beispielsweise eine Discovery-Map, in der die Punkte eingetragen sind, die die Roboter schon besucht bzw. erkundet haben und die Punkte, die noch nicht erkunden wurden müssen als nächstes angefahren werden. Zurzeit sind zwei sehr einfache Koordination-Strategien implementiert, da komplexe Strategien in dem zur Verfügung stehenden Suchterrain nicht nötig sind. In der ersten Variante werden Fest eingespeicherte Punkte im Raum angefahren, die jedoch für jede Karte neu eingetragen werden müssen. Die andere Strategie basiert auf Zufallspunkten, die währende der Laufzeit erstellt werden. Dabei wird eine zufällige Koordinate erstellt und überprüft, ob diese auch auf einem befahrbaren Punkt liegt. Sollte der generierte Punkt in einem Hindernis liegen, wird so lange ein neuer Punkt generiert, bis der Punkt nicht im Hindernis liegt.\\
+\subsubsection{Bahnplanung}
+Mit dem Punkt der Koordination wird das neue Ziel des Roboters generiert, das als nächstes erreicht werden muss. Dazu berechnet die Bahnplanung einen Weg durch den Raum, den der Roboter abfahren soll. Im Gegensatz zur Koordination, kann jeder Roboter eine unterschiedliche Bahnplanung besitzen. Dazu stehen verschiedene Strategien zur Auswahl. Beispielsweise ein RRT (Rapidly-exploring random tree), der zufällig Punkte im Raum generiert und diese zu einem Weg vom Roboter zum Zielpunkt verbindet. Ziel ist es durch die Bahnplanung eine Liste von Punkten zu erhalten, die der Roboter kollisionsfrei durch Rotation und Vorwärtsbewegung, erreichen muss. In der aktuellen Version wurde eine selbst entwickelte Methode implementiert, die "`Fast Sweep 4"' genannt wurde (vermutlich bereits unter einem anderen Namen bekannt). Diese Methode startet am Punkt an dem sich der Roboter befindet und breitet sich von Schritt zu Schritt über die Karte aus, bis das Ziel erreicht wurde. Dabei werden in jedem Schritt die Entfernungen zum Roboter in den leeren anliegenden Zellen der Karte gespeichert, die beim erreichen des Punktes, durch Rückwärtslaufen, zu einem Pfad erstellt werden. Als Ergebnis dieser Funktion entsteht eine Liste von Punkten, die durch eine Interpolation die unnötigen Zwischenpunkte entfernt und daraus die benötigte Pfad-Liste resultiert.\\
+\subsubsection{Kollisionsvermeidung}
+Neben der Kollision, die mit der Umgebung entstehen kann, muss bei einer Suche mit mehreren Robotern auch sichergestellt werden, dass keine Kollision untereinander entsteht. Dafür stand beispielsweise eine Strategie zur Verfügung, die einer Methode der Bahntechnik ähnelt. Dazu wird nach dem Erreichen eines Punktes überprüft, ob der nächste Fahrabschnitt sicher ist und eine Fahrstraße gestellt werden kann, die zu dem Zeitpunkt von keinem anderen Roboter genutzt werden kann. Die implementierte Methode sperrt nach der Bahnplanung den kompletten Raum, der von einem Roboter abgefahren werden soll, in dem die Punkt der Karte als Hindernis für die Bahnplanung der andren Roboter eingestellt werden. Erreicht der Roboter die Punkte der Bahnplanung, wird der bereits bewältigte Raum wieder für alle Roboter freigegeben.
+
+\subsection{Erweiterung von Koordination und Bahnplanung}
+
+Die Struktur des Programms ist so Konstruiert, dass durch ein hinzufügen weniger Programmcodezeilen neue Koordinationsalgorithmen und Bahnplanungsalgorithmen aufgenommen werden können. Koordinationen, die hinzugefügt werden sollen sind Klassen, die von der Klasse "`Coordination"' abgeleitet werden müssen. Das Ableiten bewirkt den Zwang die virtualle Methode {\it GetNextPoint(..)} zu implementieren, die im Programmverlauf vom Roboter aufgerufen wird und den neuen Zielpunkt für den Roboter ermittelt und zurückgibt. Zur Berechnung des Punktes steht der Koordination lediglich die Karte des Raumes zur Verfügung. Das Header-Template einer solchen Klasse ist in Listing \ref{serv:lst:koordtemp} dargestellt.
+
+\begin{lstlisting}[frame=tb,captionpos=b,caption=Koordinationstemplate., label=serv:lst:koordtemp]
+#pragma once
+#include "coordination.h"
+
+
+class Coordination_None : public Coordination
+{
+public:
+    Coordination_None(void);
+    ~Coordination_None(void);
+
+    Point GetNextPoint(int robotId);
+};
+\end{lstlisting}
+
+Die Integration einer neuen Bahnplanung ist identisch zu der Integration einer Koordination. Bahnplanungen müssen von der Klasse "`Pathplan"' abgeleitet werden, damit sichergestellt wird, dass die Funktion {\it CreateNextPath(..)} vorhanden ist. Diese berechnet durch die Angabe von Startpunkt und Zielpunkt eine neue List von Wegpunkten für den Roboter. Die Liste befindet sich nach der Funktion in der übergebenen Referenz "`InternalPathInformation"'. Listing \ref{serv:lst:bahnplantemp} entspricht dem Header-Template der Klasse.
+
+\begin{lstlisting}[frame=tb,captionpos=b,caption=Bahnplantemplate., label=serv:lst:bahnplantemp]
+#pragma once
+#include "Pathplan.h"
+
+class Pathplan_None : public Pathplan
+{
+public:
+    Pathplan_None();
+    ~Pathplan_None();
+
+    int CreateNextPath(int robotId, Point start, Point end, InternalPathInformation *ipi);
+};
+\end{lstlisting}
+
+Der angezeigte Name der Koordiantion und Bahnplanung sehen in den Variablen "`coordinationName"' und "`pathplanName"' die in den jeweiligen Basisklassen enthalten sind. Sind die Klassen im Programm integriert, müssen diese noch im Programm angemeldet werden. Dies geschieht durch das Inkludieren der Header-Dateien in der "`stdafx.h"' wie in Listing \ref{serv:lst:anmeldungstda} und das Erstellen der Instanz in der Datei "`PathManager.cpp"', wie es in Listing \ref{serv:lst:anmeldungpm} gezeigt wird.
+
+\begin{lstlisting}[frame=tb,captionpos=b,caption=Anmeldung der Klassen in stdafx.h., label=serv:lst:anmeldungstda]
+//UsernInput:------//User muss seine neu erstellte *.h Datei hier einf"ugen!                                    
+#include "Coordination.h"
+#include "Coordination_None.h"
+#include "Coordination_Random.h"
+#include "Coordination_Fixpoint.h"
+
+#include "Pathplan.h"
+#include "Pathplan_None.h"
+#include "Pathplan_FastSweep4.h"
+\end{lstlisting}
+
+\begin{lstlisting}[frame=tb,mathescape=true,captionpos=b,caption=Anmeldung der Klassen in PathManager.cpp., label=serv:lst:anmeldungpm]
+
+//UserInput: User muss die Anzal der Coordinationen Manuell eintragen                                          
+$\color{red}\textbf{numberOfCoordinations = 3;}$
+coord = new Coordination*[numberOfCoordinations];
+for(int i=0; i<numberOfCoordinations; i++)
+{
+    coord[i] = NULL;
+}
+
+//UsernInput: Koordinationsklassen hinzuf"ugen                
+$\color{red}\textbf{coord[0] = new Coordination\_None();}$
+coord[1] = new Coordination_Fixpoint();
+coord[2] = new Coordination_Random();  
+
+//UserInput: User muss die Anzal der Bahnplaner Manuell eintragen                                          
+$\color{red}\textbf{numberOfPathplaner = 2;}$
+pathplan = new Pathplan*[numberOfPathplaner];
+for(int i=0; i<numberOfPathplaner; i++)
+{
+    pathplan[i] = NULL;
+}
+//UsernInput: Bahnplanung hinzuf"ugen
+$\color{red}\textbf{pathplan[0] = new Pathplan\_None();}$
+pathplan[1] = new Pathplan_FastSweep4();
+
+\end{lstlisting}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "template"
+%%% End: 
