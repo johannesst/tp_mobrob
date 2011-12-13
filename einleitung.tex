@@ -15,8 +15,8 @@ Ad-hoc-Lösung und schließlich eine Server-Client-Lösung zu Auswahl, auf
 die die Entscheidung fiel. Dies ermöglicht eine parallele Entwicklung
 von Client und Server, was eine einfachere Aufgabenverteilung im Team
 ermöglicht. Ausserdem kann dann auf den Server eine Visualisierung der
-Ballsuche erfolgen, indem eine Karte des Raumes, sowie der darin
-befindlichen Roboter sowie (nach erfolgreicher Suche) des Balls in der
+Ballsuche erfolgen, in dem eine Karte des Raumes, sowie de Position des darin
+befindlichen Roboter sowie (nach erfolgreicher Suche) die Position des Balls in der
 GUI des Servers angezeigt wird. Der Client ist dann nur noch für das
 Abfahren der von Server vorgebenen Postionen, sowie die Lokalisierung
 im Raum und Ballerkennung in seiner unmittelbaren Umgebung
@@ -29,7 +29,7 @@ Zum Erreichen des Ziels standen uns mobile Roboter
     \begin{itemize}
     \item Der SonarPartikelfilter geht auf ein vorheriges Teamprojekt
       zurück. Mit ihm konnten wir die Position des Roboters im Raum
-      relativ  genau bestimmen. Diese diente zum einen als
+      relativ  genau bestimmen. Dieser diente zum einen als
       Basis für die Bahnplanung. Zum anderen war dies die Basis zur
       Bestimmung der Position eines erkannten Balls.
     \item Die Ballerkennung konnten wir aus der Bachelorarbeit von
@@ -49,7 +49,8 @@ Unsere Softwarearchitektur bestand somit aus folgenden Komponenten:
   und bestimmt aus den dabei erhalten Informationen und der durch den
   Partikelfilter erhaltenen Position die Position des Balles im Raumes.
 \end{itemize}
-Im nächsten Abschnitt folgt nun eine genauere Beschreibung unserer Software-Architektur
+Im nächsten Abschnitt folgt nun eine genauere Beschreibung unserer
+Software-Architektur.
 %Es folgt nun die Beschreibung
 %%% Local Variables: 
 %%% mode: latex

@@ -1,7 +1,3 @@
-Seite 1: Dies erm ̈glicht eine parallele Entwicklung von Client und Server, was eine einfa-
-o
-chere Aufgabenverteilung im Team erm ̈glicht.o (2x ermöglicht)
-
 Seite 1:
 indem eine Karte des Raumes, sowie der darin befindlichen Roboter sowie (nach
 erfolgreicher Suche) des Balls in der GUI des Servers angezeigt wird (Position des Roboters, Position des Balls)

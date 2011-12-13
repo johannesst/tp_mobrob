@@ -12,17 +12,17 @@ auch
 ARIA nicht mit der mitgelieferten Solution unter VS 2010 gebaut werden
 konnte,
 haben wir uns für den Client für den Einsatz eines neuen Buildsystems
-entschlossen. Aufgrund der Einfacheit der Beschreibung der Buildvorgänge
+entschlossen. Aufgrund der Einfachheit der Beschreibung der Buildvorgänge
 für
 die einzelnen zu integrierenden Projekte und dem Hinzufügen neuer
-Unterprojekte, sowie der Möglichkeit, von einem konkreten Buildsystem
+Unterprojekte, sowie der Möglichkeit, nicht von einem konkreten Buildsystem
 abhängig
 zu sein sowie existierender Erfahrungen mit dem System, fiel die Wahl auf
 CMake\footnote{http://www.cmake.org/}. Bei CMake handelt es sich um ein
 open-source Metabuildsystem. Es erzeugt Build-Vorschriften für andere
 Buildsysteme (u.a. GNU make, nmake, msbuild). Somit wäre es bei Bedarf auch
-Möglich gewesen, auf eine andere Visual Studio Version umzusteigen ohne
-die Solutions zu konvertieren oder neu zu erstellen.
+Möglich gewesen, auf eine andere Visual Studio Version umzusteigen ohne große
+Änderungen vornehmen zu müssen.
 
 \subsection{Integration der Projekte}
 Zuerst wurde eine passende Ordnerstrukur angelegt: include für
@@ -149,7 +149,7 @@ Hilfe der originalen VS Solutions sowie durch Ausprobieren. Zum anderen gab
 manchmal Dateien, die zwar in den Quellen lagen, jedoch in nicht in den
 Solutions auftauchten. Diese konnten den Buildprozess stören und mussten
 daher
-entfernt werden TODO: Beispiel raussuchen, wenn noch überhaupt möglich.
+entfernt werden.
 Außerdem waren an ein paar Stellen kleinere Änderungen am Quellcode nötig,
 um
 ihn mit MSVC 2010 oder der Struktur unseres include-Ordners kompatibel zu
@@ -168,7 +168,7 @@ kopiert
 man die cpp-Dateien in den neuen Unterordner im src-Verzeichnis.
 
 Danach erstellt man in diesem Ordner eine CMakeLists.txt ähnlich wie oben,
-jenachdem ob ex sich um eine Anwendung oder Bibliothek handelt. Man fügt
+jenachdem ob es sich um eine Anwendung oder Bibliothek handelt. Man fügt
 zuerst
 die cpp-Dateien und Includes hinzu, fügt dann mit add\_library oder
 add\_executable Buildtargets hinzu und gibt eventuell noch zu linkende

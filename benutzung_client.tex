@@ -8,7 +8,7 @@ Nach Start des Servers  positioniert man den Roboter in der Mitte des
 Raumes, in dem die Ballsuche stattfinden soll. Anschließend schaltet
 man den Roboter ein und startet den Client mit der
 Stapelverarbeitungsdatei \verb|Start.bat|. Der Client startet nun und
-nimm zunächst soviele Rotationen um die eigene Ache vor, wie in der
+nimmt zunächst soviele Rotationen um die eigene Achse vor, wie in der
 \verb|config.cfg| festgelegt worden sind. Diese dienen dazu, den
 Sonar-Partikelfilter zu initialisieren, sodass der Client dann die
 Position des Roboters im Raum bestimmen kann. Nach erfolgreicher
@@ -22,7 +22,7 @@ Ab diesen Zeitpunkt muss man als Benutzer
 nur noch den Ablauf überwachen, falls es unerwarteterweise zu
 Kollisionen mit der Wand oder anderen Robotern kommt. Dies sollte zwar
 aufgrund der vom Server vorgenommen Kollisionerkennung nicht
-passieren, allerdings lassen sich ,,false Positives'' nicht generell
+passieren, allerdings lassen sich ,,False-Positives'' nicht generell
 ausschließen, mehr dazu im nächsten Kapitel. Erkennt der Client
 schließlich einen Ball im aktuellen Kamerabild, wird der Ball im Bild
 markiert:
@@ -31,7 +31,7 @@ markiert:
 \caption{Kamerabild bei erfolgreicher Ballerkennung}  
 \end{nofloat}
 
-Anschließend wird aus der mit den Sonar-Partikelfilter ermittelten
+Anschließend wird aus der mit dem Sonar-Partikelfilter ermittelten
 Position des Roboters im Raum und von der Ballerkennung zurückgebenen
 Entfernung und Winkel vom Ball zum Roboter die Position des Balls im
 Raum bestimmt und an den Server übermittelt. Dieser weiß nun, dass die

@@ -50,7 +50,7 @@ gefiltert und der Rückgabewert als Startposition genommen. Erst jetzt wird
 die Verbindung zum Server hergestellt und die Roboterposition übermittelt,
 sowie ein Thread gestartet, der regelmäßig die Structs \lstinline|RobotInformation|,
 \lstinline|PathInformation| und \lstinline|SearchInformation| mit dem
-Server abgleicht.  Sie enthalten die zum Steuern des Clients, sowie
+Server abgleicht.  Sie enthalten die zum Steuern des Clients, sowie zur
 Durchführung der Suche notwendigen Informationen.  Nach
 Verbindungsaufbau wartet der Client bis der Server die Suche startet. 
 Sobald die Suche startet, wird ein  Thread zur
@@ -82,7 +82,7 @@ Dann wird eine neue Ausrichtung zum Punkt berechnet und mit der aktuellen
 Roboter neu ausgerichtet, ansonsten wird die alte Ausrichtung beibehalten.
 Danach wird wieder eine Teilstrecke gefahren usw. bis sich dem Punkt auf
 einen Abstand unterhalb einer Toleranzschwelle angenährt wurde
-(\lstinline|delta\_pos|). 
+(\lstinline|delta_pos|). 
 Die Toleranzschwelle ist nötig, da aufgrund der Ungenaugkeiten des
 Sonar-Partikelfilters nicht immer eine genaues Erreichen der
 Zielposition gewährleistet werden kann.  Auf die prinzipiellen
