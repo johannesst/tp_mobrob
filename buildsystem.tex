@@ -35,7 +35,7 @@ build als Zielordner für erzeugte Buildfiles.
 Als nächstes wurde für das Projekt im Ordner des Clients eine
 CMakeLists.txt-Datei angelegt:
 
-\begin{lstlisting}[captionpos=b,caption={CMakeLists.txt für das Buildsystem des Clients}]
+\begin{lstlisting}[language={},captionpos=b,caption={CMakeLists.txt für das Buildsystem des Clients}]
 cmake_minimum_required (VERSION 2.6)
 project (TP_WS_2010)
 
@@ -69,7 +69,7 @@ verwenden.
 
 Die CMakeLists.txt bindet nun alle Sourceordner der Unterprojekte ein:
 
-\begin{lstlisting}[captionpos=b,caption={CMakeLists.txt für den Sourceordner}]
+\begin{lstlisting}[language={},captionpos=b,caption={CMakeLists.txt für den Sourceordner}]
 %\begin{lstlisting}
 cmake_minimum_required (VERSION 2.6)
 
@@ -104,7 +104,7 @@ add_subdirectory (networkTest)
 Bei den Unterprojekten gibt es zwei Arten: Bibliotheken und Anwendungen.
 
 Die CMakeList.txt einer Bibliothek sieht wie folgt aus:
-\begin{lstlisting}[captionpos=b,caption={CMakeLists.txt einer Bibliothek am
+\begin{lstlisting}[language={},captionpos=b,caption={CMakeLists.txt einer Bibliothek am
     Beispiel irpCamera}]
 %\begin{lstlisting}
 cmake_minimum_required (VERSION 2.6)
@@ -116,7 +116,7 @@ add_library (irpCamera ${src} ${includes})
 \end{lstlisting}
 
 Die CMakeList.txt einer Anwendung sieht so aus:
-\begin{lstlisting}[captionpos=b,caption={CMakeLists.txt des Clients}]
+\begin{lstlisting}[language={},captionpos=b,caption={CMakeLists.txt des Clients}]
 cmake_minimum_required (VERSION 2.6)
 
 file(GLOB src "*.cpp")
