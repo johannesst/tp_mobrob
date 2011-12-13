@@ -24,7 +24,7 @@ Visualisierungsskriptes und Benutzung des Skriptes}
 \end{itemize}
 \subsubsection{Interpretation der Visualisierung}
 In den folgenden Bildern sieht man jeweils die Partikelverteilung, wie
-sie sich nach der initalen 180 $\circ$-Rotation zur
+sie sich nach der initalen $360^{\circ}$-Rotation zur
 Partikelfilter-Initialisierung darstellt. In den oberen beiden Bildern
 wurde dabei der Roboter an der linken respektive rechten Wand des
 Raums gestartet, in den unteren beiden in der linken respektive
@@ -61,11 +61,8 @@ abhängig: War schon die Startposition falsch, änderte sich dies
 auch nicht im Verlauf der Ballsuche. War sie hingegen richtig, wurden
 in der Folge auch die weiteren Positionen korrekt bestimmt. Trotzdem
 kam es mitunter, insbesondere wenn sich der Roboter in der Nähe von
-Raumecken oder Wänden aufhielt zu Sprüngen. Um diese zu minimieren,
-wurde im Client eine Plausiblitätskontrolle für die gefundene Position
-implementiert. Auf Basis ihrer Ergebnisse fand dann gegebenenfalls
-eine Interpolation und Korrektur der bestimmten Position bei. Die noch
-vorhandenen Sprünge sind nun in einen akzeptablen Rahmen, der die
+Raumecken oder Wänden aufhielt zu Sprüngen. Die 
+vorhandenen Sprünge sind in einen akzeptablen Rahmen, der die
 Funktionsweise des Clients nicht gefährdet.
 %Der weitere Verlauf der Ballsuch
 %%% Local Variables:

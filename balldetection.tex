@@ -7,6 +7,7 @@ würden. Dabei greift sie auf das Kamerabild einer Logitech Webcam Pro 9000
 zurück. Nach Initialisierung der Ballerkennung
 werden folgende Schritte durchgeführt, bis der Ball gefunden oder die
 Suche abgebrochen wurde:
+<<<<<<< HEAD
 \begin{nofloat}{figure}
 \centering
 \includegraphics[width=0.5\linewidth]{bilder/balldetect_uml}
@@ -36,7 +37,7 @@ Aus den Ergebnissen Daraus wird zusammen mit der aktuellen Position des Roboters
 Dann wird die Entfernung zum Ball ermittelt, da diese in mm ist, muss
 die Entfernung in px umgerechnet werden. Dazu dient der Wert
 pixelPerMm aus der Konfiguration, welcher die Auflösung der Karte in px/mm angibt. Um nun die Ballposition zu
-		erhalten, wird der gedrehte Ausrichtungsvektor (ein Einheitsvektor) mit
+	erhalten, wird der gedrehte Ausrichtungsvektor (ein Einheitsvektor) mit
 		pixelPerMm $\cdot$ Entfernung zum Ball skalar multipliziert und auf den aktuellen
 		Positionsvektor raufaddiert.
 %  \item 
@@ -54,7 +55,8 @@ Wahrscheinlichkeit, ob sich im aktuellen Bild ein Ball befindet und
 die Entfernung und den Winkel zum vermuteten Ball. Um vernünftige
 Werte zu erhalten ist es unabdingbar, die Software vorher zu
 kalibrieren\footnote{Die genaue Vorgehensweise wird im Abschnitt
-\ref{cha:nutzung} Nutzung ab Seite \pageref{cha:nutzung} beschrieben}.  Nichts destotrotz kann es zu false Positives
+\ref{cha:nutzung} Nutzung ab Seite \pageref{cha:nutzung} beschrieben}.  Nichts
+destotrotz kann es zu False-Positives
 kommen. Näheres zu den  Ursachen von
 False Positives finden sich im Abschnitt \ref{cha:evaluation} ab Seite \pageref{cha:evaluation}.
 %%% Local Variables: 
