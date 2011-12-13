@@ -1,0 +1,82 @@
+
+Seite 1: Dies erm ̈glicht eine parallele Entwicklung von Client und Server, was eine einfa-
+o
+chere Aufgabenverteilung im Team erm ̈glicht.o (2x ermöglicht)
+
+Seite 1:
+indem eine Karte des Raumes, sowie der darin befindlichen Roboter sowie (nach
+erfolgreicher Suche) des Balls in der GUI des Servers angezeigt wird (Position des Roboters, Position des Balls)
+
+Seite 1: Diese diente zum einen als Basis f ̈r die
+u
+Bahnplanung. Zum anderen war dies die Basis zur Bestimmung der Position eines erkannten Balls.
+
+Seite 2:
+Punkt fehlt am Ende
+
+
+Seite 3:
+f ̈r die Koordination der Suche und Bahnplanungung -> zur Koordination der Suche und Bahnplanung
+
+Seite 3:
+Die Schnittstelle zwischen Server und Client wurde so gering wie m ̈glich
+gehalten um sowohl den Server als auch den Client so dynamisch wie m ̈glich verweden zu k ̈nnen. -> ???, wird nach den Datenstrukturen klar -> referenz dahin?
+
+Seite 3, ABschnitt 2-2-1: Kaputte referenzen?
+
+Seite 4, Abschnitt 2.1: aufgabaut -> aufgebaut
+Robobter -> Roboter
+
+Seite 4: erstellen->Erstellen
+Anschließen -> anschließend
+Inforamtion->Information
+
+Seite 6: ̈
+Mittels der Ubergabe des Sockets der Verbingung, -> Komma weg?
+
+Seite 7:
+Die RobotInformation-Struktur aus 2.4 ->
+Die RobotInformation-Struktur aus Listing 2.4
+
+
+Seite 7, Listing 2.5 Pfadlänge
+
+Seite 8,  SearchInformation aus 2.5 -> Listing fehlt
+
+Seite 8: Andersfalls -> Andernfalls
+sie Suche -> die Suche
+Die PathInformation aus 2.6 Ubermittelt ->  Die PathInformation aus Listing 2.6 "ubermittelt
+
+Seite 8:
+
+dargstellte
+Schnittstelle, die im definierten Regeltakt zwischen Server und Client ubertragen wird ̈ -> 
+dargestellte
+Schnittstelle, die im definierten Regeltakt zwischen Server und Client ubertragen wird ̈ (deren Information werden übertragen, nicht die Schnittstelle selber)
+
+Seite 9, 2.2.3 nach dem starten -> nach dem Starten
+
+Seite 9, 2.2.4 Karte in Positionen -> in weg
+Raumes passt -> Komma fehlt danach
+wird in Abbildung 2.5 -> dargestellt fehlt
+
+das wechseln der Ansichten -> das Wechseln der Ansichten
+
+Seite 10, 2.2.5
+beenden des Clients -> Beenden ...
+die generierung -> Generierung
+der Schleife wir -> der Schleife wird
+
+Seite 11, Lst. 2.7. Z2 Ponint -> Point
+Abb. 2.6 Schleibe -> Schleife
+F ̈r die Zeit -> Die Zeit
+
+Seite 12, Sec. 2.2.6 Kollisionsverbeidung -> Kollisionsvermeidung
+Fest eingespeicherte -> fest ...
+die beim erreichen -> Erreichen
+
+Seite 13, Sec 2.2.7
+ist so Konstruiert -> konstuiert ...
+ein hinzufügen -> ein Hinzufügen
+werden sollen -> komma fehlt danach
+virtualle -> virtuelle
