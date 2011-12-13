@@ -1,4 +1,3 @@
-
 Seite 1: Dies erm ̈glicht eine parallele Entwicklung von Client und Server, was eine einfa-
 o
 chere Aufgabenverteilung im Team erm ̈glicht.o (2x ermöglicht)
@@ -79,4 +78,87 @@ Seite 13, Sec 2.2.7
 ist so Konstruiert -> konstuiert ...
 ein hinzufügen -> ein Hinzufügen
 werden sollen -> komma fehlt danach
+
+Sec 2.3.2 Es nutzt -> Er?
+methodenaufruf geht über die seite hinaus
+
 virtualle -> virtuelle
+
+Seite 15, Sec. 2.3.1
+Mit den Methode -> Methoden
+ ermittelt, da diese ->  ermittelt; da diese
+false Positives -> False-Positives
+
+Seite 16
+Sec 2.3.2 mehr beötigt -> benötigt
+nun möglich -> + ,
+Zudem wurde bis hat +,
+
+Seite 18
+sowie -> sowie zur
+delta\_pos -> \ weg
+
+Seite 20
+gesondereten -> gesonderten
+Sec. 3.2.1 Einfacheit -> Einfachheit
+abhängig -> unabhängig
+ Somit w ̈re es bei Bedarf auch M ̈glich gewesen, auf eine andere Visual
+Studio Version umzusteigen ohne die Solutions zu konvertieren oder neu zu erstellen. ->  Somit w ̈re es bei Bedarf auch M ̈glich gewesen, auf eine andere Visual
+Studio Version umzusteigen, ohne große Anpassungen vornehmen zu müssen.
+S. 22 Todo rausnehmen
+S. 23 ex -> es
+Erstellung -> Bauen
+ ”Visual Studio 2010 ̈nd Use default native compilers ̈usw ̈hlenu -> Umlaute fixen
+klicken -> . fehlt danach
+S25 in ihrern -> ihrer
+und -> und mit
+sofortiges starten -> sofortiges Starten
+S26 ca -> ca.
+S27 Die Batchdatei fragt nun die Kameranummer, sowie die im vorherigen Schritt ermittelten Entfer-
+nungen in mm angeben und anschließend durch Dr ̈cken der Enter-Taste die Erkennung starten:
+S29 Strg-C fixen
+S31 libzmq.dll raus
+S32 libzmq.dll raus
+nimm -> nimmt
+Ache -> Achse
+false Positives -> False-Positives
+S32 mit dden -> mit dem
+S34 zuvällig -> zufällig
+wir mit den -> dem
+S35 eingehen -> eingehen.
+S36 Gradzeichen korrigieren
+360° statt 180°
+Um diese zu minimieren, wurde im Client eine
+Plausiblit ̈tskontrolle f ̈r die gefundene Position implementiert. Auf Basis ihrer Ergebnisse fand dann
+a
+u
+gegebenenfalls eine Interpolation und Korrektur der bestimmten Position bei. Die noch vorhandenen
+Spr ̈nge sind nun in einen akzeptablen Rahmen, der die Funktionsweise des Clients nicht gef ̈hrdet. -> Die meisten Sprünge waren akzeptabel und haben sich meistens nach ein paar Fahrschritten wieder korrigiert.
+S37 False-Positives
+S38 Zeilenabstand falsch
+ ohne gr ̈ßeres Hintergrundwisseno -> raus
+ enventuell -> eventuell
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
