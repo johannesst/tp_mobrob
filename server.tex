@@ -3,7 +3,7 @@
 \section{Server}\label{serv:Server}
 
 Der Server dient zum einen als zentraler Netzwerk-Einstiegspunkt für alle
-Clients, und zum anderen auch zur Koordination der Suche und Bahnplanung der verbundenen mobilen Roboter auf der bereitgestellten Karte des Raumes. Die Schnittstelle zwischen Server und Client wurde so gering wie möglich gehalten um sowohl den Server als auch den Client so dynamisch wie möglich verweden zu können.
+Clients, und zum anderen auch zur Koordination der Suche und Bahnplanung der verbundenen mobilen Roboter auf der bereitgestellten Karte des Raumes. Die Schnittstelle zwischen Server und Client wurde so gering wie möglich gehalten um sowohl den Server als auch den Client so dynamisch wie möglich verwenden zu können.
 
 \subsection{Grafische Benutzeroberfläche (GUI)}\label{serv:archGui}
 Zur Visualisierung der im Projekt implementieren Funktionen wurde
@@ -76,8 +76,9 @@ int check = connect(m_socket, (sockaddr*)&m_serverAddress,
 \end{lstlisting}
 
 \subsubsection{Datenaustausch}
-Zum Senden und Empfangen von Daten wurde eine Reihenfolge von Aktionen festgelegt, da ein Paket, das gesendet wurde, auch von der Gegenseite empfangen werden muss. Dieser Ablauf wird in Abbildung \ref{serv:fig:datenaustausch} dargestellt. Neben den Nutzdaten für und über die mobilen Roboter werden desweiteren ACK's gesendet, die ein erfolgreiches Empfangen signalisieren. Diese Implementierung wurde zunächst für die ersten Testreihen genutzt und sollte im späteren Verlauf entfernt werden. Jedoch erwiesen diese sich als nützlich zur Fehlererkennnung bei einer Übergebe falscher Daten und sind aus Programmstabilitätsgründen erhalten geblieben.
+Zum Senden und Empfangen von Daten wurde eine Reihenfolge von Aktionen festgelegt, da ein Paket, das gesendet wurde, auch von der Gegenseite empfangen werden muss. Dieser Ablauf wird in Abbildung \ref{serv:fig:datenaustausch} dargestellt. Neben den Nutzdaten für und über die mobilen Roboter werden desweiteren ACK's gesendet, die ein erfolgreiches Empfangen signalisieren. Diese Implementierung wurde zunächst für die ersten Testreihen genutzt und sollte im späteren Verlauf entfernt werden. Jedoch erwiesen diese sich als nützlich zur Fehlererkennnung bei einer Übergabe falscher Daten und sind aus Programmstabilitätsgründen erhalten geblieben.
 
+\newpage
 \begin{figure}[h]
 	\centering	
 	\includegraphics[width=8cm]{\bilderpath server_client_datenaustausch.png}
@@ -106,7 +107,7 @@ Die Datenstrukturen für den Datenaustausch konzentrieren sich auf die wesentlic
 struct RobotInformation
 {			
 	Point pos;					//Aktuelle Standordsinformationen des Roboters
-	int angle;					//Angle in GRAD!!!
+	int angle;					//Angle in Grad
 
 	bool ballDetected;	//Ball gefunden?
 	Point ballPos;			//Position des gefundenen Balles
@@ -117,7 +118,7 @@ struct RobotInformation
 };
 \end{lstlisting}
 
-Die RobotInformation-Struktur aus Listing \ref{serv:lst:str:robotinfo} beinhaltet Informationen über den aktuellen Status des Roboters. Dazu gehören die Koordinaten an denen sich der mobile Roboter zum Übertragungszeitpunkt befindet. Zur Visualisierung auf der Karte des Servers wird außerdem noch die Ausrichtung des Roboters übermittelt, die als Winkel der x-Achse und der Blickrichtung definiert ist. Sollte der Roboter einen Ball im Raum detektieren, wird diese Information inklusive der Ballposition Übertragen. Die Ballposition ist dabei für die Darstellung auf der Karte nötig.\\ Während der Roboter die vom Server generierten Wege abfährt, werden zwei Signalisierungstypen benötigt. Zum einen wird, für die Darstellung der Karte des Servers, signalisiert, dass ein Punkt der Liste erreicht wurde, der beim nächsten Zeichnen der Karte gelöscht werden kann und zum anderen wird signalisiert, dass ein neuer Pfad benötigt wird, sobald alle Punkte abgearbeitet wurden. 
+Die RobotInformation-Struktur aus Listing \ref{serv:lst:str:robotinfo} beinhaltet Informationen über den aktuellen Status des Roboters. Dazu gehören die Koordinaten an denen sich der mobile Roboter zum Übertragungszeitpunkt befindet. Zur Visualisierung auf der Karte des Servers wird außerdem noch die Ausrichtung des Roboters übermittelt, die als Winkel der x-Achse und der Blickrichtung definiert ist. Sollte der Roboter einen Ball im Raum detektieren, wird diese Information inklusive der Ballposition übertragen. Die Ballposition ist dabei für die Darstellung auf der Karte nötig.\\ Während der Roboter die vom Server generierten Wege abfährt, werden zwei Signalisierungstypen benötigt. Zum einen wird, für die Darstellung der Karte des Servers, signalisiert, dass ein Punkt der Liste erreicht wurde, der beim nächsten Zeichnen der Karte gelöscht werden kann und zum anderen wird signalisiert, dass ein neuer Pfad benötigt wird, sobald alle Punkte abgearbeitet wurden. 
 
 \begin{lstlisting}[frame=tb,captionpos=b,caption={Datenstruktur  SearchInformation.}, label=serv:lst:str:searchinfo]
 struct SearchInformation
@@ -263,7 +264,8 @@ mit $t_{Operationen}$ als die Zeit die benötigt wird um die Operationen Koordin
 \subsubsection{Koordination}
 Der Weg, den die Roboter während der Suche zurücklegen, wird durch die Koordination, Bahnplanung und Kollisionsvermeidung berechnet und festgelegt. Die Koordination ermittelt einen neuen Punkt im Raum, den der Roboter als nächstes anfahren soll. Dies geschieht global. Das bedeutet, dass alle Roboter gemeinsam nach dem gleichen Koordinationsalgorithmus fahren. Strategie für eine Koordination wäre beispielsweise eine Discovery-Map, in der die Punkte eingetragen sind, die die Roboter schon besucht bzw. erkundet haben und die Punkte, die noch nicht erkunden wurden müssen als nächstes angefahren werden. Zurzeit sind zwei sehr einfache Koordination-Strategien implementiert, da komplexe Strategien in dem zur Verfügung stehenden Suchterrain nicht nötig sind. In der ersten Variante werden fest eingespeicherte Punkte im Raum angefahren, die jedoch für jede Karte neu eingetragen werden müssen. Die andere Strategie basiert auf Zufallspunkten, die währende der Laufzeit erstellt werden. Dabei wird eine zufällige Koordinate erstellt und überprüft, ob diese auch auf einem befahrbaren Punkt liegt. Sollte der generierte Punkt in einem Hindernis liegen, wird so lange ein neuer Punkt generiert, bis der Punkt nicht im Hindernis liegt.\\
 \subsubsection{Bahnplanung}
-Mit dem Punkt der Koordination wird das neue Ziel des Roboters generiert, das als nächstes erreicht werden muss. Dazu berechnet die Bahnplanung einen Weg durch den Raum, den der Roboter abfahren soll. Im Gegensatz zur Koordination, kann jeder Roboter eine unterschiedliche Bahnplanung besitzen. Dazu stehen verschiedene Strategien zur Auswahl. Beispielsweise ein RRT (Rapidly-exploring random tree), der zufällig Punkte im Raum generiert und diese zu einem Weg vom Roboter zum Zielpunkt verbindet. Ziel ist es durch die Bahnplanung eine Liste von Punkten zu erhalten, die der Roboter kollisionsfrei durch Rotation und Vorwärtsbewegung, erreichen muss. In der aktuellen Version wurde eine selbst entwickelte Methode implementiert, die "`Fast Sweep 4"' genannt wurde (vermutlich bereits unter einem anderen Namen bekannt). Diese Methode startet am Punkt an dem sich der Roboter befindet und breitet sich von Schritt zu Schritt über die Karte aus, bis das Ziel erreicht wurde. Dabei werden in jedem Schritt die Entfernungen zum Roboter in den leeren anliegenden Zellen der Karte gespeichert, die beim Erreichen des Punktes, durch Rückwärtslaufen, zu einem Pfad erstellt werden. Als Ergebnis dieser Funktion entsteht eine Liste von Punkten, die durch eine Interpolation die unnötigen Zwischenpunkte entfernt und daraus die benötigte Pfad-Liste resultiert.\\
+Mit dem Punkt der Koordination wird das neue Ziel des Roboters generiert, das als nächstes erreicht werden muss. Dazu berechnet die Bahnplanung einen Weg durch den Raum, den der Roboter abfahren soll. Im Gegensatz zur Koordination, kann jeder Roboter eine unterschiedliche Bahnplanung besitzen. Dazu stehen verschiedene Strategien zur Auswahl. Beispielsweise ein RRT (Rapidly-exploring random tree), der zufällig Punkte im Raum generiert und diese zu einem Weg vom Roboter zum Zielpunkt verbindet. Ziel ist es durch die Bahnplanung eine Liste von Punkten zu erhalten, die der Roboter kollisionsfrei durch Rotation und Vorwärtsbewegung, erreichen muss. In der aktuellen Version wurde eine selbst entwickelte Methode implementiert, die "`Fast Sweep 4"' genannt wurde und dem 
+A-Stern Algorithmus ähnelt. Diese Methode startet am Punkt an dem sich der Roboter befindet und breitet sich von Schritt zu Schritt über die Karte aus, bis das Ziel erreicht wurde. Dabei werden in jedem Schritt die Entfernungen zum Roboter in den leeren anliegenden Zellen der Karte gespeichert, die beim Erreichen des Punktes, durch Rückwärtslaufen, zu einem Pfad erstellt werden. Als Ergebnis dieser Funktion entsteht eine Liste von Punkten, die durch eine Interpolation die unnötigen Zwischenpunkte entfernt und daraus die benötigte Pfad-Liste resultiert.\\
 \subsubsection{Kollisionsvermeidung}
 Neben der Kollision, die mit der Umgebung entstehen kann, muss bei einer Suche mit mehreren Robotern auch sichergestellt werden, dass keine Kollision untereinander entsteht. Dafür stand beispielsweise eine Strategie zur Verfügung, die einer Methode der Bahntechnik ähnelt. Dazu wird nach dem Erreichen eines Punktes überprüft, ob der nächste Fahrabschnitt sicher ist und eine Fahrstraße gestellt werden kann, die zu dem Zeitpunkt von keinem anderen Roboter genutzt werden kann. Die implementierte Methode sperrt nach der Bahnplanung den kompletten Raum, der von einem Roboter abgefahren werden soll, in dem die Punkt der Karte als Hindernis für die Bahnplanung der andren Roboter eingestellt werden. Erreicht der Roboter die Punkte der Bahnplanung, wird der bereits bewältigte Raum wieder für alle Roboter freigegeben.
 
@@ -298,7 +300,8 @@ public:
     Pathplan_None();
     ~Pathplan_None();
 
-    int CreateNextPath(int robotId, Point start, Point end, InternalPathInformation *ipi);
+    int CreateNextPath(int robotId, Point start,
+		Point end, InternalPathInformation *ipi);
 };
 \end{lstlisting}
 

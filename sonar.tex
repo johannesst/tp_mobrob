@@ -28,7 +28,9 @@ mehr benötigt wird, mit \lstinline|delete[]| gelöscht werden. Außerdem ist nu
 möglich, 
 die Anzahl der Sonare von außerhalb des Filters ohne neukompillieren
 einzustellen. Die Visualisierungen wurden aus Performancegründen entweder
-entfernt oder deaktiviert. Zudem wurde, für eine einfachere Auswertung und
+entfernt oder deaktiviert. Auch wurde ein Speicherleck behoben, welches dadurch zustande kam,
+das Measure-Objekte nur alloziert wurden und, nachdem sie nicht mehr benötigt wurden,
+nicht dealloziert wurden. Zudem wurde, für eine einfachere Auswertung und
 weil die Partikelvisualisierung öfter zu Abstürzen unseres Programms
 geführt hat, der Filter um eine Funktion erweitert, die, sofern dies
 beim Kompilieren der Software aktiviert wurde,  bei jedem Filtern alle Partikel als

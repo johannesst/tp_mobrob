@@ -2,12 +2,12 @@
     \chapter{Einleitung}
     \label{einleitung}
     \pagenumbering{arabic}
-    Unsere Aufgabe ist es, eine koordinierte Ballsuche in einen Raum
+    Unsere Aufgabe ist es, eine koordinierte Ballsuche in einem abgegrenzten Raum
     zu implementieren. \\\\
 
 Das Ziel der koordinierten Suche besteht darin, dass die im Raum bzw. im
-Suchterrain befindlichen mobilen Roboter miteinander das gesuchte Ziel
-finden. Diese Suche setzt voraus, dass sich die Roboter kollisionsfrei
+Suchterrain befindlichen mobilen Roboter miteinander das gesuchte Ziel, einen roten Ball,
+finden sollen. Diese Suche setzt voraus, dass sich die Roboter kollisionsfrei
 im Raum bewegen. Sie dürfen weder mit Objekten aus der Umgebung, noch
 mit anderen Robotern, die ebenfalls auf der Suche nach dem gegebenen
 Objekt sind, kollidieren. Zur Umsetzung dieser Aufgabe standen eine
@@ -23,15 +23,14 @@ im Raum und Ballerkennung in seiner unmittelbaren Umgebung
 zuständig. \\\\
 Zum Erreichen des Ziels standen uns mobile Roboter 
     ,,Pioneer-3DX'' der Firma ,,adept mobilerobots'' zur
-    Verfügung. Dazu konnten wir diverse Libaries des Instituts
+    Verfügung. Dazu konnten wir diverse Bibliotheken des Instituts
     nutzen. Die wichtigsten schon vorhandenen Komponenten waren aber
     der SonarPartikelfilter, sowie die Ballerkennung:
     \begin{itemize}
     \item Der SonarPartikelfilter geht auf ein vorheriges Teamprojekt
       zurück. Mit ihm konnten wir die Position des Roboters im Raum
       relativ  genau bestimmen. Dieser diente zum einen als
-      Basis für die Bahnplanung. Zum anderen war dies die Basis zur
-      Bestimmung der Position eines erkannten Balls.
+      Basis für die Bahnplanung.
     \item Die Ballerkennung konnten wir aus der Bachelorarbeit von
       Tobias Breuer übernehmen. Sie stellte uns eine API zur Verfügung,
       worüber wir den Ball finden, sowie seine genaue Position
@@ -45,11 +44,11 @@ Unsere Softwarearchitektur bestand somit aus folgenden Komponenten:
 \item Der Client: Eine Steuersoftware für die Roboter. Sie ist dafür
   zuständig, die vom Server vorgebene Bahnplanung umzusetzen. Dafür
   nutzt er den SonarPartikelfilter, um seine eigene Position im Raum
-  zu bestimmen. Außerdem nimmt er die eigentliche Ballerkennung vor
+  zu bestimmen. Außerdem nimmt er die Ballerkennung vor
   und bestimmt aus den dabei erhalten Informationen und der durch den
   Partikelfilter erhaltenen Position die Position des Balles im Raumes.
 \end{itemize}
-Im nächsten Abschnitt folgt nun eine genauere Beschreibung unserer
+Im nächsten Abschnitt \ref{cha:softwarearchitektur} folgt nun eine genauere Beschreibung unserer
 Software-Architektur.
 %Es folgt nun die Beschreibung
 %%% Local Variables: 
