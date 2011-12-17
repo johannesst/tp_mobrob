@@ -251,7 +251,7 @@ while(holdConnection) 					//Dauerschleife
 	\centering	
 	\includegraphics[width=15cm]{\bilderpath server_regeltakt.png}
 	\caption{Programmablauf des Roboter-Threads.}
-	\label{serv:fig:regeltakt}
+	\LAbel{serv:fig:regeltakt}
 \end{figure}
 
 Die Länge der Wartezeit nach einer Schleife kann vom Benutzer im Programm festgelegt werden. Während der Versuche hat sich die Wartezeit von 500ms als gutes Maß bewährt. Die Zeit $t_{Takt}$ in der eine Übertragung pro Thread erfolgt ergibt sich demnach aus: 
@@ -264,8 +264,20 @@ mit $t_{Operationen}$ als die Zeit die benötigt wird um die Operationen Koordin
 \subsubsection{Koordination}
 Der Weg, den die Roboter während der Suche zurücklegen, wird durch die Koordination, Bahnplanung und Kollisionsvermeidung berechnet und festgelegt. Die Koordination ermittelt einen neuen Punkt im Raum, den der Roboter als nächstes anfahren soll. Dies geschieht global. Das bedeutet, dass alle Roboter gemeinsam nach dem gleichen Koordinationsalgorithmus fahren. Strategie für eine Koordination wäre beispielsweise eine Discovery-Map, in der die Punkte eingetragen sind, die die Roboter schon besucht bzw. erkundet haben und die Punkte, die noch nicht erkunden wurden müssen als nächstes angefahren werden. Zurzeit sind zwei sehr einfache Koordination-Strategien implementiert, da komplexe Strategien in dem zur Verfügung stehenden Suchterrain nicht nötig sind. In der ersten Variante werden fest eingespeicherte Punkte im Raum angefahren, die jedoch für jede Karte neu eingetragen werden müssen. Die andere Strategie basiert auf Zufallspunkten, die währende der Laufzeit erstellt werden. Dabei wird eine zufällige Koordinate erstellt und überprüft, ob diese auch auf einem befahrbaren Punkt liegt. Sollte der generierte Punkt in einem Hindernis liegen, wird so lange ein neuer Punkt generiert, bis der Punkt nicht im Hindernis liegt.\\
 \subsubsection{Bahnplanung}
-Mit dem Punkt der Koordination wird das neue Ziel des Roboters generiert, das als nächstes erreicht werden muss. Dazu berechnet die Bahnplanung einen Weg durch den Raum, den der Roboter abfahren soll. Im Gegensatz zur Koordination, kann jeder Roboter eine unterschiedliche Bahnplanung besitzen. Dazu stehen verschiedene Strategien zur Auswahl. Beispielsweise ein RRT (Rapidly-exploring random tree), der zufällig Punkte im Raum generiert und diese zu einem Weg vom Roboter zum Zielpunkt verbindet. Ziel ist es durch die Bahnplanung eine Liste von Punkten zu erhalten, die der Roboter kollisionsfrei durch Rotation und Vorwärtsbewegung, erreichen muss. In der aktuellen Version wurde eine selbst entwickelte Methode implementiert, die "`Fast Sweep 4"' genannt wurde und dem 
-A-Stern Algorithmus ähnelt. Diese Methode startet am Punkt an dem sich der Roboter befindet und breitet sich von Schritt zu Schritt über die Karte aus, bis das Ziel erreicht wurde. Dabei werden in jedem Schritt die Entfernungen zum Roboter in den leeren anliegenden Zellen der Karte gespeichert, die beim Erreichen des Punktes, durch Rückwärtslaufen, zu einem Pfad erstellt werden. Als Ergebnis dieser Funktion entsteht eine Liste von Punkten, die durch eine Interpolation die unnötigen Zwischenpunkte entfernt und daraus die benötigte Pfad-Liste resultiert.\\
+Mit dem Punkt der Koordination wird das neue Ziel des Roboters
+generiert, das als nächstes erreicht werden muss. Dazu berechnet die
+Bahnplanung einen Weg durch den Raum, den der Roboter abfahren soll. Im
+Gegensatz zur Koordination, kann jeder Roboter eine unterschiedliche
+Bahnplanung besitzen. Dazu stehen verschiedene Strategien zur Auswahl.
+Beispielsweise ein RRT (Rapidly-exploring random tree), der zufällig
+Punkte im Raum generiert und diese zu einem Weg vom Roboter zum
+Zielpunkt verbindet. Ziel ist es durch die Bahnplanung eine Liste von
+Punkten zu erhalten, die der Roboter kollisionsfrei durch Rotation und
+Vorwärtsbewegung, erreichen muss. In der aktuellen Version wurde eine
+selbst entwickelte Methode implementiert, die "`Fast Sweep 4"' genannt
+wurde und dem A-Stern Algorithmus 
+%FIXME(TODO: quelle mit A-Stern!) einfügen
+ähnelt. Diese Methode startet am Punkt an dem sich der Roboter befindet und breitet sich von Schritt zu Schritt über die Karte aus, bis das Ziel erreicht wurde. Dabei werden in jedem Schritt die Entfernungen zum Roboter in den leeren anliegenden Zellen der Karte gespeichert, die beim Erreichen des Punktes, durch Rückwärtslaufen, zu einem Pfad erstellt werden. Als Ergebnis dieser Funktion entsteht eine Liste von Punkten, die durch eine Interpolation die unnötigen Zwischenpunkte entfernt und daraus die benötigte Pfad-Liste resultiert.\\
 \subsubsection{Kollisionsvermeidung}
 Neben der Kollision, die mit der Umgebung entstehen kann, muss bei einer Suche mit mehreren Robotern auch sichergestellt werden, dass keine Kollision untereinander entsteht. Dafür stand beispielsweise eine Strategie zur Verfügung, die einer Methode der Bahntechnik ähnelt. Dazu wird nach dem Erreichen eines Punktes überprüft, ob der nächste Fahrabschnitt sicher ist und eine Fahrstraße gestellt werden kann, die zu dem Zeitpunkt von keinem anderen Roboter genutzt werden kann. Die implementierte Methode sperrt nach der Bahnplanung den kompletten Raum, der von einem Roboter abgefahren werden soll, in dem die Punkt der Karte als Hindernis für die Bahnplanung der andren Roboter eingestellt werden. Erreicht der Roboter die Punkte der Bahnplanung, wird der bereits bewältigte Raum wieder für alle Roboter freigegeben.
 
