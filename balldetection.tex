@@ -34,8 +34,9 @@ Aus den Ergebnissen wird zusammen mit der aktuellen Position des Roboters
     die Ballposition für die Anzeige auf der Karte des Servers bestimmt, dazu wird zuerst der Ausrichtungsvektor des
 		Roboters um den Winkel zum Ball gedreht.
              % \item 
-Dann wird die Entfernung zum Ball ermittelt, da diese in mm ist, muss
-die Entfernung in px (auf der Serverkarte) umgerechnet werden. Dazu dient der Wert
+Dann wird die Entfernung zum Ball ermittelt, da diese in Millimeter (mm) ist, muss
+die Entfernung in Pixel (px)  umgerechnet werden, um die Position auf der
+Serverkarte korrekt zu visualisieren. Dazu dient der Wert
 pixelPerMm aus der Konfiguration, welcher die Auflösung der Karte in px/mm angibt. Um nun die Ballposition zu
 	erhalten, wird der gedrehte Ausrichtungsvektor (ein Einheitsvektor) mit
 		pixelPerMm $\cdot$ Entfernung zum Ball skalar multipliziert und zum aktuellen
@@ -43,9 +44,10 @@ pixelPerMm aus der Konfiguration, welcher die Auflösung der Karte in px/mm angi
 %  \item 
 Danach wird die gefundene Position zum Server übertragen.
 \\\\
-Wie bereits erwähnt greifen wir bei der Ballerkennung auf die
-Bachelorarbeit von Tobias Breuer zurück. Dadurch konnten wir einfach
-die API der von ihm entwickelten Software nutzen, ohne uns selber mit
+Wie bereits erwähnt greifen wir bei der Ballerkennung auf eine Bachelorarbeit 
+%FIXME TODO: again cite tbr einfügen!
+zurück. Dadurch konnten wir einfach
+die API der dabei entwickelten Software nutzen, ohne uns selber mit
 den Details der Ballerkennung beschäftigen zu müssen. Sie verfolgt
 folgenden Ansatz: Im Kamerabild wird nach roten Pigmenten
 gesucht. Erreichen diese eine gewisse Anzahl, sucht die Software nach
