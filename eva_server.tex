@@ -15,13 +15,41 @@ treffen, sodass die Roboter möglichst viele im Raum verteile
 Positionen anfahren, sodass irgendwann der Roboter den Ball nahe genug
 kommt, um ihm zu erkennen. Dies leistet die Bahnplanung ohne Probleme.
 \subsection{Kollisonsvermeidung}
-Hier ergab sich das Problem, dass wir bei unseren Versuchen nur mit
-einen Roboter arbeiten konnten, da unsere Laptops schon durch den
-ersten Roboter, sowie den Server ,,belegt'' waren. Somit konnten wir
-mit dem realen Roboter nur testen, ob die Kollision mit Wänden
-vermieden wurde. Dies klappte in der Tat ohne Probleme. Nur einmal
-wurde die Wand doch angefahren. Dies war darauf zurückzuführen, dass
-die Positionserkennung mit dem Sonar-Partikelfilter kurzfristig einen
+%Hier waren mehrere Aspekte zu untersuchen
+Hier ergab sich das Problem, dass wir bei unseren Versuchen nur
+bedingtes Kollisionspotential hatten, da der entsprechende Raum (kaum
+Problempotential hatte. Also wurde eine Version des Servers mit einer
+alternativen Karte gebaut. Diese Karte repräsentiert einen fiktiven
+Raum mit mehreren Zwischenwänden als mögliche Hindernisse. Natürlich
+liess sich diese Version aber nicht mit den realen Robotern testen, da
+der entsprechende Raum ja eigentlich nicht existiert. Also wurde auf
+den im Abschnitt \ref{serv:testclient} auf Seite
+\pageref{serv:testclient} beschriebenen Testclient
+zurückgegriffen. Damit wurde eine Suche mit drei Robotern simuliert,
+die ohne Kollisionen verlief. Abbildung \ref{fig:kollisonsvermeidung}
+zeigt die Simulation mit je einer Momentaufnahme für beide Kartenansichten.
+%\begin{addmargin}{-1.5cm}
+%\begin{nofloat}{figure}%\centering
+\begin{figure}[h!]
+\includegraphics[width=0.5\linewidth]{bilder/avoidCollision2}
+\includegraphics[width=0.5\linewidth]{bilder/avoidCollision1}
+\caption{Waben- und Roboterscankarte beim Test der
+  Kollisionserkennung}
+\label{fig:kollisonsvermeidung}
+\end{figure}
+%\end{nofloat}
+%\end{addmargin}
+% Entsprechend arbeiten konnten, da unsere Laptops schon durch den
+%ersten Roboter, sowie den Server ,,belegt'' waren. Somit konnten wir
+%mit dem realen Roboter nur testen, ob die Kollision mit Wänden
+%vermieden wurde. Dies klappte in der Tat ohne Probleme. 
+Danach haben wir getestet, ob die Erkennung der Wände auch mit einen
+Roboter im Raum vor dem Robotiklabor im Braunschweiger
+Informatikzentrum funktionieren würde. Wie oben erwähnt, hatte dieser
+deutlich geringeres Problempotential. Wie erwartet klappte dann auch
+die Vermeidung der Wände ohne Probleme. Nur einmal wurde eine Wand
+doch angefahren. \newpage Dies war darauf zurückzuführen, dass die
+Positionserkennung  mit dem Sonar-Partikelfilter kurzfristig einen
 Ausreißer hatte (vgl. hierzu auch den Abschnitt
 \ref{sec:lokal-mit-den} ab Seite \pageref{sec:lokal-mit-den}). Somit
 war aus Sicht der Kollisonsvermeidung keine Gefahr vorhanden und
