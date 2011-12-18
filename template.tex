@@ -16,6 +16,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{nomencl}
 \usepackage[normalem]{ulem}
+\usepackage{url}
 \usepackage[]{listings}
 \usepackage{setspace}
 \usepackage{nomencl}
@@ -317,12 +318,22 @@
 \input{zusammenfassung} % Zusammenfassung halt :) 
 %\newpage
 %\setstretch{1}
- 
+\nocite{Hart1968}
+\nocite{Shinners2011}
+\nocite{wiki:astern}
+\nocite{p3dxmanual}
+\nocite{tbr2011}
+% \appendix
+\bibliographystyle{plain}
+
+\bibliography{literatur}
+\addcontentsline{toc}{chapter}{Literaturverzeichnis}%Eintrag} 
 % \begin{appendix} 
 % dazu anhang mit installationsanleitung und ggf. weiteren Kram. 
 %\include{buildsystem} 
 %\end{appendix} 
- 
+%\nocite{*}
+%\printbibliography
 %literatur? Vielleicht die quelle des bahnplanungsalgorithmuses? 
 %\begin{thebibliography}{99} 
 %        \addcontentsline{toc}{chapter}{Bibliography} 
